@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 1243: Course Orientation &amp; Chapter 1 - Building Your First Game Application</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">SE 1243: Course Orientation &amp; Chapter 1</h2>
+					<p style="font-size: 0.95em; color: #bd93f9; margin-top: 15px;">Building Your First Game Application</p>
+					<div style="margin-top: 40px; font-size: 0.7em; color: #6272a4;">
+						<p>Central Philippine University &bull; College of Engineering</p>
+						<p>Department of Software Engineering &bull; Second Semester AY 2026&ndash;2027</p>
+					</div>
+				</section>
+
+				<!-- Part I Divider -->
+				<section>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Part I: Course Orientation &amp; Syllabus Overview</h3>
+				</section>
+
+				<!-- Slide 3: Course Identity & Schedule -->
+				<section>
+					<h3>Course Identity &amp; Class Schedule</h3>
+					<p class="text-smaller"><strong>SE 1243: Software Development II</strong> transitions you from procedural programming to Object-Oriented Programming (OOP) in C#.</p>
+					<ul style="font-size: 0.85em;">
+						<li class="fragment"><strong>Pre-requisite:</strong> <code>SE 1122</code> (Introductory Programming)</li>
+						<li class="fragment"><strong>Credit &amp; Contact Hours:</strong> 3 Units &mdash; 5 hours/week (75 total hours over 19 weeks)</li>
+						<li class="fragment"><strong>Lecture Schedule:</strong> Mondays, 08:00 &ndash; 10:00 AM | Room <code>EnA202</code> (2 hrs/wk)</li>
+						<li class="fragment"><strong>Laboratory Schedule:</strong> Wednesdays, 01:00 &ndash; 04:00 PM | Room <code>EnA202</code> (3 hrs/wk)</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: Instructor & Academic Support -->
+				<section>
+					<h3>Instructor &amp; Consultation Details</h3>
+					<p class="text-smaller">Reach out during official consultation hours for code reviews, debugging guidance, or academic advising:</p>
+					<ul style="font-size: 0.85em;">
+						<li class="fragment"><strong>Course Instructor:</strong> Anfernee Joan B. Ng</li>
+						<li class="fragment"><strong>Office Location:</strong> Software Engineering Department, Room <code>En 205b</code></li>
+						<li class="fragment"><strong>Consultation Hours:</strong> Mondays, 01:00 &ndash; 02:30 PM (<code>En 205b</code>)</li>
+						<li class="fragment"><strong>Contact Info:</strong> <code>ajbng@cpu.edu.ph</code> | Tel: (033) 329-1971 local <code>1087</code></li>
+					</ul>
+				</section>
+
+				<!-- Slide 9: Course Description -->
+				<section>
+					<h3>Course Description &amp; Approach</h3>
+					<p class="text-smaller">How we bridge introductory coding to software engineering architecture:</p>
+					<ul style="font-size: 0.75em;">
+						<li class="fragment"><strong>Paradigm Shift:</strong> Transitions students from basic procedural programming (Python) to <strong>Object-Oriented Programming (OOP)</strong> in C#.</li>
+						<li class="fragment"><strong>Four Pillars of OOP:</strong> Covers <em>encapsulation</em>, <em>inheritance</em>, <em>polymorphism</em>, and <em>abstraction</em>.</li>
+						<li class="fragment"><strong>Visual Learning Lab:</strong> Uses 2D game development in <strong>MonoGame</strong> to practice real-time game loops, user input polling, 2D vector math, collision detection, and File I/O persistence.</li>
+						<li class="fragment"><strong>End Goal:</strong> Break down complex software problems and design clean, modular, maintainable object-oriented applications.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 18: Textbook, References & Online Resources -->
+				<section>
+					<h3>Textbook, Library &amp; Online Resources</h3>
+					<ul style="font-size: 0.65em;">
+						<li class="fragment"><strong>Primary Textbook:</strong><br>van Toll, W., Egges, A., &amp; Fokker, J. D. (2019). <em>Learning C# by programming games</em> (2nd ed.). Springer.</li>
+						<li class="fragment"><strong>CPU Main Library Reserve Reference:</strong><br>Seebeck, A. (2020). <em>C# fundamentals: C# 9 and .NET 5</em> (3rd ed.). unQbd. (Call #: <code>QA 76.76.M52 .S44 2020</code>)</li>
+						<li class="fragment"><strong>Official Online Resources:</strong>
+							<ul>
+								<li>Microsoft Learn C#: <code>dotnet.microsoft.com/en-us/learntocode</code></li>
+								<li>Stackify C# Tutorials: <code>stackify.com/learn-c-sharp-tutorials/</code></li>
+								<li>Game Programming Patterns: <code>resources.gamedoora.com/resources/monogame/</code></li>
+								<li>MonoGame Tutorials &amp; Docs: <code>docs.monogame.net/articles/tutorials/index.html</code></li>
+								<li>MonoGame Community Resources: <code>monogame.net/resources/</code></li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 19: Grading System Breakdown -->
+				<section>
+					<h3>Grading System Breakdown</h3>
+					<p class="text-smaller">Your final grade combines <strong>Lecture (70%)</strong> and <strong>Laboratory (30%)</strong> components:</p>
+					<div style="display: flex; gap: 20px; margin-top: 15px; font-size: 0.72em;">
+						<div class="fragment" style="flex: 1; background: #282a36; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
+							<h4 style="color: #8be9fd; margin-bottom: 10px;">Lecture Component (70%)</h4>
+							<ul>
+								<li>Prelim Examination: <strong>15%</strong></li>
+								<li>Mid-Term Examination: <strong>20%</strong></li>
+								<li>Final Examination: <strong>25%</strong></li>
+								<li>Quizzes: <strong>25%</strong></li>
+								<li>Other Requirements (Assignments, Seatwork, Board Work, Recitation): <strong>15%</strong></li>
+							</ul>
+						</div>
+						<div class="fragment" style="flex: 1; background: #282a36; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
+							<h4 style="color: #50fa7b; margin-bottom: 10px;">Laboratory Component (30%)</h4>
+							<ul>
+								<li>Prelim Requirement: <strong>20%</strong></li>
+								<li>Midterm Requirement: <strong>30%</strong></li>
+								<li>Final Requirement: <strong>50%</strong></li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 20: Passing Mark & Transmutation Table -->
+				<section>
+					<h3>Passing Mark &amp; Grade Transmutation</h3>
+					<p class="text-smaller">The passing raw mark for SE 1243 is <strong>60%</strong>. Raw General Weighted Average (GWA) is transmuted using:</p>
+					<div class="fragment" style="font-size: 0.6em; margin: 10px 0;">
+						$$	\text{Transmuted Value} = \frac{	\text{GWA} - 60}{100 - 60} 	\times 25 + 75$$
+					</div>
+					<table class="fragment" style="font-size: 0.6em; width: 85%; margin: 10px auto; border-collapse: collapse; text-align: center;">
+						<thead>
+							<tr style="background-color: #44475a; color: #f8f8f2;">
+								<th style="padding: 5px; border: 1px solid #6272a4;">Transmuted</th>
+								<th style="padding: 5px; border: 1px solid #6272a4;">Grade</th>
+								<th style="padding: 5px; border: 1px solid #6272a4;">Transmuted</th>
+								<th style="padding: 5px; border: 1px solid #6272a4;">Grade</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">98 &ndash; 100</td>
+								<td style="padding: 4px; border: 1px solid #6272a4; color: #50fa7b;"><strong>1.00</strong></td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">83 &ndash; 85</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.25</td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">95 &ndash; 97</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">1.25</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">80 &ndash; 82</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.50</td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">92 &ndash; 94</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">1.50</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">77 &ndash; 79</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.75</td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">89 &ndash; 91</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">1.75</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">75 &ndash; 76</td>
+								<td style="padding: 4px; border: 1px solid #6272a4; color: #ffb86c;"><strong>3.00 (Pass)</strong></td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">86 &ndash; 88</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.00</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">Below 75</td>
+								<td style="padding: 4px; border: 1px solid #6272a4; color: #ff5555;"><strong>5.00 (Fail)</strong></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Slide 27: COE Standard of Academic Integrity -->
+				<section>
+					<h3>COE Standard of Academic Integrity</h3>
+					<p class="text-smaller">In consonance with CPU's vision of <strong>EXCEL</strong>, College of Engineering students commit to honest, ethical, and moral scholarship:</p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment">Zero tolerance for cheating, plagiarism, falsification, forgery, bribery, or misuse of university computing resources.</li>
+						<li class="fragment" style="color: #ffb86c;"><strong>Student Statement of Commitment:</strong> <em>"I will claim ownership only for work output which is truly my own; I will give appropriate credit where credit is due; I will use resources provided with care; and I will choose to be fair and honest in all of my dealings."</em></li>
+					</ul>
+				</section>
+
+				<!-- Part II Divider -->
+				<section>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Part II: Chapter 1 &mdash; Building Your First Game Application</h3>
+				</section>
+
+				<!-- Slide 30: Why Build Games to Learn OOP? -->
+				<section>
+					<h3>Why Learn C# &amp; OOP Through Games?</h3>
+					<p class="text-smaller">Textbook Chapter 1 introduces the dual mission of <em>Learning C# by Programming Games</em>:</p>
+					<ul style="font-size: 0.75em;">
+						<li class="fragment"><strong>Engaging Practice:</strong> Building interactive games can be just as fun as playing them&mdash;and gives immediate visual feedback when your code works (or breaks!).</li>
+						<li class="fragment"><strong>Real-World Software Paradigm:</strong> Games are natural ecosystems of interacting objects (cannons, paint cans, grids, UI buttons), making them ideal for mastering <strong>Object-Oriented Programming (OOP)</strong>.</li>
+						<li class="fragment"><strong>Transferable Engineering Skills:</strong> The architecture, state management, and C# skills you learn apply directly to desktop, web, enterprise, and mobile software engineering.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 31: Chapter 1 Objectives -->
+				<section>
+					<h3>Chapter 1 Learning Objectives</h3>
+					<p class="text-smaller">Before building full games, we transform your workstation into a C# game development environment:</p>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment">Install <strong>Microsoft Visual Studio</strong> and the <strong>MonoGame</strong> framework in the proper sequence.</li>
+						<li class="fragment">Create, compile, and execute your first C# game project (<code>Game1</code>).</li>
+						<li class="fragment">Navigate <strong>Solution Explorer</strong> and modify your first line of C# rendering code in <code>Game1.cs</code>.</li>
+						<li class="fragment">Understand how Visual Studio organizes <strong>Projects</strong> and <strong>Solutions</strong>, and run companion example games (<em>Painter</em>).</li>
+					</ol>
+				</section>
+
+				<!-- Slide 32: 1.1 Getting and Installing the Tools -->
+				<section>
+					<h3>1.1 Getting and Installing the Tools</h3>
+					<p class="text-smaller">Two core, freely available software tools power our development workflow:</p>
+					<ul style="font-size: 0.75em;">
+						<li class="fragment"><strong>Microsoft Visual Studio (IDE):</strong> Our Integrated Development Environment for writing C# code, inspecting project trees, auto-completing APIs, compiling, and debugging.</li>
+						<li class="fragment"><strong>MonoGame Framework:</strong> An open-source C# framework that handles cross-platform window creation, real-time game loops, 2D/3D graphics rendering, audio, and input devices.</li>
+						<li class="fragment"><strong>Cost &amp; Licensing:</strong> Both Visual Studio Community Edition and MonoGame are 100% free for students and independent developers.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 33: Installation Order & Lab Note -->
+				<section>
+					<h3>Crucial Rule: Installation Order Matters!</h3>
+					<p class="text-smaller">Follow this exact sequence when setting up your personal laptop or workstation:</p>
+					<ol style="font-size: 0.65em;">
+						<li class="fragment"><strong>Step 1 &mdash; Install Visual Studio FIRST:</strong> Install Visual Studio with the <em>.NET desktop development</em> workload enabled.</li>
+						<li class="fragment"><strong>Step 2 &mdash; Install MonoGame SECOND:</strong> Install MonoGame templates/extensions <em>after</em> Visual Studio is already installed so MonoGame can register its project templates inside the IDE.</li>
+					</ol>
+					<p class="fragment text-smaller" style="color: #ffb86c; margin-top: 15px; font-size: 0.65em;"><strong>Lab Tooling Note:</strong> While the textbook figures show Visual Studio 2017 &amp; MonoGame 3.6, our laboratory uses Visual Studio 2022 &amp; MonoGame 3.8+ templates. All C# code and architectural concepts in the book work seamlessly!</p>
+				</section>
+
+				<!-- Slide 34: Visual Studio Start Screen -->
+				<section>
+					<h3>Exploring the Visual Studio Environment</h3>
+					<p class="text-smaller">When you launch Visual Studio (Fig. 1.1 in the textbook), four key areas greet you:</p>
+					<ul style="font-size: 0.65em;">
+						<li class="fragment"><strong>Get Started / Recent:</strong> Quick links to tutorials and recently opened projects/solutions.</li>
+						<li class="fragment"><strong>Open:</strong> Open an existing local project/solution (<code>.sln</code>) or clone from a Git/remote repository.</li>
+						<li class="fragment"><strong>New Project:</strong> Search and select templates (such as <em>MonoGame Windows Project</em> or <em>Cross-Platform Desktop Project</em>).</li>
+						<li class="fragment"><strong>Solution Explorer (Right Panel):</strong> Displays the hierarchical tree of solutions, projects, dependencies, and source files once a project is loaded.</li>
+					</ul>
+				</section>
+
+        <section>
+					<img src="slide01-images/fig1.1.png" alt="">
+				</section>
+
+				<!-- Slide 35: 1.2 Creating Your First Game Application -->
+				<section>
+					<h3>1.2 Creating Your First Game Application</h3>
+					<p class="text-smaller">A <strong>project</strong> is the basic working environment for building a single game or application. Follow these steps to create one:</p>
+					<ol style="font-size: 0.7em;">
+						<li class="fragment">Launch <strong>Microsoft Visual Studio</strong>.</li>
+						<li class="fragment">In the top menu, select <code>File &rarr; New &rarr; Project</code> (or click <em>Create a new project</em>).</li>
+						<li class="fragment">Filter or select the <strong>MonoGame</strong> category under Visual C#.</li>
+						<li class="fragment">Select the <strong>MonoGame Windows Project</strong> template (for Windows desktop using DirectX; or Cross-Platform Desktop).</li>
+						<li class="fragment">Enter a project <strong>Name</strong> (e.g., <code>Game1</code>), disk <strong>Location</strong>, and <strong>Solution name</strong>, then click <strong>OK / Create</strong>.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 36: Project Configuration Details -->
+				<section>
+					<h3>Understanding New Project Settings</h3>
+					<p class="text-smaller">When configuring your project in the New Project dialog (Fig. 1.2), pay attention to three fields:</p>
+					<ul style="font-size: 0.85em;">
+						<li class="fragment"><strong>Name (<code>Game1</code>):</strong> Defines the project folder name, compiled executable name, and default C# namespace.</li>
+						<li class="fragment"><strong>Location:</strong> Choose a clean, organized directory path (e.g., <code>C:\SE1243\Labs\</code>) so you can easily locate and zip your work for submission.</li>
+						<li class="fragment"><strong>Solution Name (<code>Game1</code>):</strong> Names the outer <code>.sln</code> container file. Keeping <em>"Create directory for solution"</em> checked keeps multi-project workspaces tidy.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 37: 1.3 Running the Game Project -->
+				<section>
+					<h3>1.3 Compiling &amp; Running Your Game</h3>
+					<p class="text-smaller">Once Visual Studio generates the template project, test your setup immediately:</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>How to Run:</strong> Click the green <strong>Start</strong> ("play") button in the top toolbar, or press the <strong><code>F5</code></strong> shortcut key.</li>
+						<li class="fragment"><strong>Compilation Process:</strong> Visual Studio compiles your C# files into intermediate language, links MonoGame libraries, and launches the game window.</li>
+						<li class="fragment"><strong>Expected Result (Fig. 1.3):</strong> A desktop window titled <code>Game1</code> filled with a solid <strong>Cornflower Blue</strong> background!</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #50fa7b; margin-top: 15px; font-size: 0.75em;">Even though you can only see a solid color right now, a full real-time game loop is actively running at 60 frames per second!</p>
+				</section>
+
+				<!-- Slide 38: 1.4 Inspecting Solution Explorer -->
+				<section>
+					<h3>1.4 Anatomy of a MonoGame Project</h3>
+					<p class="text-smaller">Close the game window and inspect the file hierarchy inside <strong>Solution Explorer</strong> (Fig. 1.4):</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>Solution 'Game1' (1 project):</strong> Top-level container organizing your project(s).</li>
+						<li class="fragment"><strong>Game1 (in boldface):</strong> Your active game project node.</li>
+						<li class="fragment"><strong>Properties &amp; References:</strong> Assembly metadata, target framework settings, and external libraries (<code>MonoGame.Framework</code>).</li>
+						<li class="fragment"><strong>Content:</strong> Holds game assets (sprites, sound effects, fonts) managed by the MonoGame Content Pipeline.</li>
+						<li class="fragment"><strong><code>Program.cs</code>:</strong> Contains the C# <code>Main()</code> entry point that instantiates and starts the game.</li>
+						<li class="fragment"><strong><code>Game1.cs</code>:</strong> The core game class containing initialization, update logic, and rendering code.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 39: Inspecting Game1.cs -->
+				<section>
+					<h3>Inspecting <code>Game1.cs</code>: The <code>Draw</code> Method</h3>
+					<p class="text-smaller">Double-click <code>Game1.cs</code> in Solution Explorer and scroll near the bottom to locate the <code>Draw</code> method:</p>
+					<pre class="fragment" style="font-size: 1rem;"><code class="language-csharp" >/// &lt;summary&gt;
+/// This is called when the game should draw itself.
+/// &lt;/summary&gt;
+/// &lt;param name="gameTime"&gt;Provides a snapshot of timing values.&lt;/param&gt;
+protected override void Draw(GameTime gameTime)
+{
+    GraphicsDevice.Clear(Color.CornflowerBlue);
+
+    // TODO: Add your drawing code here
+
+    base.Draw(gameTime);
+}</code></pre>
+					<p class="fragment text-smaller" style="color: #8be9fd;"><code>GraphicsDevice.Clear(...)</code> wipes the screen every frame and fills it with the specified <code>Color</code>.</p>
+				</section>
+
+				<!-- Slide 40: Changing Your First Line of Code -->
+				<section>
+					<h3>Making Your First Code Modification</h3>
+					<p class="text-smaller">Replace <code>Color.CornflowerBlue</code> with <code>Color.Chocolate</code> inside <code>Draw</code>:</p>
+					<pre class="fragment"><code class="language-csharp">protected override void Draw(GameTime gameTime)
+{
+    GraphicsDevice.Clear(Color.Chocolate);
+
+    // TODO: Add your drawing code here
+
+    base.Draw(gameTime);
+}</code></pre>
+					<ul>
+						<li class="fragment">Press <strong><code>F5</code></strong> (or click the green Start button) to recompile and run.</li>
+						<li class="fragment">Your game window now renders with a warm <strong>Chocolate</strong> background!</li>
+					</ul>
+				</section>
+
+				<!-- Slide 41: Discovering IntelliSense -->
+				<section>
+					<h3>Discovering Visual Studio IntelliSense</h3>
+					<p class="text-smaller">How do you know what other color names exist besides <code>CornflowerBlue</code> and <code>Chocolate</code>?</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>Triggering Auto-Complete (Fig. 1.5):</strong> Delete <code>.Chocolate</code> and type a dot (<code>.</code>) immediately after <code>Color</code> inside <code>GraphicsDevice.Clear(Color.);</code>.</li>
+						<li class="fragment"><strong>Live Member List:</strong> Visual Studio pops up an alphabetical list of every predefined color (<code>AliceBlue</code>, <code>AntiqueWhite</code>, <code>Aqua</code>, <code>Olive</code>, <code>Black</code>, etc.).</li>
+						<li class="fragment"><strong>Rich Tooltips:</strong> Highlighting any item displays its C# type signature and exact RGBA values (e.g., <code>R:240, G:248, B:255, A:255</code>).</li>
+						<li class="fragment"><strong>Developer Superpower:</strong> IntelliSense works across all C# classes, structs, and MonoGame APIs&mdash;eliminating guesswork and syntax typos!</li>
+					</ul>
+				</section>
+
+				<!-- Slide 42: Checkpoint 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your understanding of Sections 1.1&ndash;1.4:</p>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment">Why must you install Microsoft Visual Studio <em>before</em> installing MonoGame?</li>
+						<li class="fragment">Which file in Solution Explorer contains the <code>GraphicsDevice.Clear(...)</code> method call that controls the window background color?</li>
+						<li class="fragment">What keyboard shortcut compiles and launches your project in Visual Studio, and how do you trigger IntelliSense on the <code>Color</code> type?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 43: 1.5 Projects and Solutions -->
+				<section>
+					<h3>1.5 Projects vs. Solutions</h3>
+					<p class="text-smaller">Visual Studio organizes code using a two-tier hierarchy:</p>
+					<ul style="font-size: 0.85em;">
+						<li class="fragment"><strong>Project (<code>.csproj</code>):</strong> Represents a single game, executable program, or code library you are developing.</li>
+						<li class="fragment"><strong>Solution (<code>.sln</code>):</strong> A workspace container that groups one or more related projects together under one roof.</li>
+						<li class="fragment"><strong>Flexible Organization:</strong> When creating a new project, you can either generate a brand-new solution or add the new project into your currently open solution.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 44: Benefits of Multi-Project Solutions -->
+				<section>
+					<h3>Why Put Multiple Projects in One Solution?</h3>
+					<p class="text-smaller">The textbook's companion code uses <strong>one solution per chapter</strong> containing multiple projects:</p>
+					<ul style="font-size: 0.85em;">
+						<li class="fragment"><strong>Side-by-Side Comparison:</strong> Easily open, compare, and copy logic between incremental versions of a game (e.g., <code>Painter1</code>, <code>Painter2</code>, <code>PainterFinal</code>).</li>
+						<li class="fragment"><strong>Shared Workspace:</strong> Switch between small concept demos and main game projects without launching multiple Visual Studio instances.</li>
+						<li class="fragment"><strong>Unified Visibility:</strong> Every project inside the active solution appears neatly listed in Solution Explorer.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 45: 1.6 Running the Examples in This Book -->
+				<section>
+					<h3>1.6 Running the Textbook's Example Projects</h3>
+					<p class="text-smaller">Every chapter in <em>Learning C# by Programming Games</em> includes downloadable sample solutions:</p>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment">Download and extract the companion source code archive from the book's website.</li>
+						<li class="fragment">Navigate to a chapter folder (e.g., <code>05_ShowingPlayer</code>) and double-click its solution file (<code>ShowingPlayer.sln</code>).</li>
+						<li class="fragment">Visual Studio opens the solution and displays all sample projects for that chapter inside <strong>Solution Explorer</strong>.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 46: Setting the Startup Project -->
+				<section>
+					<h3>Selecting the Startup Project</h3>
+					<p class="text-smaller">When a solution holds multiple projects, how does Visual Studio know which one to run when you press <code>F5</code>?</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>The Boldface Rule:</strong> The single project displayed in <strong>boldface</strong> in Solution Explorer is the <strong>Startup Project</strong>.</li>
+						<li class="fragment"><strong>How to Switch Projects:</strong>
+							<ol>
+								<li><strong>Right-click</strong> the desired project name in Solution Explorer (e.g., <code>Balloon2</code>).</li>
+								<li>Click <strong><code>Set as StartUp Project</code></strong> from the context menu.</li>
+								<li>Press <strong><code>F5</code></strong> to build and run that specific project!</li>
+							</ol>
+						</li>
+						<li class="fragment"><strong>Verification Test:</strong> Running <code>Balloon2</code> displays a window where a balloon sprite smoothly tracks your mouse pointer.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 47: Previewing PainterFinal -->
+				<section>
+					<h3>Previewing Our First Full Game: <em>Painter</em></h3>
+					<p class="text-smaller">Open the Chapter 11 solution and run <strong><code>PainterFinal</code></strong> (Fig. 1.6) to test your complete environment:</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>Game Objective:</strong> Paint falling paint cans from the top of the screen so each can matches its target color (Red, Green, or Blue) before falling off the bottom.</li>
+						<li class="fragment"><strong>Aiming &amp; Shooting:</strong> Move the <strong>mouse</strong> to rotate the paint cannon in the bottom-left corner; <strong>left-click</strong> to shoot paint balls.</li>
+						<li class="fragment"><strong>Color Switching:</strong> Press <strong><code>R</code></strong> (Red), <strong><code>G</code></strong> (Green), or <strong><code>B</code></strong> (Blue) on the keyboard to change cannon ammo color.</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #50fa7b; margin-top: 12px; font-size: 0.75em;">If <code>PainterFinal</code> compiles and runs via <code>F5</code>, your Visual Studio + MonoGame setup is 100% ready for the semester!</p>
+				</section>
+
+				<!-- Slide 48: Checkpoint 2 -->
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #50fa7b;">Test your understanding of Sections 1.5&ndash;1.6:</p>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment">What is the difference between a Visual Studio <strong>Project</strong> and a <strong>Solution</strong>?</li>
+						<li class="fragment">How can you visually identify which project in a multi-project solution will execute when you press <code>F5</code>?</li>
+						<li class="fragment">What steps do you take to run <code>PainterFinal</code> instead of another project inside the Chapter 11 solution?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 49: 1.7 Chapter 1 Summary -->
+				<section>
+					<h3>1.7 Summary of Chapter 1</h3>
+					<ol style="font-size: 0.82em;">
+						<li class="fragment"><strong>Tooling Setup:</strong> Installed Microsoft Visual Studio first and the MonoGame framework second to create a C# game development environment.</li>
+						<li class="fragment"><strong>Project Lifecycle:</strong> Created a new <em>MonoGame Windows Project</em> (<code>Game1</code>), compiled it, and ran its real-time game loop with <code>F5</code>.</li>
+						<li class="fragment"><strong>Source Code Editing:</strong> Explored Solution Explorer, modified <code>GraphicsDevice.Clear(...)</code> in <code>Game1.cs</code>, and used <strong>IntelliSense</strong> to inspect <code>Color</code> properties.</li>
+						<li class="fragment"><strong>Workspace Architecture:</strong> Learned how Solutions group multiple Projects and how to switch the active <strong>Startup Project</strong> to run textbook examples like <em>Painter</em>.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 50: Week 1 Formative Assessment & Action Items -->
+				<section>
+					<h3>Week 1 Action Items &amp; Checklist</h3>
+					<p class="text-smaller">Complete these Week 1 formative tasks before next lecture:</p>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment"><strong>Workstation Setup:</strong> Install Visual Studio and MonoGame on your personal computer (or verify your lab workstation in <code>EnA202</code>).</li>
+						<li class="fragment"><strong>Hello MonoGame Verification:</strong> Create <code>Game1</code>, change <code>Color.CornflowerBlue</code> to a custom IntelliSense color of your choice, run it via <code>F5</code>, and complete the <strong>Tooling Setup Checklist</strong>.</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>
