@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 3 - Sections 3.4 to 3.6</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">Chapter 3: More SQL Operations and Null Values</h2>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Subchapters 3.4, 3.5, & 3.6</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<!-- Slide 2: 3.4 Additional Basic Operations - Rename (AS) -->
+				<section>
+					<h3>3.4.1 The Rename Operation</h3>
+					<p class="text-smaller">SQL provides the <code>AS</code> clause (taking the form <code>old-name AS new-name</code>) to rename attributes and relations:</p>
+					<ul>
+						<li class="fragment"><strong>Renaming Attributes:</strong> Useful when attributes share names across tables, results involve expressions, or clearer labels are needed.
+							<pre><code style="font-size: 1.5rem;" class="language-sql">SELECT name AS instructor_name, course_id
+FROM instructor, teaches
+WHERE instructor.ID = teaches.ID;</code></pre>
+						</li>
+						<li class="fragment"><strong>Renaming Relations (Correlation Names / Table Aliases):</strong> Essential for shortening long table names or taking the Cartesian product of a relation with itself.
+							<pre><code style="font-size: 1.5rem;" class="language-sql">SELECT DISTINCT T.name
+FROM instructor AS T, instructor AS S
+WHERE T.salary > S.salary AND S.dept_name = 'Biology';</code></pre>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: 3.4.2 String Operations -->
+				<section>
+					<h3>3.4.2 String Operations</h3>
+					<p class="text-smaller">SQL encloses string constants in single quotes (e.g., <code>'Computer'</code>) and uses two single quotes to embed a quote (e.g., <code>'It''s right'</code>).</p>
+					<ul>
+						<li class="fragment"><strong>Case Sensitivity:</strong> Standard SQL string comparisons are case sensitive (<code>'comp. sci.' = 'Comp. Sci.'</code> is false), though engines like MySQL or SQL Server differ by default.</li>
+						<li class="fragment"><strong>String Functions:</strong> Built-in support for concatenation (<code>||</code>), <code>upper(s)</code>, <code>lower(s)</code>, <code>trim(s)</code>, and substring extraction.</li>
+						<li class="fragment"><strong>Pattern Matching with <code>LIKE</code>:</strong>
+							<ul>
+								<li><code>%</code> matches any substring. (e.g., <code>'Intro%'</code>, <code>'%Comp%'</code>)</li>
+								<li><code>_</code> matches any single character. (e.g., <code>'___'</code> for 3 characters, <code>'___%'</code> for at least 3)</li>
+								<li>Use <code>ESCAPE</code> to match literal wildcard characters: <code>LIKE 'ab\%cd%' ESCAPE '\'</code></li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: 3.4.3 - 3.4.5 Select Attributes, Ordering, and Row Constructors -->
+				<section>
+					<h3>3.4.3 - 3.4.5 Additional Clauses</h3>
+					<ul>
+						<li class="fragment"><strong>3.4.3 Attribute Specification:</strong> Use <code>*</code> to select all attributes (e.g., <code>instructor.*</code> or <code>SELECT *</code>).</li>
+						<li class="fragment"><strong>3.4.4 Ordering the Display:</strong> Sort query outputs using <code>ORDER BY</code> with optional <code>DESC</code> or <code>ASC</code> modifiers across multiple attributes.
+							<pre><code style="font-size: 1.5rem;" class="language-sql">SELECT * FROM instructor ORDER BY salary DESC, name ASC;</code></pre>
+						</li>
+						<li class="fragment"><strong>3.4.5 Where-Clause Predicates:</strong>
+							<ul>
+								<li><code>BETWEEN ... AND ...</code> (and <code>NOT BETWEEN</code>) simplifies range checks.</li>
+								<li><strong>Row Constructors:</strong> Compare tuples lexicographically using <code>(v1, v2, ..., vn)</code>.
+									<br><code style="font-size: 1.5rem;" class="language-sql">WHERE (instructor.ID, dept_name) = (teaches.ID, 'Biology');</code>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 6: Quick Review 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your knowledge on basic operations:</p>
+					<ol>
+						<li class="fragment">How do you write the string literal <em>"User's Guide"</em> inside an SQL query string?</li>
+						<li class="fragment">What string pattern would match any string containing at least two characters?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 7: 3.5 Set Operations Overview -->
+				<section>
+					<h3>3.5 Set Operations in SQL</h3>
+					<p class="text-smaller">SQL operations <code>UNION</code> ($\cup$), <code>INTERSECT</code> ($\cap$), and <code>EXCEPT</code> ($-$ / set difference) operate on relations.</p>
+					<ul>
+						<li class="fragment"><strong>Automatic Duplicate Elimination:</strong> Unlike regular <code>SELECT</code> clauses, set operations automatically eliminate duplicates by default!</li>
+						<li class="fragment">To retain all duplicates, use <code>UNION ALL</code>, <code>INTERSECT ALL</code>, or <code>EXCEPT ALL</code>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 8: Set Operations Duplicate Rules -->
+				<section>
+					<h3>Multiset Set Operations Mechanics</h3>
+					<p class="text-smaller">Suppose relation $c_1$ has $m$ copies of a tuple, and relation $c_2$ has $n$ copies:</p>
+					<ul>
+						<li class="fragment"><strong><code>UNION ALL</code>:</strong> Produces $m + n$ duplicate copies in the result.</li>
+						<li class="fragment"><strong><code>INTERSECT ALL</code>:</strong> Produces $\min(m, n)$ duplicate copies in the result.</li>
+						<li class="fragment"><strong><code>EXCEPT ALL</code>:</strong> Produces $\max(0, m - n)$ duplicate copies in the result.</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #ffb86c; margin-top: 15px;"><em>Implementation Note:</em> Oracle uses <code>MINUS</code> instead of <code>EXCEPT</code>; MySQL does not support <code>INTERSECT</code> or <code>EXCEPT</code> directly.</p>
+				</section>
+
+				<!-- Slide 9: 3.6 Null Values & Arithmetic -->
+				<section>
+					<h3>3.6 Null Values & Arithmetic</h3>
+					<p class="text-smaller"><code>NULL</code> indicates missing, unknown, or non-applicable attribute values, introducing special behavior in queries:</p>
+					<ul>
+						<li class="fragment"><strong>Arithmetic Propagation:</strong> Any arithmetic expression (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) involving a <code>null</code> yields <code>null</code> (e.g., $r.A + 5$ evaluates to <code>null</code> if $r.A$ is <code>null</code>).</li>
+						<li class="fragment"><strong>Comparisons Yield UNKNOWN:</strong> Any comparison like <code>1 < null</code> evaluates to <code>unknown</code>.</li>
+						<li class="fragment">This introduces a <strong>Three-Valued Logic</strong> system: <code>TRUE</code>, <code>FALSE</code>, and <code>UNKNOWN</code>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 10: Three-Valued Logic Truth Table Rules -->
+				<section>
+					<h3>Three-Valued Logic (3VL)</h3>
+					<p class="text-smaller">Definitions of Boolean operations extended for <code>UNKNOWN</code>:</p>
+					<ul>
+						<li class="fragment"><strong>AND:</strong>
+							<ul>
+								<li><code>true AND unknown</code> $\rightarrow$ <code>unknown</code></li>
+								<li><code>false AND unknown</code> $\rightarrow$ <code>false</code></li>
+								<li><code>unknown AND unknown</code> $\rightarrow$ <code>unknown</code></li>
+							</ul>
+						</li>
+						<li class="fragment"><strong>OR:</strong>
+							<ul>
+								<li><code>true OR unknown</code> $\rightarrow$ <code>true</code></li>
+								<li><code>false OR unknown</code> $\rightarrow$ <code>unknown</code></li>
+								<li><code>unknown OR unknown</code> $\rightarrow$ <code>unknown</code></li>
+							</ul>
+						</li>
+						<li class="fragment"><strong>NOT:</strong> <code>NOT unknown</code> $\rightarrow$ <code>unknown</code></li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #bd93f9; margin-top: 10px;">The <code>WHERE</code> clause predicate discards tuples if it evaluates to either <code>FALSE</code> or <code>UNKNOWN</code>.</p>
+				</section>
+
+				<!-- Slide 11: Testing for Nulls & Equality in Distinct/Sets -->
+				<section>
+					<h3>Testing Nulls & Set Equality</h3>
+					<ul>
+						<li class="fragment"><strong>Null Predicates:</strong> Test missing values using <code>IS NULL</code>, <code>IS NOT NULL</code>, or test logic using <code>IS UNKNOWN</code> / <code>IS NOT UNKNOWN</code>.
+							<pre><code style="font-size: 1.5rem;" class="language-sql">SELECT name FROM instructor WHERE salary IS NULL;</code></pre>
+						</li>
+						<li class="fragment"><strong>Null Equality in SELECT DISTINCT & Set Operations:</strong>
+							<ul>
+								<li>In <code>WHERE</code> comparisons, <code>null = null</code> evaluates to <code>UNKNOWN</code>.</li>
+								<li>HOWEVER, for <code>SELECT DISTINCT</code>, <code>UNION</code>, <code>INTERSECT</code>, and <code>EXCEPT</code>, two null values are treated as <strong>identical</strong> (e.g., <code>{('A', null), ('A', null)}</code> collapses to 1 row).</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 12: Discussion Question -->
+				<section>
+					<h3>Null Treatment Inconsistencies</h3>
+					<p class="text-smaller" style="color: #ffb86c;">Notice the contradiction in how SQL treats <code>NULL</code> values:</p>
+					<ul>
+						<li class="fragment">In a <code>WHERE</code> clause predicate, comparing <code>null = null</code> results in <code>UNKNOWN</code>, failing the condition.</li>
+						<li class="fragment">In <code>SELECT DISTINCT</code> or <code>UNION</code> operations, two tuples with <code>NULL</code> values in the same attribute are treated as identical duplicate rows.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 14: Summary -->
+				<section>
+					<h3>Summary of 3.4 - 3.6</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Renaming & Strings:</strong> Use <code>AS</code> for aliasing. SQL supports string pattern matching via <code>LIKE</code> with <code>%</code> and <code>_</code> wildcards.</li>
+						<li class="fragment"><strong>Set Operations:</strong> <code>UNION</code>, <code>INTERSECT</code>, and <code>EXCEPT</code> eliminate duplicates by default; append <code>ALL</code> to preserve multiset counts.</li>
+						<li class="fragment"><strong>Three-Valued Logic:</strong> Comparisons with <code>NULL</code> evaluate to <code>UNKNOWN</code>. Predicates only pass tuples evaluating to <code>TRUE</code>.</li>
+						<li class="fragment"><strong>Null Equality Dualism:</strong> Nulls are <code>UNKNOWN</code> in predicates but treated as identical duplicates in <code>DISTINCT</code> and set operations.</li>
+					</ol>
+				</section>
+
+        <!-- Slide 14: Summary -->
+				<section>
+					<h3>Seatwork 2</h3>
+					<p>Answer the following questions starting on page 115 of the book:</p>
+          <ul>
+            <li>3.1 (a and b only)</li>
+            <li>3.6</li>
+            <li>3.9 (a, b, c only)</li>
+            <li>3.11 (a and b only)</li>
+          </ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

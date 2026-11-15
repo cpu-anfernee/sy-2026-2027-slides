@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 1 - Introduction</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2 style="font-size: 1.5em;">Chapter 1: Introduction</h2>
+					<h3 style="color: #bd93f9;">Database System Concepts</h3>
+					<h4 style="color: #bd93f9;">Subchapters 1.1 - 1.4</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<section>
+					<h3>Opening Discussion</h3>
+                    <div class="media">
+                        <div class="image">
+                            <img src="assets/netflix-tiktok.jpg" alt="Netflix and Tiktok">
+                        </div>
+                        <div class="content">
+                            <p class="text-smaller" style="color: #ffb86c;">Think about the apps you use every single day:</p>
+                            <ul>
+                                <li class="fragment">How do apps remember your login state, your precise feed position, or your checkout histories?</li>
+                                <li class="fragment">What happens behind the scenes if 10,000 users try to buy a single remaining concert ticket at the exact same millisecond?</li>
+                                <li class="fragment"><strong>Discussion Question:</strong> Have you ever experienced a system sync error or data loss while using an app? What do you think went wrong with the data storage layer?</li>
+                            </ul>
+                        </div>
+                    </div>
+				</section>
+
+				<section>
+					<h3>Traditional File Systems</h3>
+					<div class="media">
+                        <div class="image">
+                            <img src="assets/analytic_script_input_output.png" alt="Analytic Script">
+                        </div>
+                        <div class="content">
+					        <p class="text-smaller">Before DBMSs, corporate records were stored in separated operating system text or custom binary files.</p>
+                            <ul>
+                                <li class="fragment">Data was kept in flat structures handled by customized software programs written by different teams.</li>
+                                <li class="fragment">As businesses grew, this application-centric storage method quickly hit major architectural roadblocks.</li>
+                            </ul>
+                        </div>
+                    </div>
+					
+				</section>
+
+				<section>
+					<h3>File System Disadvantages</h3>
+					<ul>
+						<li class="fragment"><strong>Data Redundancy & Inconsistency:</strong> The same information is duplicated across different file paths, leading to mismatched fields.</li>
+						<li class="fragment"><strong>Difficulty in Accessing Data:</strong> Requires writing completely new code scripts just to pull simple customized reports.</li>
+						<li class="fragment"><strong>Data Isolation:</strong> Records are scattered in different formats, making integration highly difficult.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Atomicity & Concurrency Disadvantages</h3>
+					<ul>
+						<li class="fragment"><strong>Atomicity Violations:</strong> If a system crashes mid-transfer, money could leave Account A without ever arriving in Account B.</li>
+						<li class="fragment"><strong>Concurrent-Access Anomalies:</strong> Multiple updates running at the exact same time can overwrite each other's changes.</li>
+						<li class="fragment"><strong>Security Problems:</strong> Hard to enforce granular read/write access permissions on raw text files.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Let's test our understanding before moving forward:</p>
+					<ol>
+						<li class="fragment">What does <span class="accent-text">Data Inconsistency</span> mean in a file system, and how does redundancy cause it?</li>
+						<li class="fragment">Explain the concept of <span class="accent-text">Atomicity</span> using a real-world bank transfer scenario.</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>The Solution: The DBMS</h3>
+                    <div class="media">
+                        <div class="image">
+                            <img src="assets/database-management-system.png" alt="DBMS">
+                        </div>
+                        <div class="content">
+					        <p class="text-smaller">A <strong>Database Management System (DBMS)</strong> consists of a collection of interrelated data and a set of software programs to access that data safely and efficiently.</p>
+                            <ul>
+                                <li class="fragment">Provides a centralized repository that solves data isolation and redundancy.</li>
+                                <li class="fragment">Ensures highly reliable data storage despite hardware failures, power cuts, or thousands of concurrent user requests.</li>
+                            </ul>
+                        </div>
+                    </div>
+				</section>
+
+				<section>
+					<h3>Levels of Data Abstraction</h3>
+                    <div class="media">
+                        <div class="image">
+                            <img src="assets/sample-relational-database.png" alt="sample db">
+                        </div>
+                        <div class="content">
+					        <p class="text-smaller">To hide structural complexity from developers, a DBMS abstracts data into three distinct architectural layers:</p>
+                            <ul style="font-size: smaller;">
+                                <li class="fragment"><strong>Physical Level:</strong> The lowest tier. Describes *how* the records are actually stored in bytes, tracks, or sector indexes on disks/SSDs.</li>
+                                <li class="fragment"><strong>Logical Level:</strong> The intermediate tier. Describes *what* data is stored in the database, and what relationships exist among those data points. (e.g., tables, columns, constraints).</li>
+                                <li class="fragment"><strong>View Level:</strong> The highest tier. Hides details of data types for security or simplicity, exposing only customized entry forms or user specific dashboards.</li>
+                            </ul>
+                        </div>
+                    </div>
+				</section>
+
+                <section>
+                    <img src="assets/data-abstraction-levels.png" alt="data abstraction levels">
+                </section>
+
+				<section>
+					<h3>Schemas and Instances</h3>
+					<p class="text-smaller">Understanding the difference between structural design and real-time state:</p>
+					<ul>
+						<li class="fragment"><strong>Database Schema:</strong> The overall logical design framework of the database. This rarely changes (analogous to variable declarations or class types in programming).</li>
+						<li class="fragment"><strong>Database Instance:</strong> The actual snapshot collection of data stored in the database at a specific moment in time (analogous to the values assigned to variables at runtime).</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #50fa7b;">Answer the following concepts concisely:</p>
+					<ol>
+						<li class="fragment">Which abstraction layer handles the specific sorting algorithms and record layouts on a physical hard drive?</li>
+						<li class="fragment">If I add a new field called <code>middle_name</code> to a student table definition, did I modify the database <span class="accent-text">schema</span> or the database <span class="accent-text">instance</span>?</li>
+						<li class="fragment">What advantage does the <strong>View Level</strong> offer when designing systems with sensitive personal data?</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Data Modeling Blueprints</h3>
+					<p class="text-smaller">A data model is a collection of conceptual tools for describing data, data relationships, data semantics, and consistency constraints.</p>
+					<ul>
+						<li class="fragment"><strong>Relational Model:</strong> Represents data in tables (relations) with rows and columns. This is the dominant industry standard model.</li>
+						<li class="fragment"><strong>Entity-Relationship Model (ERM):</strong> A graphical model widely used for database design layout analysis.</li>
+						<li class="fragment"><strong>Semi-Structured Model (JSON/XML):</strong> Allows individual data items to have different sets of attributes.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Database Languages</h3>
+					<p class="text-smaller">We interact with a database engine using two specialized categories of instructions within SQL:</p>
+					<ul>
+						<li class="fragment"><strong>Data Definition Language (DDL):</strong> Used to specify the database schema structure, tables, types, and constraints.
+							<br><code class="highlight-text">CREATE TABLE students (id INT PRIMARY KEY, name VARCHAR(50));</code>
+						</li>
+						<li class="fragment"><strong>Data Manipulation Language (DML):</strong> Used to express database queries and updates (inserting, deleting, updating data rows).
+							<br><code class="highlight-text">SELECT name FROM students WHERE id = 101;</code>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Chapter 1 Recap</h3>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment"><strong>File Systems Fail:</strong> Duplication, lack of concurrency control, and lack of atomicity make flat file systems unviable for scalable enterprise data applications.</li>
+						<li class="fragment"><strong>DBMS Abstract Complexity:</strong> By isolating physical layouts from logical models, databases allow developers to build flexible systems without worrying about low-level disk management.</li>
+						<li class="fragment"><strong>Data Models Form Blueprints:</strong> Relational structures and structured query languages (SQL) guarantee standard, robust ways to store and read data.</li>
+					</ol>
+				</section>
+
+                <section>
+					<h3>Covered Terms</h3>
+					<ul class="three-columns">
+                        <li class="fragment">Database-management system</li>
+                        <li class="fragment">File-processing systems</li>
+                        <li class="fragment">Data inconsistency</li>
+                        <li class="fragment">Data abstraction</li>
+                        <li class="fragment">Physical level</li>
+                        <li class="fragment">Logical level</li>
+                        <li class="fragment">View level</li>
+                        <li class="fragment">Database instance</li>
+                        <li class="fragment">Database schema</li>
+                        <li class="fragment">Entity-Relationship model</li>
+                        <li class="fragment">Relational data model</li>
+                        <li class="fragment">Semi-structured data model</li>
+                        <li class="fragment">DDL</li>
+                        <li class="fragment">DML</li>
+                    </ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets securely mapped to flat dist/plugin root directories while maintaining monokai's subfolder structure
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

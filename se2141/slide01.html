@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Database Systems - Course Introduction</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<link rel="stylesheet" href="../dist/plugin/monokai.css">
+
+		<style>
+			:root {
+				--r-main-font-size: 32px;
+				--r-block-margin: 10px;
+			}
+			.reveal pre code {
+				max-height: 380px;
+				font-size: 0.75em;
+				line-height: 1.25em;
+			}
+			.reveal section p, .reveal section li {
+				margin-bottom: 0.25em;
+				line-height: 1.2em;
+			}
+			.reveal h2 {
+				margin-bottom: 0.3em;
+			}
+			.reveal h3, .reveal h4 {
+				margin-bottom: 0.25em;
+				color: #ff79c6;
+			}
+			.reveal ul, .reveal ol {
+				margin-bottom: 0.3em;
+			}
+			.text-smaller {
+				font-size: 0.85em;
+			}
+			.highlight-text {
+				color: #50fa7b;
+			}
+			.accent-text {
+				color: #ffb86c;
+			}
+			.reveal :not(pre) > code {
+				background-color: #44475a;
+				color: #f8f8f2;
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-family: monospace;
+				font-size: 0.9em;
+			}
+			table {
+				font-size: 0.8em;
+				border-collapse: collapse;
+				width: 100%;
+				margin-top: 10px;
+			}
+			th, td {
+				padding: 8px 12px;
+				border: 1px solid #44475a;
+				text-align: left;
+			}
+			th {
+				background-color: #6272a4;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2 style="font-size: 1.6em;">Welcome to SE 2141</h2>
+					<h3 style="color: #bd93f9;">Database Systems</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>Course Introduction & Syllabus Overview</p>
+					</div>
+				</section>
+
+				<section>
+					<h3>What We Cover</h3>
+					<p class="text-smaller">This course provides a comprehensive foundation in the design, implementation, and management of data systems:</p>
+					<ul>
+						<li class="fragment"><strong>Basics of Databases & DBMSs:</strong> Understanding storage, architecture, and the relational model.</li>
+						<li class="fragment"><strong>SQL (Structured Query Language):</strong> Writing robust DDL and DML queries to manipulate data.</li>
+						<li class="fragment"><strong>Database Design & Normalization:</strong> Organizing tables to prevent redundancy and dependency anomalies.</li>
+						<li class="fragment"><strong>Entity-Relationship Diagrams (ERDs):</strong> Mapping conceptual schemas into physical blueprints.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Course Prerequisites</h3>
+					<p class="text-smaller">To succeed in SE 2141, you must have successfully completed the following foundation blocks:</p>
+					<ul>
+						<li class="fragment"><strong class="accent-text">EMath 1105 (Discrete Math):</strong> Relational algebra, set theory, and logic form the direct mathematical underpinnings of relational databases.</li>
+						<li class="fragment"><strong class="accent-text">SE 1242 (Data Structures)</strong></li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Weekly Schedule & Venue</h3>
+					<p class="text-smaller">Ensure your schedule is aligned with our weekly sessions. Attendance is tracked promptly.</p>
+					<table class="fragment">
+						<thead>
+							<tr>
+								<th>Session Type</th>
+								<th>Day</th>
+								<th>Time</th>
+								<th>Room</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Lecture</strong></td>
+								<td>Tuesday</td>
+								<td>10:00 AM - 12:00 PM</td>
+								<td>En205</td>
+							</tr>
+							<tr>
+								<td><strong>Laboratory</strong></td>
+								<td>Thursday</td>
+								<td>10:00 AM - 1:00 PM</td>
+								<td>En205</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h3>How to Contact Me</h3>
+					<p class="text-smaller">For consultations, clarifications, or emergencies, use the following official communication pipelines:</p>
+					<ul>
+						<li class="fragment"><strong>Discord:</strong> Best for quick questions, lecture discussions, and team project synchronization.</li>
+						<li class="fragment"><strong>Email:</strong> <code class="highlight-text">ajbng@cpu.edu.ph</code> — Best for formal academic concerns, scheduling changes, or official submissions.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Primary Textbook</h3>
+					<p class="text-smaller">Our lectures and exercises closely follow the industry-standard textbook:</p>
+					<div class="fragment" style="background-color: #282a36; padding: 20px; border-left: 6px solid #ff79c6; margin-top: 15px;">
+						<h4 style="margin: 0; font-size: 1.1em; color: #f8f8f2;">Database System Concepts</h4>
+						<p style="margin: 5px 0 0 0; font-size: 0.85em; color: #bd93f9;">7th Edition</p>
+						<p style="margin: 5px 0 0 0; font-size: 0.75em; color: #6272a4;">By Abraham Silberschatz, Henry F. Korth, and S. Sudarshan</p>
+					</div>
+					<p class="fragment text-smaller" style="margin-top: 15px; color: #8be9fd;">Reading assignments, database schemas, and activities will be referenced from this edition.</p>
+				</section>
+
+				<section>
+					<h3>Grading Assessment Breakdown</h3>
+					<p class="text-smaller">Your final mark is computed from the following:</p>
+					<img src="assets/grading-system.png" width="50%" alt="grading-system">
+					<p class="fragment text-smaller" style="margin-top: 15px; color: #ff5555; font-weight: bold;">
+						⚠️ Note: Attendance constitutes a MAJOR and non-negotiable slice of the "Other Requirements" component. Show up on time.
+					</p>
+				</section>
+
+				<section>
+					<h3>The Final Capstone Project</h3>
+					<p class="text-smaller">You will not build your database in isolation. This course features an cross-subject framework alignment:</p>
+					<ul>
+						<li class="fragment"><strong>The Collaboration:</strong> This group project is closely tied with your <strong class="accent-text">SE 2144: Web Development</strong> course.</li>
+						<li class="fragment"><strong>Database (SE 2141):</strong> You will design the physical schemas, build ERDs, normalize tables, and implement relational constraints.</li>
+						<li class="fragment"><strong>Web Dev (SE 2144):</strong> You will connect that exact same backend layer to an interactive, client web application.</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets securely mapped to the flat dist/plugin root folder configuration
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

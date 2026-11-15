@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 2 - Introduction to the Relational Model</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2 style="font-size: 1.5em;">Chapter 2: Introduction to the Relational Model</h2>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Subchapters 2.1 - 2.5</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<section>
+					<h3>2.1 Structure of Relational Databases</h3>
+					<p class="text-smaller">The relational model represents data as a collection of tables. Let's map everyday terms to formal relational database terminology:</p>
+					<ul>
+						<li class="fragment"><strong>Relation:</strong> The formal mathematical term for a <strong>Table</strong>.</li>
+						<li class="fragment"><strong>Tuple:</strong> The formal term for a <strong>Row</strong> (a sequence of values).</li>
+						<li class="fragment"><strong>Attribute:</strong> The formal term for a <strong>Column</strong> (a specific data property).</li>
+					</ul>
+				</section>
+
+				<section>
+					<div>
+						<center>
+							<img src="assets/instructor-table.png" alt="Instructor Table">
+						</center>
+					</div>
+				</section>
+
+				<section>
+					<div>
+						<center>
+							<img src="assets/course-table.png" style="max-height: 50vh;" alt="Course Table">
+							<img src="assets/prereq-table.png" style="max-height: 30vh;" alt="Prereq Table">
+						</center>
+					</div>
+				</section>
+
+				<section>
+					<h3>Worth noting is that: </h3>
+					<p class="text-smaller">The order in which tuples appear in a relation is irrelevant, since a relation is a set of types.</p>
+				</section>
+
+				<section>
+					<h3>Domains and Atomicity</h3>
+					<p class="text-smaller">Every attribute has a permitted set of values, called the <strong>domain</strong> of that attribute.</p>
+					<ul>
+						<li class="fragment"><strong>Atomic Values:</strong> We require that domain values be indivisible. For example, a single integer is atomic.</li>
+						<li class="fragment"><strong>Non-Atomic Example:</strong> A <code>phone_numbers</code> attribute containing a list like "555-1234, 555-9876" is NOT atomic. It must be broken down.</li>
+						<li class="fragment"><strong>The Null Value:</strong> A special value signifying that a value is <em>unknown</em> or <em>does not exist</em>. Nulls can cause difficulties in mathematical operations (e.g., what is $5 + \text{null}$?).</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Discussion: The Atomicity Rule</h3>
+					<p class="text-smaller" style="color: #ffb86c;">Consider an e-commerce database where users have multiple shipping addresses.</p>
+					<ul>
+						<li class="fragment">If we stuff all addresses into a single <code>address</code> text column separated by commas, we violate atomicity.</li>
+						<li class="fragment"><strong>Discussion Question:</strong> If a user's address column is non-atomic, what specific problems would a programmer face when trying to write a query to find "all customers living in the city of Iloilo"?</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>2.2 Database Schema</h3>
+					<p class="text-smaller">Just as Chapter 1 discussed abstraction, we must distinguish between the logical design and the data itself.</p>
+					<ul>
+						<li class="fragment"><strong>Relation Schema:</strong> The logical design of a single table. It consists of the relation name and a list of its attributes.
+							<br>Example: <code class="highlight-text">instructor(ID, name, dept_name, salary)</code>
+						</li>
+						<li class="fragment"><strong>Relation Instance:</strong> A snapshot of the specific tuples (rows) containing data at a given moment.</li>
+						<li class="fragment">The schema rarely changes; the instance changes every time someone inserts, updates, or deletes a record.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Example of a schema:</h3>
+					<center>
+						<img src="assets/department-table.png" style="max-height: 40vh;" alt="Department Table">
+					</center>
+					<p>The schema for this table is: </p>
+					<center><em>department(dept_name, building, budget)</em></center>
+				</section>
+
+				<section>
+					<section>
+						<center>
+							<img src="assets/section-table.png" style="max-height: 45vh;" alt="Section Table">
+							<img src="assets/teaches-table.png" style="max-height: 40vh;" alt="Section Table">
+						</center>
+					</section>
+					<section>
+						<center>
+							<img src="assets/instructor-table.png" style="max-height: 60vh;" alt="Instructor Table">
+						</center>
+					</section>
+				</section>
+
+				<section>
+					<h3>2.3 Keys: Identifying Tuples</h3>
+					<p class="text-smaller">To distinguish one tuple from another, we use keys. No two tuples in a relation are allowed to have exactly the same values for all attributes.</p>
+					<ul>
+						<li class="fragment"><strong>Superkey:</strong> A set of one or more attributes that uniquely identifies a tuple within a relation.</li>
+						<li class="fragment">If <code>ID</code> is a superkey of <code>instructor</code>, then no two instructors can have the same ID.</li>
+						<li class="fragment">Combinations can be superkeys too! If <code>ID</code> is unique, then the combination <code>(ID, name)</code> is also mathematically a superkey, even though <code>name</code> is unnecessary for uniqueness.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Candidate Keys & Primary Keys</h3>
+					<p class="text-smaller">We prefer keys that don't have unnecessary attributes.</p>
+					<ul>
+						<li class="fragment"><strong>Candidate Key:</strong> A <em>minimal</em> superkey. It uniquely identifies a row, and if you remove any attribute from it, it loses its uniqueness property.</li>
+						<li class="fragment"><strong>Primary Key:</strong> The specific candidate key chosen by the database designer as the principal means of identifying tuples.</li>
+						<li class="fragment">Primary keys are customarily listed before other attributes in the schema and are <span style="text-decoration: underline;">underlined</span>.
+							<br>Example: <code>student(<span style="text-decoration: underline;">ID</span>, name, tot_cred)</code>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Key Conventions</h3>
+					<p class="text-smaller">We usually write the primary key attributes of a relation schema before the other attributes. And we underline them as well.</p>
+					<p><em>classroom(<u>building</u>, <u>room_number</u>, capacity)</em></p>
+				</section>
+
+				<section>
+					<h3>Foreign Keys & Referential Integrity</h3>
+					<p class="text-smaller">Relations don't exist in isolation. They refer to each other.</p>
+					<ul>
+						<li class="fragment"><strong>Foreign Key:</strong> An attribute in one relation (the <em>referencing</em> relation) that points to the primary key of another relation (the <em>referenced</em> relation).</li>
+						<li class="fragment"><strong>Referential Integrity Constraint:</strong> A rule stating that a value appearing in a foreign key MUST also exist as a primary key in the referenced table.</li>
+						<li class="fragment">Example: An instructor belongs to a <code>dept_name</code>. That <code>dept_name</code> MUST exist in the <code>department</code> table. You cannot assign a teacher to a ghost department!</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<center>
+							<img src="assets/department-table.png" style="max-height: 40vh;" alt="Department Table">
+						</center>
+						<p>The schema for this table is: </p>
+						<center><em>department(<u>dept_name</u>, building, budget)</em></center>
+					</section>
+					<section>
+						<center>
+							<img src="assets/instructor-table.png" style="max-height: 60vh;" alt="Instructor Table">
+						</center>
+						<p>The schema for this table is: </p>
+						<center><em>instructor(<u>ID</u>, name, dept_name, salary)</em></center>
+						<p class="text-smaller"><em>dept_name</em> is a foreign key.</p>
+					</section>
+				</section>
+
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your understanding of relation keys:</p>
+					<ol>
+						<li class="fragment">Why is the combination of <code>(Social Security Number, Last Name)</code> considered a <span class="accent-text">Superkey</span> but NOT a <span class="accent-text">Candidate Key</span>?</li>
+						<li class="fragment">If a student tries to enroll in course "CS-101", but "CS-101" does not exist in the <code>course</code> table, what specific constraint is being violated?</li>
+						<li class="fragment">True or False: A primary key column is allowed to contain a <code>null</code> value.</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>2.4 Schema Diagrams</h3>
+					<p class="text-smaller">We visualize the structure of an entire database using schema diagrams.</p>
+					<ul>
+						<li class="fragment">Each relation appears as a box with its attributes listed inside.</li>
+						<li class="fragment">The <strong>Primary Key</strong> attributes are underlined.</li>
+						<li class="fragment"><strong>Foreign Keys</strong> are represented by arrows extending from the referencing attribute to the primary key of the referenced relation.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Visualizing the University Schema</h3>
+					<center>
+						<img src="assets/schema-diagram-university.png" style="max-height: 60vh;" alt="University Database Schema">
+					</center>
+					<p class="text-smaller fragment">Notice how arrows enforce logical dependency. If you drop the <code>department</code> table, the <code>instructor</code> table is suddenly left with broken foreign key arrows pointing to nowhere (orphan records).</p>
+				</section>
+
+				<section>
+					<h3>2.5 Relational Query Languages</h3>
+					<p class="text-smaller">A query language is the language in which a user requests information from the database. They fall into two paradigms:</p>
+					<ul>
+						<li class="fragment"><strong>Imperative Languages:</strong> The user specifies a detailed sequence of operations to compute the result (the "how").</li>
+						<li class="fragment"><strong>Declarative Languages:</strong> The user specifies <em>what</em> data is needed, leaving it to the database engine's Query Processor to figure out the best execution path.</li>
+						<li class="fragment">SQL (Structured Query Language) is primarily <strong>declarative</strong>.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Pure Query Languages</h3>
+					<p class="text-smaller">Before SQL became the commercial standard, computer scientists defined three "pure" mathematical languages that form the foundation of relational theory:</p>
+					<ul>
+						<li class="fragment"><strong>Relational Algebra:</strong> Procedural. Uses mathematical operators like Select ($\sigma$), Project ($\Pi$), and Join ($\bowtie$).</li>
+						<li class="fragment"><strong>Tuple Relational Calculus:</strong> Non-procedural. Defines desired tuples using formal logic.</li>
+						<li class="fragment"><strong>Domain Relational Calculus:</strong> Non-procedural. Defines desired domain values using formal logic.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #50fa7b;">Wrapping up the first half of Chapter 2:</p>
+					<ol>
+						<li class="fragment">In a schema diagram, what does an arrow drawn between two tables represent?</li>
+						<li class="fragment">Is SQL considered an imperative or a declarative query language? Why is this beneficial to developers?</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Summary of 2.1 - 2.5</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Vocabulary Matters:</strong> Relations (tables), tuples (rows), and attributes (columns) form the structural backbone.</li>
+						<li class="fragment"><strong>Keys Ensure Identity:</strong> Primary keys prevent duplicate records. Foreign keys enforce referential integrity between tables.</li>
+						<li class="fragment"><strong>Schema Diagrams:</strong> Act as blueprints, mapping out primary keys and dependency arrows.</li>
+						<li class="fragment"><strong>Declarative Power:</strong> Relational query languages allow users to ask for data by stating what they want, rather than programming exactly how to fetch it.</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets securely mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

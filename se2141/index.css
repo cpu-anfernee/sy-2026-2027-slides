@@ -1,0 +1,85 @@
+:root {
+	--r-main-font-size: 30px;
+	--r-block-margin: 8px;
+}
+.reveal pre code {
+	max-height: 350px;
+	font-size: 0.75em;
+	line-height: 1.25em;
+}
+.reveal section p,
+.reveal section li {
+	margin-bottom: 0.2em;
+	line-height: 1.2em;
+}
+.reveal h2 {
+	margin-bottom: 0.3em;
+}
+.reveal h3,
+.reveal h4 {
+	margin-bottom: 0.2em;
+	color: #ff79c6;
+}
+.reveal ul,
+.reveal ol {
+	margin-bottom: 0.2em;
+}
+.text-smaller {
+	font-size: 0.8em;
+	justify-content: flex-start;
+}
+.highlight-text {
+	color: #50fa7b;
+}
+.accent-text {
+	color: #ffb86c;
+}
+.reveal :not(pre) > code {
+	background-color: #44475a;
+	color: #f8f8f2;
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-family: monospace;
+	font-size: 0.9em;
+}
+/* Placeholder Image Box styling */
+.img-placeholder {
+	border: 2px dashed #6272a4;
+	background-color: #282a36;
+	color: #f8f8f2;
+	padding: 15px;
+	text-align: center;
+	margin: 10px auto;
+	border-radius: 6px;
+	font-size: 0.75em;
+	max-width: 70%;
+}
+
+.media {
+	/* border: 2px dotted rgb(96 139 168); */
+	display: flex;
+	align-items: center;
+}
+
+.media .content {
+	flex: 1;
+	padding: 15px;
+	text-align: left;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+    padding: 10px;
+}
+
+.image img {
+	max-width: 400px;
+}
+
+.three-columns {
+  column-count: 3;   /* Splits the list into 3 columns */
+  column-gap: 20px;  /* Adds spacing between columns */
+  list-style-position: inside; /* Keeps bullet points aligned inside */
+  font-size: x-large;
+}

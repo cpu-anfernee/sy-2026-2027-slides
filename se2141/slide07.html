@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 6.6 - Removing Redundant Attributes</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">Chapter 6: Database Design Using the E-R Model</h2>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<!-- Slide 2: 6.6 Removing Redundant Attributes Overview -->
+				<section>
+					<h3>6.6 Removing Redundant Attributes</h3>
+					<p class="text-smaller">When designing an E-R model, we first identify entity sets and their attributes to capture required values. However, introducing relationship sets can make certain attributes redundant.</p>
+					<ul>
+						<li class="fragment"><strong>The Core Principle:</strong> A good entity-relationship design does not contain redundant attributes.</li>
+						<li class="fragment">If a relationship naturally connects two entity sets, we do not need to explicitly store the primary key of one entity inside the other entity as an attribute.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: Example 1: instructor and department -->
+				<section>
+					<h3>Example 1: instructor and department</h3>
+					<p class="text-smaller">Consider the entity sets <code>instructor</code> and <code>department</code>:</p>
+					<ul>
+						<li class="fragment"><code>instructor</code> has attributes <code>ID</code>, <code>name</code>, <code>dept_name</code>, and <code>salary</code>.</li>
+						<li class="fragment"><code>department</code> has attributes <code>dept_name</code> (primary key), <code>building</code>, and <code>budget</code>.</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #ffb86c; margin-top: 15px;">We model the association using a relationship set <code>inst_dept</code> relating <code>instructor</code> and <code>department</code>. Because <code>dept_name</code> is the primary key for <code>department</code>, keeping it as an attribute inside <code>instructor</code> is redundant and it must be removed.</p>
+				</section>
+
+				<!-- Slide 4: Why Remove It? -->
+				<section>
+					<h3>Why Remove Redundant Attributes?</h3>
+					<p class="text-smaller">Removing <code>dept_name</code> from the <code>instructor</code> entity set may seem unintuitive since our earlier relational tables included it. However:</p>
+					<ul>
+						<li class="fragment"><strong>Explicit Logic:</strong> Treating the connection uniformly as a relationship (rather than an attribute) makes the logical relationship explicit.</li>
+						<li class="fragment"><strong>Avoiding Premature Assumptions:</strong> It helps avoid assuming an instructor is associated with only one department. If an instructor has multiple departments, this is handled easily by a separate relation without changing the <code>instructor</code> entity.</li>
+						<li class="fragment"><em>Note:</em> When we convert the E-R diagram back to a relational schema later, the attribute will reappear in the <code>instructor</code> table if the mapping is many-to-one.</li>
+					</ul>
+				</section>
+
+        <section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your understanding of redundant attributes:</p>
+					<ol>
+						<li class="fragment">Why is it preferable to use the <code>inst_dept</code> relationship rather than simply giving the <code>instructor</code> entity a <code>dept_name</code> attribute?</li>
+						<li class="fragment">True or False: If an attribute is removed from an entity set during the E-R modeling phase to reduce redundancy, it will permanently stay out of the final relational table design.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 5: Example 2: section and time_slot -->
+				<section>
+					<h3>Example 2: section and time_slot</h3>
+					<p class="text-smaller">Consider course offerings (<code>section</code>) and their time slots (<code>time_slot</code>):</p>
+					<ul>
+						<li class="fragment"><code>section</code> has attributes <code>course_id</code>, <code>sec_id</code>, <code>semester</code>, <code>year</code>, <code>building</code>, <code>room_number</code>, and <code>time_slot_id</code>.</li>
+						<li class="fragment"><code>time_slot</code> has attribute <code>time_slot_id</code> (primary key).</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #50fa7b; margin-top: 15px;">These entities are related through the relationship set <code>sec_time_slot</code>. The attribute <code>time_slot_id</code> is redundant in the <code>section</code> entity set and needs to be removed.</p>
+				</section>
+                
+                <!-- Slide 6: Example 3: section and classroom -->
+				<section>
+					<h3>Example 3: section and classroom</h3>
+					<p class="text-smaller">Consider entity sets <code>section</code> and <code>classroom</code>:</p>
+					<ul>
+						<li class="fragment"><code>classroom</code> has attributes <code>building</code> and <code>room_number</code> forming the primary key.</li>
+						<li class="fragment">We have a relationship set <code>sec_class</code> that relates <code>section</code> to <code>classroom</code>.</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #ffb86c; margin-top: 15px;">The attributes <code>building</code> and <code>room_number</code> are redundant in the entity set <code>section</code> and should be removed.</p>
+				</section>
+
+				<!-- Slide 7: Visualizing the Final Clean Entities -->
+				<section>
+					<h3>The Cleaned E-R Diagram</h3>
+						<center>
+							<img src="assets/6.6-diagram.png" style="max-height: 75vh;" alt="6.6 Diagram">
+						</center>
+					<p class="text-smaller fragment">Notice in the diagram that none of the entity sets have an attribute that is made redundant by one of the relationship sets.</p>
+				</section>
+
+				<!-- Slide 9: Summary -->
+				<section>
+					<h3>Summary of 6.6</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Identify Redundancy:</strong> When a relationship set links two entities, the primary key of one entity shouldn't be hardcoded as an attribute in the other.</li>
+						<li class="fragment"><strong>Maintain Flexibility:</strong> Removing redundant attributes prevents premature assumptions about cardinality (e.g., assuming an instructor only has one department).</li>
+						<li class="fragment"><strong>Clean E-R Models:</strong> The final E-R diagram relies purely on relationship lines (like <code>inst_dept</code> or <code>sec_class</code>) to represent associations, keeping entity attribute boxes lean and focused.</li>
+					</ol>
+				</section>
+
+        <section>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Subchapter 6.7: Reducing E-R Diagrams to Relational Schemas</h3>
+				</section>
+
+        <!-- Slide 2: 6.7 Overview -->
+				<section>
+					<h3>From E-R to Relational Schemas</h3>
+					<p class="text-smaller">Because both E-R models and relational models rely on similar design principles, we can convert an E-R diagram directly into a set of tables.</p>
+					<ul>
+						<li class="fragment">For each entity set and relationship set, there is a unique relation schema.</li>
+						<li class="fragment">Constraints in the E-R diagram (like primary keys and mapping cardinalities) map directly to constraints on the relational tables (like primary keys and foreign keys).</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: 6.7.1 Strong Entity Sets -->
+				<section>
+					<h3>6.7.1 Strong Entity Sets</h3>
+					<p class="text-smaller">A strong entity set with simple descriptive attributes maps directly to a table.</p>
+					<ul>
+						<li class="fragment">Create a table with the same name as the entity set.</li>
+						<li class="fragment">Create a column for each simple attribute.</li>
+						<li class="fragment">The primary key of the entity set becomes the primary key of the table.</li>
+					</ul>
+					<pre class="fragment"><code class="language-sql">-- Example: The student entity set
+CREATE TABLE student (
+    ID          VARCHAR(5),
+    name        VARCHAR(20),
+    tot_cred    NUMERIC(3,0),
+    PRIMARY KEY (ID)
+);</code></pre>
+				</section>
+
+				<!-- Slide 4: 6.7.2 Complex Attributes (Composite & Derived) -->
+				<section>
+					<h3>6.7.2 Composite & Derived Attributes</h3>
+					<p class="text-smaller">Not all attributes are simple. We must handle complex structures carefully:</p>
+					<ul>
+						<li class="fragment"><strong>Composite Attributes:</strong> Flatten them. Do not create a column for the composite attribute itself; instead, create separate columns for each of its component attributes.
+							<br><span style="font-size: 0.85em; color: #ffb86c;">Example: <code>name</code> becomes <code>first_name</code>, <code>middle_initial</code>, <code>last_name</code>.</span>
+						</li>
+						<li class="fragment"><strong>Derived Attributes:</strong> Ignore them. They are not explicitly stored in the relational database model since their values are computed on the fly.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 5: 6.7.2 Multivalued Attributes -->
+				<section>
+					<h3>6.7.2 Multivalued Attributes</h3>
+					<p class="text-smaller">Relational tables require atomic values, so we cannot store a list of values in one column.</p>
+					<ul>
+						<li class="fragment">Create a entirely <strong>new relation schema</strong> for the multivalued attribute.</li>
+						<li class="fragment">The new table includes the multivalued attribute itself AND the primary key of the parent entity set.</li>
+						<li class="fragment">The primary key of the new table is the combination of all its attributes.</li>
+					</ul>
+					<pre class="fragment"><code class="language-sql">-- Example: An instructor with multiple phone numbers
+CREATE TABLE instructor_phone (
+    ID              VARCHAR(5),
+    phone_number    VARCHAR(15),
+    PRIMARY KEY (ID, phone_number),
+    FOREIGN KEY (ID) REFERENCES instructor(ID)
+);</code></pre>
+				</section>
+
+				<!-- Slide 6: Quick Review 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your understanding of entity reduction:</p>
+					<ol>
+						<li class="fragment">If an entity set <code>employee</code> has a composite attribute <code>address</code>, what columns will exist in the final <code>employee</code> table?</li>
+						<li class="fragment">Why must a multivalued attribute like <code>email_addresses</code> be split into a separate table instead of being kept inside the main entity table?</li>
+						<li class="fragment">What forms the primary key of the new table created for a multivalued attribute?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 7: 6.7.3 Weak Entity Sets -->
+				<section>
+					<h3>6.7.3 Weak Entity Sets</h3>
+					<p class="text-smaller">A weak entity set lacks a complete primary key of its own and depends on a strong entity set.</p>
+					<ul>
+						<li class="fragment">The table includes all attributes of the weak entity set.</li>
+						<li class="fragment"><strong>Plus:</strong> It must include the primary key attributes of the identifying strong entity set.</li>
+						<li class="fragment"><strong>Primary Key:</strong> The combination of the strong entity's primary key and the weak entity's discriminator.</li>
+					</ul>
+					<pre class="fragment"><code class="language-sql">-- Example: section depends on course
+CREATE TABLE section (
+    course_id   VARCHAR(8), -- From strong entity 'course'
+    sec_id      VARCHAR(8), -- Discriminator
+    semester    VARCHAR(6), -- Discriminator
+    year        NUMERIC(4,0), -- Discriminator
+    PRIMARY KEY (course_id, sec_id, semester, year),
+    FOREIGN KEY (course_id) REFERENCES course(course_id)
+);</code></pre>
+				</section>
+
+				<!-- Slide 8: 6.7.4 Relationship Sets -->
+				<section>
+					<h3>6.7.4 Relationship Sets</h3>
+					<p class="text-smaller">Relationships between entities are translated into their own linking tables.</p>
+					<ul>
+						<li class="fragment">The table includes the primary keys of all participating entity sets, plus any descriptive attributes of the relationship itself.</li>
+						<li class="fragment">Foreign keys are created referencing the participating entity tables.</li>
+						<li class="fragment"><strong>Primary Key Selection:</strong>
+							<ul>
+								<li><em>Many-to-Many:</em> The union of all participating primary keys.</li>
+								<li><em>Many-to-One:</em> The primary key of the "many" side entity.</li>
+								<li><em>One-to-One:</em> The primary key of either entity.</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 9: 6.7.5 Redundancy of Schemas -->
+				<section>
+					<h3>6.7.5 Redundancy of Schemas</h3>
+					<p class="text-smaller">When reducing diagrams, some relationship schemas end up being completely redundant.</p>
+					<ul>
+						<li class="fragment">Consider the identifying relationship set (e.g., <code>sec_course</code>) that links a weak entity (<code>section</code>) to a strong entity (<code>course</code>).</li>
+						<li class="fragment">The <code>sec_course</code> table would contain <code>course_id</code> (from course) and <code>course_id, sec_id, semester, year</code> (from section).</li>
+						<li class="fragment">Because the <code>section</code> table already contains all of these exact columns to form its own primary key, the <code>sec_course</code> relationship table is redundant and should be discarded!</li>
+					</ul>
+				</section>
+
+				<!-- Slide 10: 6.7.6 Combination of Schemas -->
+				<section>
+					<h3>6.7.6 Combination of Schemas</h3>
+					<p class="text-smaller">To optimize the database, we can often merge tables together, avoiding unnecessary joins.</p>
+					<ul>
+						<li class="fragment">If a relationship is <strong>Many-to-One</strong> AND the participation of the "many" side is <strong>total</strong>, we can combine the relationship schema into the "many" side's entity schema.</li>
+						<li class="fragment"><strong>Example:</strong> The <code>inst_dept</code> relationship relates many instructors to one department. Every instructor must have a department (total participation).</li>
+						<li class="fragment">Instead of creating an <code>inst_dept</code> table, we simply add <code>dept_name</code> as a foreign key column directly inside the <code>instructor</code> table.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 11: Quick Review 2 -->
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #50fa7b;">Test your understanding of schema optimization:</p>
+					<ol>
+						<li class="fragment">When converting a weak entity set into a table, why must we include the primary key of its identifying strong entity?</li>
+						<li class="fragment">Why do we completely discard the table generated for an identifying relationship (like the relationship between a building and its rooms)?</li>
+						<li class="fragment">If employees can optionally belong to a department (partial participation), can we still merge the department relationship into the employee table? What consequence does this have?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 12: Summary -->
+				<section>
+					<h3>Summary of 6.7</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Entity Mapping:</strong> Strong entities become standard tables. Weak entities pull in the primary key of their parent to survive.</li>
+						<li class="fragment"><strong>Attribute Mapping:</strong> Flatten composite attributes. Move multivalued attributes into their own dedicated bridging tables. Drop derived attributes.</li>
+						<li class="fragment"><strong>Relationship Mapping:</strong> Relationships become bridging tables built from the primary keys of the entities they connect.</li>
+						<li class="fragment"><strong>Optimization:</strong> Drop redundant identifying relationships. Merge many-to-one relationships into the "many" side table to minimize the total number of tables.</li>
+					</ol>
+				</section>
+
+        <section>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Subchapter 6.9: Entity-Relationship Design Issues</h3>
+				</section>
+
+				<!-- Slide 2: 6.9.1 Common Mistakes (Part 1) -->
+				<section>
+					<h3>6.9.1 Common Mistakes in E-R Diagrams</h3>
+					<p class="text-smaller">Avoid these structural errors when designing entity and relationship sets:</p>
+					<ul>
+						<li class="fragment"><strong>Primary Keys as Attributes:</strong> Do not use the primary key of one entity set as an attribute of another entity set. Use a relationship set instead (e.g., use a <code>stud_dept</code> relationship rather than putting <code>dept_name</code> inside <code>student</code>).</li>
+						<li class="fragment"><strong>Redundant Relationship Attributes:</strong> Do not designate the primary-key attributes of the related entity sets as attributes of the relationship set itself. The primary keys are already implicit in the relationship.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: 6.9.1 Common Mistakes (Part 2) -->
+				<section>
+					<h3>6.9.1 Common Mistakes (Continued)</h3>
+					<ul>
+						<li class="fragment"><strong>Single-Valued vs. Multivalued:</strong> Do not use a relationship with a single-valued attribute for a situation that requires multiple values.
+							<ul>
+								<li><em>Example:</em> Adding <code>assignment</code> and <code>marks</code> to the <code>takes</code> relationship restricts the student to a single assignment per course section.</li>
+								<li><em>Solution:</em> Model <code>assignment</code> as a weak entity identified by <code>section</code>, or use a multivalued composite attribute.</li>
+							</ul>
+						</li>
+						<li class="fragment"><strong>Repeating Attributes:</strong> When splitting a large E-R diagram across multiple pages, show the attributes of an entity set only on its first occurrence to prevent inconsistencies.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: Quick Review 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your understanding of E-R diagram mistakes:</p>
+					<ol>
+						<li class="fragment">Why is it incorrect to include the <code>instructor_ID</code> as an attribute inside the <code>advisor</code> relationship diamond?</li>
+						<li class="fragment">If a student has multiple assignments in a section, why does adding a simple <code>marks</code> attribute to the <code>takes</code> relationship fail to model this correctly?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 5: 6.9.2 Entity Sets vs. Attributes -->
+				<section>
+					<h3>6.9.2 Entity Sets vs. Attributes</h3>
+					<p class="text-smaller">Deciding whether an object is an attribute or its own entity depends on the enterprise's structure.</p>
+					<ul>
+						<li class="fragment"><strong>Attribute Example:</strong> A simple <code>phone_number</code> string implies the instructor just has phone numbers.</li>
+						<li class="fragment"><strong>Entity Example:</strong> Creating a <code>phone</code> entity allows you to store additional metadata, such as location (office/home) or type (mobile/IP), and allows multiple people to share the exact same phone entity.</li>
+						<li class="fragment"><strong>Guideline:</strong> Treat an object as an entity if you need to keep extra information about it or track relationships to it. (e.g., a person's <code>name</code> should be an attribute, not an entity).</li>
+					</ul>
+				</section>
+
+				<!-- Slide 6: 6.9.3 Entity Sets vs. Relationship Sets -->
+				<section>
+					<h3>6.9.3 Entity Sets vs. Relationship Sets</h3>
+					<p class="text-smaller">Sometimes an action can be modeled as either an entity or a relationship.</p>
+					<ul>
+						<li class="fragment"><strong>Relationship Approach:</strong> A student <code>takes</code> a section. This is compact and directly describes an action between entities.</li>
+						<li class="fragment"><strong>Entity Approach:</strong> Creating a <code>registration</code> entity set, connected via relationships to <code>student</code> and <code>section</code>.</li>
+						<li class="fragment"><strong>Guideline:</strong> Designate a relationship set to describe an action between entities. However, if the system (like a registrar's office) needs to associate significant independent information with the record itself, an entity set may be preferable.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 7: 6.9.4 Binary vs. n-ary Relationships -->
+				<section>
+					<h3>6.9.4 Binary vs. n-ary Relationship Sets</h3>
+					<p class="text-smaller">Most relationships are binary, but ternary (3-way) or n-ary relationships exist.</p>
+					<ul>
+						<li class="fragment">It is always conceptually possible to replace a nonbinary relationship with a set of binary relationships by creating an intermediate entity set $E$.</li>
+						<li class="fragment"><strong>Drawbacks of converting to binary:</strong>
+							<ul>
+								<li>Requires an artificial identifying attribute for the new entity $E$.</li>
+								<li>Increases design complexity and storage requirements.</li>
+								<li>May make it impossible to express certain constraints (e.g., a constraint that the original relationship is many-to-one from A and B to C).</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 8: Quick Review 2 -->
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #50fa7b;">Test your understanding of design choices:</p>
+					<ol>
+						<li class="fragment">Under what condition is it better to model a "phone" as an entity set rather than just a multivalued attribute of an instructor?</li>
+						<li class="fragment">While it is possible to convert any ternary relationship into multiple binary relationships, name one reason why doing so might be undesirable.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 9: Summary -->
+				<section>
+					<h3>Summary of 6.9</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Avoid Redundancy:</strong> Never duplicate primary keys as attributes across entities or relationships when a relationship link already exists.</li>
+						<li class="fragment"><strong>Design Granularity:</strong> Elevate attributes to entities only when they carry metadata (like a phone's location). Elevate relationships to entities only when the relationship record itself has an independent lifecycle.</li>
+						<li class="fragment"><strong>Relationship Degrees:</strong> Use n-ary relationships when multiple entities participate in a single, unified association that cannot be accurately constrained by a web of binary links.</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

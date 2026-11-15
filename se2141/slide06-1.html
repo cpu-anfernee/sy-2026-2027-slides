@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 4 - Intermediate SQL</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">Chapter 4: Intermediate SQL</h2>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Sections 4.1, 4.2, and 4.4</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<!-- Slide 2: 4.1 Join Expressions - Natural Join -->
+				<section>
+					<h3>4.1.1 The Natural Join</h3>
+					<p class="text-smaller">The natural join operation matches tuples across two relations based on equal values in all common attribute names.</p>
+					<ul>
+						<li class="fragment">Attributes with matching names appear only once in the result relation.</li>
+						<li class="fragment"><strong>Example:</strong> Finding courses taken by students:
+							<pre style="font-size: 1.5rem;"><code class="language-sql">SELECT name, course_id
+FROM student NATURAL JOIN takes;</code></pre>
+						</li>
+						<li class="fragment"><strong>Avoiding Erroneous Matches (JOIN USING):</strong> Specify precise matching columns to prevent accidental joins on shared attribute names like <code>dept_name</code>:
+							<pre style="font-size: 1.5rem;"><code class="language-sql">SELECT name, title
+FROM (student NATURAL JOIN takes) JOIN course USING (course_id);</code></pre>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: 4.1.2 Join Conditions (ON Clause) -->
+				<section>
+					<h3>4.1.2 Join Conditions (ON Clause)</h3>
+					<p class="text-smaller">The <code>ON</code> condition allows general predicates over joined relations, behaving like a <code>WHERE</code> clause during the join:</p>
+					<ul>
+						<li class="fragment">Unlike <code>NATURAL JOIN</code> or <code>USING</code>, the join attribute appears twice in the raw result unless explicitly projected.
+							<pre style="font-size: 1.5rem;"><code class="language-sql">SELECT *
+FROM student JOIN takes ON student.ID = takes.ID;</code></pre>
+						</li>
+						<li class="fragment"><strong>Why use ON?</strong> It separates structural join predicates from application filtering predicates, improving readability and altering behavior in outer joins.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: 4.1.3 Outer Joins -->
+				<section>
+					<h3>4.1.3 Outer Joins</h3>
+					<p class="text-smaller">Outer joins preserve tuples that would be lost in an inner join by padding missing attributes with <code>NULL</code> values:</p>
+					<ul>
+						<li class="fragment"><strong>Left Outer Join:</strong> Preserves unmatched tuples from the left-hand relation.
+							<pre style="font-size: 1.5rem;"><code class="language-sql">SELECT * FROM student NATURAL LEFT OUTER JOIN takes;</code></pre>
+						</li>
+						<li class="fragment"><strong>Right Outer Join:</strong> Preserves unmatched tuples from the right-hand relation.
+							<pre style="font-size: 1.5rem;"><code class="language-sql">SELECT * FROM takes NATURAL RIGHT OUTER JOIN student;</code></pre>
+						</li>
+						<li class="fragment"><strong>Full Outer Join:</strong> Preserves unmatched tuples from both relations (combines Left and Right).
+							<pre style="font-size: 1.5rem;"><code class="language-sql">SELECT * FROM student NATURAL FULL OUTER JOIN takes;</code></pre>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 5: ON vs WHERE in Outer Joins -->
+				<section>
+					<h3>ON vs WHERE in Outer Joins</h3>
+					<p class="text-smaller">The <code>ON</code> clause determines which tuples match to generate null-padded records, while the <code>WHERE</code> clause filters the result <em>after</em> join generation.</p>
+					<pre style="font-size: 1.5rem;"><code class="language-sql">-- Example 1: Preserves student 'Snow' padded with NULLs
+SELECT * FROM student LEFT OUTER JOIN takes ON student.ID = takes.ID;
+
+-- Example 2: Generates Cartesian Product, then WHERE drops 'Snow'!
+SELECT * FROM student LEFT OUTER JOIN takes ON true
+WHERE student.ID = takes.ID;</code></pre>
+					<p class="fragment text-smaller" style="color: #ffb86c;">In Example 2, <code>Snow</code> has no matching <code>takes</code> row, so <code>student.ID = takes.ID</code> evaluates to false or unknown and drops the record.</p>
+				</section>
+
+				<!-- Slide 6: Quick Exercise 1 -->
+				<section>
+					<h3>Quick Exercise: Joins</h3>
+					<p style="color: #50fa7b;">Test your join mechanics knowledge:</p>
+					<ol>
+						<li class="fragment">What is the result of running <code>student NATURAL JOIN course</code> if both tables share the <code>dept_name</code> attribute?</li>
+						<li class="fragment">Which outer join variant preserves unmatched rows from both tables?</li>
+						<li class="fragment">Convert this cross join query to use explicit join syntax:
+							<br><code>SELECT * FROM A, B WHERE A.id = B.id;</code>
+						</li>
+					</ol>
+				</section>
+
+				<!-- Slide 7: 4.2 Views & View Definition -->
+				<section>
+					<h3>4.2.1 View Definition</h3>
+					<p class="text-smaller">A <strong>View</strong> is a virtual relation defined by a query. It is not precomputed or stored on disk; the query expression is evaluated when accessed.</p>
+					<pre style="font-size: 1.5rem;"><code class="language-sql">CREATE VIEW faculty AS
+SELECT ID, name, dept_name
+FROM instructor;</code></pre>
+					<ul>
+						<li class="fragment"><strong>Custom Column Headers:</strong> Explicitly name output columns in the view definition:
+							<pre style="font-size: 1.5rem;"><code class="language-sql">CREATE VIEW departments_total_salary(dept_name, total_salary) AS
+SELECT dept_name, SUM(salary)
+FROM instructor
+GROUP BY dept_name;</code></pre>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 10: 4.4 Integrity Constraints - Single Relation -->
+				<section>
+					<h3>4.4 Integrity Constraints</h3>
+					<p class="text-smaller">Integrity constraints guard against accidental loss of data consistency.</p>
+					<ul>
+						<li class="fragment"><code>NOT NULL</code>: Prohibits <code>null</code> insertions for designated attributes.</li>
+						<li class="fragment"><code>UNIQUE</code>: Ensures attribute lists form a superkey (no two rows share the same values, though nulls are permitted).</li>
+						<li class="fragment"><code>CHECK(P)</code>: Enforces that every tuple satisfies predicate $P$.
+							<pre style="font-size: 1.5rem;"><code class="language-sql">CREATE TABLE section (
+    ...
+    semester VARCHAR(6) CHECK (semester IN ('Fall', 'Winter', 'Spring', 'Summer')),
+    budget NUMERIC(12,2) CHECK (budget > 0)
+);</code></pre>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 11: 4.4.5 Referential Integrity & Cascades -->
+				<section>
+					<h3>4.4.5 Referential Integrity</h3>
+					<p class="text-smaller">Foreign keys require that values appearing in one relation must exist in the primary or unique key of another relation.</p>
+					<pre style="font-size: 1.5rem;"><code class="language-sql">CREATE TABLE course (
+    ...
+    foreign key (dept_name) references department
+        on delete cascade
+        on update cascade
+);</code></pre>
+					<ul>
+						<li class="fragment"><strong>Cascading Actions:</strong> Deletions or updates in <code>department</code> cascade to delete or update referencing rows in <code>course</code>.</li>
+						<li class="fragment">Alternatives to <code>CASCADE</code> include <code>SET NULL</code> or <code>SET DEFAULT</code>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 13: Quick Exercise 3 -->
+				<section>
+					<h3>Quick Exercise: Integrity Constraints</h3>
+					<p style="color: #50fa7b;">Test your understanding of SQL constraints:</p>
+					<ol>
+						<li class="fragment">What happens to child records when a parent record is deleted if the foreign key is set to <code>ON DELETE CASCADE</code>?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 14: Summary -->
+				<section>
+					<h3>Summary of Chapter 4 (4.1, 4.2, 4.4)</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Joins:</strong> Natural joins match on common attribute names; Outer joins preserve unmatched records with <code>NULL</code> padding.</li>
+						<li class="fragment"><strong>Views:</strong> Virtual relations evaluated on demand. Materialized views store results for speed, requiring maintenance.</li>
+						<li class="fragment"><strong>Constraints:</strong> <code>NOT NULL</code>, <code>UNIQUE</code>, and <code>CHECK</code> enforce single-relation rules; Foreign keys and cascading triggers maintain referential integrity.</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

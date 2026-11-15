@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 1 - Part 2: Database Design to History</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2 style="font-size: 1.4em;">Chapter 1: Introduction (Continuation)</h2>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Subchapters 1.5 - 1.9</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<section>
+					<h3>1.5 Database Design</h3>
+					<p class="text-smaller">Database design is the process of determining the structure and organization of data to mirror real-world enterprise requirements.</p>
+					<div class="media">
+                        <div class="image">
+							<img src="assets/ddlc.png" alt="DDLC">
+						</div>
+                        <div class="content">
+                            <ul>
+								<li class="fragment"><strong>The Challenge:</strong> Avoiding design flaws such as bad structural redundancy or unmappable relationships.</li>
+								<li class="fragment"><strong>Two Primary Approaches:</strong>
+									<ul>
+										<li>Conceptual Modeling (using Entity-Relationship structures)</li>
+										<li>Normalization Mechanics (analyzing functional dependencies)</li>
+									</ul>
+								</li>
+							</ul>
+                        </div>
+                    </div>
+				</section>
+
+				<section>
+					<h3>Phases of Design</h3>
+					<ol>
+						<li class="fragment"><strong>Specification & Analysis:</strong> Gathering what users want from the data architecture layer.</li>
+						<li class="fragment"><strong>Conceptual Design:</strong> Translating needs into a high-level model (ER Model).</li>
+						<li class="fragment"><strong>Logical Design:</strong> Mapping the conceptual models directly to a platform implementation schema (e.g., Relational Tables).</li>
+						<li class="fragment"><strong>Physical Design:</strong> Configuring physical access paths, indexing metrics, and file layouts.</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>1.7 Database Users & the DBA (1.6 was skipped)</h3>
+					<p class="text-smaller">People interacting with databases have different technical needs and abstraction levels:</p>
+					<ul>
+						<li class="fragment"><strong>Naive Users:</strong> Interact through pre-compiled point-and-click interface applications (e.g., bank clerks processing teller deposits).</li>
+						<li class="fragment"><strong>Application Programmers:</strong> Write application logic that targets database engines using APIs (e.g., using FastAPI or Node.js hooks).</li>
+						<li class="fragment"><strong>Sophisticated Users:</strong> Write direct raw analytic commands (SQL) to explore data without application interfaces.</li>
+						<li class="fragment"><strong>Database Administrator (DBA):</strong> Holds central structural control over the entire system.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>The Database Administrator (DBA)</h3>
+					<p class="text-smaller">The DBA manages the database system's health, design, and continuous access operations:</p>
+					<ul>
+						<li class="fragment"><strong>Schema Definition:</strong> Creating or modifying table architectures.</li>
+						<li class="fragment"><strong>Storage Structure Access Method Modification:</strong> Building or dropping indices to tune system query performance bottlenecks.</li>
+						<li class="fragment"><strong>Schema and Physical Organization Modification:</strong> Altering parameters to handle workload changes.</li>
+						<li class="fragment"><strong>Granting User Access Authorizations:</strong> Controlling permissions to enforce enterprise security policies.</li>
+						<li class="fragment"><strong>Routine Maintenance:</strong> Handling automated backups, preventing disk failures, and monitoring system execution metrics.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>1.8 Transaction Management</h3>
+					<p class="text-smaller">A <strong>Transaction</strong> is a collection of operations that performs a single logical function in a database application.</p>
+					<ul>
+						<li class="fragment"><strong>ACID Properties:</strong> To preserve structural integrity, transactions must maintain these four core pillars:
+							<!-- <ul>
+								<li><strong>Atomicity:</strong> "All or nothing." If a transaction fails mid-way, all changes are fully rolled back.</li>
+								<li><strong>Consistency:</strong> Moves the database from one valid, constraint-compliant state to another.</li>
+								<li><strong>Isolation:</strong> Keeps concurrent transactions from interfering with each other. Each runs as if it's the only operation on the engine.</li>
+								<li><strong>Durability:</strong> Once a transaction commits, its data changes are safely written to non-volatile storage and will survive power crashes.</li>
+							</ul> -->
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>A is for Atomicity</h4>
+					<div>
+						<center>
+							<img src="assets/aventurine-all-or-nothing.gif" width="90%" alt="All or Nothing">
+						</center>
+					</div>
+					<p class="fragment">If a transaction fails mid-way, all changes are fully rolled back.</p>
+				</section>
+
+				<section>
+					<h2>C is for Consistency</h4>
+					<div>
+						<center>
+							<img src="assets/consistency.gif" width="90%" alt="consistency">
+						</center>
+					</div>
+					<p class="fragment">A transaction moves the database from one valid, constraint-compliant state to another.</p>
+				</section>
+
+				<section>
+					<h2>I is for Isolation</h4>
+					<div>
+						<center>
+							<img src="assets/padded-cell-happy.gif" width="60%" alt="padded-cell-happy">
+						</center>
+					</div>
+					<p class="fragment">Keeps concurrent transactions from interfering with each other. Each runs as if it's the only operation on the engine.</p>
+				</section>
+
+				<section>
+					<h2>D is for Durability</h4>
+					<div>
+						<center>
+							<img src="assets/3310.webp" width="90%" alt="3310">
+						</center>
+					</div>
+					<p class="fragment">Once a transaction commits, its data changes are safely written to non-volatile storage and will survive power crashes.</p>
+				</section>
+
+				<section>
+					<h3>Quick Review</h3>
+					<p style="color: #50fa7b;">Reflect on transaction management constraints:</p>
+					<ol>
+						<li class="fragment">Which ACID property ensures that changes are permanently saved even if the server room loses power a second after a transaction completes?</li>
+						<li class="fragment">If Transaction A reads a row while Transaction B is updating it halfway, which ACID property regulates how visible those uncommitted modifications are?</li>
+					</ol>
+				</section>
+
+				<section>
+					<section>
+						<h3>1.9 History of Database Systems</h3>
+						<p class="text-smaller">Understanding the generational evolution of data systems storage tracks:</p>
+						<center>
+							<img src="assets/history-of-databases.webp" width="100%" alt="history of databases">
+						</center>
+					</section>
+					<section>
+						<ul>
+							<li class="fragment"><strong>Early 1960s (Pre-Relational):</strong> IBM's IMS used hierarchical pointer trees. General Electric developed network models (CODASYL). These were hard to write and adapt because queries depended on physical pointer locations.</li>
+							<li class="fragment"><strong>1970s (The Relational Turn):</strong> Edgar F. Codd published his breakthrough relational model paper at IBM. This isolated logical queries from low-level physical disk layouts.</li>
+						</ul>
+					</section>
+					<section>
+						<ul>
+							<li class="fragment"><strong>1980s:</strong> SQL grew into an international ISO standard, making relational databases the standard choice for enterprise systems.</li>
+							<li class="fragment"><strong>Late 1990s - 2000s:</strong> The birth of object-relational extensions, followed by the web explosion. Huge increases in unstructured data led to the <strong>NoSQL</strong> revolution (Key-Value, Document, Graph databases).</li>
+							<li class="fragment"><strong>Recent Trends:</strong> Scalable cloud data architectures, specialized column-oriented analytical systems, and modern <strong>NewSQL</strong> variants that combine NoSQL scale with full relational ACID safety.</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h3>Summary of Chapter 1 foundations</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>Robust Design Matters:</strong> Translating real-world requirements into clean conceptual layers prevents data redundancy anomalies.</li>
+						<li class="fragment"><strong>Transactions Guarantee Safety:</strong> The ACID rules keep your data reliable, even when facing system failures or high concurrent traffic.</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Couple of Announcements~</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment">Another blooket sesh next meeting (this Thursday July 2).</li>
+						<li class="fragment">With a quiz right after. Coverage is Chap 1 of book (Section 1.6 is skipped).</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with full asset mapping corresponding to your flat repository style
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>

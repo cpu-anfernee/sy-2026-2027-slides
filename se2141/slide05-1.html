@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 2141: Chapter 3 - SQL Data Definition</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/dracula.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.5em;">Chapter 3: SQL Data Definition</h2>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Introduction & Subchapter 3.2</h3>
+					<div style="margin-top: 40px; font-size: 0.75em; color: #6272a4;">
+						<p>SE 2141 Database Systems</p>
+					</div>
+				</section>
+
+				<!-- Slide 2: Quick Overview on SQL -->
+				<section>
+					<h3>What is SQL?</h3>
+					<p class="text-smaller"><strong>SQL (Structured Query Language)</strong> is the industry-standard language designed specifically for managing data held in a relational database management system.</p>
+					<ul>
+						<li class="fragment"><strong>Its Purpose:</strong> To provide a universal, declarative syntax for defining data structures, querying information, and controlling system access parameters.</li>
+						<li class="fragment"><strong>Declarative Power:</strong> You tell the database engine <em>what</em> dataset you want, not the step-by-step algorithms of <em>how</em> to parse files on disk.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: Discussion 1 -->
+				<section>
+					<h3>Discussion: Why One Language Standard?</h3>
+					<center>
+                        <img src="assets/db-engines.png" style="height: 50vh;" alt="Instructor Table">
+                    </center>
+					<ul>
+						<li class="fragment">Almost every relational database uses a variant of SQL (ISO standard).</li>
+						<li class="fragment"><strong>Discussion Question:</strong> How does having a single, widely adopted database language standard benefit you as software engineers working with different backend tech stacks over your career?</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: Anatomy of SQL -->
+				<section>
+					<h3>The Two Faces of SQL</h3>
+					<p class="text-smaller">SQL statements are fundamentally split into two primary working components:</p>
+					<ul>
+						<li class="fragment"><strong>Data Definition Language (DDL):</strong> Statements used to create, alter, drop, and configure the structural blueprints (schemas) of database objects.</li>
+						<li class="fragment"><strong>Data Manipulation Language (DML):</strong> Statements used to query, insert, update, or remove actual data tuples within those structural frameworks.</li>
+					</ul>
+					<p class="fragment text-smaller" style="color: #ffb86c; margin-top: 15px;">We shall start with <strong>DDL (Data Definition)</strong>!</p>
+				</section>
+
+				<!-- Slide 5: 3.2 SQL Data Definition - Built-in Types -->
+				<section>
+					<h3>3.2 Standard Domain Types</h3>
+					<p class="text-smaller">Before creating tables, we must choose appropriate data domains. The SQL standard provides several core primitive types:</p>
+					<ul>
+						<li class="fragment"><code>char(n)</code>: Fixed-length character string of length $n$.</li>
+						<li class="fragment"><code>varchar(n)</code>: Variable-length character string with a maximum length $n$.</li>
+						<li class="fragment"><code>int</code>: A standard signed machine integer.</li>
+                        <li class="fragment"><code>smallint</code>: A small integer</li>
+						<li class="fragment"><code>numeric(p, d)</code>: Fixed-point decimal number with precision $p$ digits total, and $d$ numbers to the right of the decimal point. (Essential for currency!)</li>
+						<li class="fragment"><code>float(n)</code>: Floating-point number with precision of at least $n$ digits.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 6: Creating Tables: The Syntax -->
+				<section>
+					<h3>The CREATE TABLE Command</h3>
+					<p class="text-smaller">We instantiate a relation schema layout using the <code>CREATE TABLE</code> block format:</p>
+					<pre><code style="font-size: 1rem;" class="language-sql">CREATE TABLE department (
+    dept_name   VARCHAR(20),
+    building    VARCHAR(15),
+    budget      NUMERIC(12, 2),
+    PRIMARY KEY (dept_name)
+);</code></pre>
+					<ul>
+						<li class="fragment">Attributes are separated by commas.</li>
+						<li class="fragment">Data types must be explicitly assigned to each field attribute.</li>
+						<li class="fragment">Integrity constraints (like keys) are declared at the bottom.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 7: Integrity Constraints in DDL -->
+				<section>
+					<h3>Enforcing Database Rules</h3>
+					<p class="text-smaller">The SQL DDL allows us to declare rules that the engine automatically enforces on data adjustments:</p>
+					<ul>
+						<li class="fragment"><code>PRIMARY KEY (A_1, A_2, ...)</code>: Ensures values are non-null and completely unique across rows.</li>
+						<li class="fragment"><code>FOREIGN KEY (A_1, A_2) REFERENCES s</code>: Ensures values must match values in the primary key of target relation $s$.</li>
+						<li class="fragment"><code>NOT NULL</code>: Explicitly forbids a specific attribute from storing <code>null</code> values.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 8: Complex Creation Example -->
+				<section>
+					<h3>Putting Constraints Together</h3>
+					<p class="text-smaller">Let's look at a schema mapping that includes foreign key validation pointers:</p>
+					<pre><code style="font-size: 1rem;"  class="language-sql">CREATE TABLE instructor (
+    ID          CHAR(5),
+    name        VARCHAR(20) NOT NULL,
+    dept_name   VARCHAR(20),
+    salary      NUMERIC(8, 2),
+    PRIMARY KEY (ID),
+    FOREIGN KEY (dept_name) REFERENCES department(dept_name)
+);</code></pre>
+					<center>
+                        <img src="assets/department-instructor.png" style="height: 40vh;" alt="Instructor Table">
+                    </center>
+				</section>
+
+				<!-- Slide 9: Quick Review 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #50fa7b;">Test your understanding of basic DDL declarations:</p>
+					<ol>
+						<li class="fragment">What is the functional storage difference between declaring a column as <code>char(10)</code> versus <code>varchar(10)</code>?</li>
+						<li class="fragment">Why should you use <code>numeric(10,2)</code> instead of a <code>float</code> type column when storing financial balances?</li>
+						<li class="fragment">What happens if a user attempts to execute an insert statement adding an instructor whose <code>dept_name</code> is "Magic" if that department does not exist in the referenced table?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 10: Dropping and Altering Schemas -->
+				<section>
+					<h3>Modifying Existing Tables</h3>
+					<p class="text-smaller">What happens when your structural design schema inevitably needs updates?</p>
+					<ul>
+						<li class="fragment"><strong>DROP TABLE:</strong> Deletes both the table data instance AND the structural schema from the database catalog entirely.
+							<br><code class="highlight-text">DROP TABLE instructor;</code>
+						</li>
+						<li class="fragment"><strong>ALTER TABLE:</strong> Modifies columns of an existing table without destroying the structural schema block.
+							<br><code class="highlight-text">ALTER TABLE instructor ADD middle_name VARCHAR(15);</code>
+							<br><code class="highlight-text">ALTER TABLE instructor DROP COLUMN salary;</code>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 11: Quick Review 2 -->
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #50fa7b;">Clarifying modification behaviors:</p>
+					<ol>
+						<li class="fragment">What is the difference between clearing out all rows inside a table versus running a <code>DROP TABLE</code> command?</li>
+						<li class="fragment">If you use <code>ALTER TABLE table_name ADD attribute_name data_type;</code> on an active table already populated with millions of rows, what value will the database initially give to that new column for all old rows?</li>
+					</ol>
+				</section>
+
+				<!-- Slide 12: Summary -->
+				<section>
+					<h3>Summary of SQL Data Definition</h3>
+					<ol style="font-size: 0.8em;">
+						<li class="fragment"><strong>SQL is Declarative:</strong> It handles data structures safely without you coding memory pointers or file paths manually.</li>
+						<li class="fragment"><strong>DDL Controls Schema:</strong> The <code>CREATE TABLE</code> command binds explicit domain types (like <code>int</code>, <code>varchar</code>, or <code>numeric</code>) to attributes.</li>
+						<li class="fragment"><strong>Constraints Enforce Reality:</strong> Declaring <code>PRIMARY KEY</code> and <code>FOREIGN KEY</code> keeps data reliable at the database engine layer.</li>
+						<li class="fragment"><strong>Evolution Commands:</strong> <code>ALTER TABLE</code> and <code>DROP TABLE</code> provide mechanisms to update schemas over time.</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets securely mapped to your flat repository structure
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>
