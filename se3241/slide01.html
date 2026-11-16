@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Machine Learning: Course Orientation &amp; Chapter 1 - The Machine Learning Landscape</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/blood.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">Machine Learning: Course Orientation &amp; Chapter 1</h2>
+					<p style="font-size: 0.95em; color: #bd93f9; margin-top: 15px;">The Machine Learning Landscape (Scikit-Learn &amp; PyTorch)</p>
+					<div style="margin-top: 40px; font-size: 0.7em; color: #6272a4;">
+						<p>Central Philippine University &bull; College of Engineering</p>
+						<p>Department of Software Engineering &bull; Second Semester AY 2026&ndash;2027</p>
+					</div>
+				</section>
+
+				<!-- Part I Divider -->
+				<section>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Part I: Course Orientation &amp; Syllabus Overview</h3>
+				</section>
+
+				<!-- Slide 3: Course Identity & Schedule -->
+				<section>
+					<h3>Course Identity &amp; Class Schedule</h3>
+					<p class="text-smaller"><strong>Machine Learning (Software Engineering Specialization)</strong></p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment"><strong>Credit &amp; Contact Hours:</strong> 4 Units &mdash; 6 hours/week (3 hrs Lecture + 3 hrs Laboratory)</li>
+						<li class="fragment"><strong>Course Duration:</strong> 18 Weeks (Major Exams in <strong>Weeks 6, 11, and 18</strong> &mdash; no regular classes held)</li>
+						<li class="fragment"><strong>Core Ecosystem:</strong> Python 3.11+, <code>NumPy</code>, <code>pandas</code>, <code>scikit-learn</code>, and <code>PyTorch</code></li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: Course Description -->
+				<section>
+					<h3>Course Scope &amp; Trajectory</h3>
+					<p class="text-smaller">From vectorized data pipelines to deep neural architectures:</p>
+					<ul style="font-size: 0.72em;">
+						<li class="fragment"><strong>Week 2 Bootcamp:</strong> Vectorized array/tensor operations (<code>NumPy</code>), tabular EDA (<code>pandas</code>), and applied linear algebra/calculus review.</li>
+						<li class="fragment"><strong>Weeks 3&ndash;9 (Applied Tabular ML &mdash; G&eacute;ron):</strong> Leak-free <code>scikit-learn</code> pipelines, custom estimators, classification metrics, gradient descent, SVMs, ensembles, and clustering.</li>
+						<li class="fragment"><strong>Weeks 10&ndash;17 (Bottom-Up Deep Learning &mdash; Raschka):</strong> Backpropagation from scratch, <code>PyTorch</code> <code>nn.Module</code>, CNNs, RNNs/LSTMs, Transformers, GNNs, and bias/safety audits.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 6: Textbooks & Library References -->
+				<section>
+					<h3>Primary Textbooks &amp; Library References</h3>
+					<ul style="font-size: 0.62em;">
+						<li class="fragment"><strong>Primary Textbooks:</strong>
+							<ul>
+								<li>G&eacute;ron, A. (2025). <em>Hands-on machine learning with Scikit-Learn and PyTorch: Concepts, tools, and techniques to build intelligent systems</em>. O'Reilly Media. (Chapters 1&ndash;9)</li>
+								<li>Raschka, S., Liu, Y., &amp; Mirjalili, V. (2022). <em>Machine learning with PyTorch and Scikit-Learn: Develop machine learning and deep learning models with Python</em>. Packt Publishing. (Chapters 2, 11&ndash;18)</li>
+							</ul>
+						</li>
+						<li class="fragment"><strong>Supplemental References (CPU Henry Luce III Library):</strong>
+							<ul>
+								<li>Plaue, M. (2023). <em>Data science: An introduction to statistics and machine learning</em>. Springer. (Call #: Q 325.5 .P53 2023)</li>
+								<li>Vaughn, P. (Ed.). (2018). <em>Fundamentals of machine learning</em>. Larsen &amp; Keller. (Call #: Q 325.5 .F86 2018)</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 7: Grading System Breakdown -->
+				<section>
+					<h3>Grading System Breakdown</h3>
+					<p class="text-smaller">Your final grade combines <strong>Lecture (70%)</strong> and <strong>Laboratory (30%)</strong> components:</p>
+					<div style="display: flex; gap: 20px; margin-top: 15px; font-size: 0.68em;">
+						<div class="fragment" style="flex: 1; background: #282a36; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
+							<h4 style="color: #8be9fd; margin-bottom: 10px;">Lecture Component (70%)</h4>
+							<ul>
+								<li>Prelim Examination (Wk 6): <strong>15%</strong></li>
+								<li>Midterm Examination (Wk 11): <strong>20%</strong></li>
+								<li>Final Examination (Wk 18): <strong>25%</strong></li>
+								<li>Quizzes: <strong>25%</strong></li>
+								<li>Seatwork &amp; Problem Sets: <strong>15%</strong></li>
+							</ul>
+						</div>
+						<div class="fragment" style="flex: 1; background: #282a36; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
+							<h4 style="color: #50fa7b; margin-bottom: 10px;">Laboratory &amp; Capstone (30%)</h4>
+							<ul>
+								<li>Prelim Lab Requirement (Labs 1&ndash;3): <strong>20%</strong></li>
+								<li>Midterm Lab Requirement (Labs 4&ndash;6): <strong>30%</strong></li>
+								<li>Final Labs (7&ndash;10), Capstone &amp; Defense: <strong>50%</strong></li>
+							</ul>
+							<p style="font-size: 0.85em; color: #ffb86c; margin-top: 8px;"><em>Evaluated via analytical lab rubrics, reproducible notebooks, and individual live oral code defenses.</em></p>
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 8: Passing Mark & Transmutation Table -->
+				<section>
+					<h3>Passing Mark &amp; Grade Transmutation</h3>
+					<p class="text-smaller">The passing raw mark is <strong>60%</strong>. Raw General Weighted Average (GWA) is transmuted using:</p>
+					<div class="fragment" style="font-size: 0.6em; margin: 10px 0;">
+						$$		\text{Transmuted Value} = \frac{		\text{GWA} - 60}{100 - 60} 		\times 25 + 75$$
+					</div>
+					<table class="fragment" style="font-size: 0.6em; width: 85%; margin: 10px auto; border-collapse: collapse; text-align: center;">
+						<thead>
+							<tr style="background-color: #44475a; color: #f8f8f2;">
+								<th style="padding: 5px; border: 1px solid #6272a4;">Transmuted</th>
+								<th style="padding: 5px; border: 1px solid #6272a4;">Grade</th>
+								<th style="padding: 5px; border: 1px solid #6272a4;">Transmuted</th>
+								<th style="padding: 5px; border: 1px solid #6272a4;">Grade</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">98 &ndash; 100</td>
+								<td style="padding: 4px; border: 1px solid #6272a4; color: #50fa7b;"><strong>1.00</strong></td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">83 &ndash; 85</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.25</td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">95 &ndash; 97</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">1.25</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">80 &ndash; 82</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.50</td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">92 &ndash; 94</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">1.50</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">77 &ndash; 79</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.75</td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">89 &ndash; 91</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">1.75</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">75 &ndash; 76</td>
+								<td style="padding: 4px; border: 1px solid #6272a4; color: #ffb86c;"><strong>3.00 (Pass)</strong></td>
+							</tr>
+							<tr>
+								<td style="padding: 4px; border: 1px solid #6272a4;">86 &ndash; 88</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">2.00</td>
+								<td style="padding: 4px; border: 1px solid #6272a4;">Below 75</td>
+								<td style="padding: 4px; border: 1px solid #6272a4; color: #ff5555;"><strong>5.00 (Fail)</strong></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Part II Divider -->
+				<section>
+					<h3 style="color: #bd93f9; font-size: 1.1em;">Part II: Chapter 1 &mdash; The Machine Learning Landscape</h3>
+					<p style="font-size: 0.75em; color: #8be9fd;">G&eacute;ron (2025), Chapter 1</p>
+				</section>
+
+				<!-- Slide 10: Chapter 1 Learning Objectives -->
+				<section>
+					<h3>Chapter 1 Learning Objectives</h3>
+					<p class="text-smaller">By the end of Week 1, you will be able to:</p>
+					<ol style="font-size: 0.78em;">
+						<li class="fragment">Define <strong>Machine Learning</strong> and contrast it with traditional rule-based software engineering.</li>
+						<li class="fragment">Classify ML systems across three axes: <strong>human supervision</strong>, <strong>incremental learning</strong>, and <strong>generalization mechanism</strong>.</li>
+						<li class="fragment">Diagnose major data and algorithmic challenges: <strong>overfitting</strong>, <strong>underfitting</strong>, poor data quality, and nonrepresentative samples.</li>
+						<li class="fragment">Explain proper <strong>train / validation / test</strong> splitting and why tuning on the test set causes data leakage.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 11: What Is Machine Learning? -->
+				<section>
+					<h3>What Is Machine Learning?</h3>
+					<ul style="font-size: 0.72em;">
+						<li class="fragment"><strong>Arthur Samuel (1959):</strong> <em>"Field of study that gives computers the ability to learn without being explicitly programmed."</em></li>
+					</ul>
+				</section>				
+        
+        <!-- Slide 11: What Is Machine Learning? -->
+				<section>
+					<ul style="font-size: 0.72em;">
+						<li class="fragment"><strong>Tom Mitchell (1997) &mdash; Operational Definition:</strong> A computer program learns from experience $E$ with respect to task $T$ and performance measure $P$, if its performance at $T$, as measured by $P$, improves with experience $E$.</li>
+            <li class="fragment">
+              <center>
+<img src="slide01-images/mitchell-definition.png" alt="Mitchell Definition" width="630" height="420">
+              </center>
+            </li>
+					</ul>
+				</section>
+
+                <!-- Slide 11: What Is Machine Learning? -->
+				<section>
+					<ul style="font-size: 0.72em;">
+            <li class="fragment">
+              <center>
+<img src="slide01-images/mitchell-definition.png" alt="Mitchell Definition" width="630" height="420">
+              </center>
+            </li>
+						<li class="fragment"><strong>Spam Filter Example:</strong>
+							<ul>
+								<li><strong>Task ($T$):</strong> Flagging incoming emails as spam or ham.</li>
+								<li><strong>Experience ($E$):</strong> Training dataset of labeled spam/ham emails.</li>
+								<li><strong>Performance ($P$):</strong> Ratio of correctly classified emails (accuracy / F1-score).</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 12: Traditional Programming vs. ML Approach -->
+				<section>
+					<h6>Traditional Software Engineering vs. Machine Learning</h6>
+					<div style="display: flex; gap: 20px; align-items: center; margin-top: 10px;">
+						<div style="flex: 1.1; font-size: 0.68em;">
+							<ul>
+								<li class="fragment"><strong>Traditional Approach:</strong> Write explicit <code>if-else</code> rules &rarr; evaluate &rarr; manually patch brittle rules as patterns evolve.</li>
+								<li class="fragment"><strong>Machine Learning Approach:</strong> Feed labeled data into an algorithm that automatically discovers predictive patterns.</li>
+								<li class="fragment"><strong>When ML Shines:</strong> Problems with fluctuating rules, complex perceptual signals (vision, speech), or massive datasets where humans cannot hand-craft heuristics.</li>
+							</ul>
+						</div>
+						<div class="fragment" style="flex: 0.9; text-align: center;">
+							<img src="slide01-images/trad-approach.png" alt="Traditional Programming vs Machine Learning Workflow Diagram" width="360" height="240" >
+              <img src="slide01-images/ml-approach.png" alt="Traditional Programming vs Machine Learning Workflow Diagram" width="360" height="240">
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 13: Taxonomy Axis 1 - Supervision -->
+				<section>
+					<h6>Types of ML Systems: 1. Level of Supervision</h6>
+					<div style="display: flex; gap: 20px; align-items: center;">
+						<div style="flex: 1.15; font-size: 0.55em;">
+							<ul>
+								<li class="fragment"><strong>Supervised Learning:</strong> Training data includes desired outputs (<em>labels</em>).
+									<ul>
+										<li><em>Classification:</em> Predict discrete class labels (e.g., spam vs. ham).</li>
+										<li><em>Regression:</em> Predict continuous numeric values (e.g., housing prices).</li>
+									</ul>
+								</li>
+								<li class="fragment"><strong>Unsupervised Learning:</strong> Training data is unlabeled; model discovers hidden structure (clustering, dimensionality reduction/PCA, anomaly detection).</li>
+								<li class="fragment"><strong>Self-Supervised &amp; Semi-Supervised:</strong> Generate pseudo-labels from unlabeled data itself (e.g., masked token prediction) or mix small labeled + large unlabeled sets.</li>
+								<li class="fragment"><strong>Reinforcement Learning (RL):</strong> An <em>agent</em> observes an environment, takes actions, and maximizes cumulative <em>rewards</em> via trial and error.</li>
+							</ul>
+						</div>
+						<div class="fragment" style="flex: 0.85; text-align: center;">
+							<img src="slide01-images/super-unsuper.png" alt="Supervised vs Unsupervised Learning Visual" width="400">
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 14: Taxonomy Axis 2 - Incremental Learning -->
+				<section>
+					<h3>Types of ML Systems: 2. Batch vs. Online Learning</h3>
+					<ul style="font-size: 0.72em;">
+						<li class="fragment"><strong>Batch (Offline) Learning:</strong>
+							<ul>
+								<li>Model is trained on all available data at once, then deployed statically to production.</li>
+								<li>To incorporate new data, you must retrain a fresh model from scratch&mdash;computationally expensive on large datasets.</li>
+							</ul>
+						</li>
+						<li class="fragment"><strong>Online (Incremental) Learning:</strong>
+							<ul>
+								<li>Model learns incrementally by feeding data instances sequentially or in small <em>mini-batches</em>.</li>
+								<li>Ideal for streaming data, rapidly changing environments (e.g., stock prices), or out-of-core datasets exceeding RAM.</li>
+								<li><strong>Key Risk &mdash; Learning Rate &amp; Data Poisoning:</strong> Too high a learning rate causes the model to forget old patterns; noisy/malicious incoming data can degrade live performance.</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<!-- Slide 15: Taxonomy Axis 3 - Generalization -->
+				<section>
+					<h3>Types of ML Systems: 3. How They Generalize</h3>
+					<div style="display: flex; gap: 20px; align-items: center;">
+						<div style="flex: 1.1; font-size: 0.68em;">
+							<ul>
+								<li class="fragment"><strong>Instance-Based Learning:</strong> Memorizes training examples and generalizes to new instances using a <em>similarity measure</em> (e.g., $k$-Nearest Neighbors).</li>
+								<li class="fragment"><strong>Model-Based Learning:</strong> Builds a parameterized mathematical model of the training data to make predictions (e.g., Linear Regression: $\hat{y} = 	\theta_0 + 	\theta_1 x_1$).</li>
+								<li class="fragment"><strong>Model-Based Workflow:</strong> Select model family &rarr; define <em>utility/cost function</em> &rarr; run optimization to find optimal parameters $ \boldsymbol{	\theta}$ &rarr; perform inference.</li>
+							</ul>
+						</div>
+						<div class="fragment" style="flex: 0.9; text-align: center;">
+							<img src="slide01-images/instance.png" alt="Instance-Based" width="400" height="200">
+							<img src="slide01-images/model-based.png" alt="Model-Based Learning Diagram" width="400" height="200"">
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 16: Live Demo — Model-Based Learning in 15 Lines -->
+				<section>
+					<h3>Model-Based Learning in Python (G&eacute;ron Ch. 1)</h3>
+					<p class="text-smaller">Training a linear regression model on GDP per capita vs. Life Satisfaction:</p>
+					<pre class="fragment" style="font-size: 0.34em;"><code class="language-python">import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# 1. Prepare training features X (2D array) and targets y (1D array)
+X = np.array([[22587], [32436], [40996], [49854], [55805]])  # GDP per capita (USD)
+y = np.array([5.7, 6.0, 6.5, 7.0, 7.3])                     # Life satisfaction score
+
+# 2. Select a model-based algorithm and train (fit parameters theta_0, theta_1)
+model = LinearRegression()
+model.fit(X, y)
+
+# 3. Predict on an unseen country (e.g., Cyprus GDP = $37,655)
+X_new = np.array([[37655]])
+print(f"Predicted Life Satisfaction: {model.predict(X_new)[0]:.2f}")
+print(f"Learned Parameters: intercept={model.intercept_:.3f}, slope={model.coef_[0]:.2e}")</code></pre>
+					<p class="fragment text-smaller" style="color: #50fa7b; font-size: 0.7em;">Notice the universal <code>scikit-learn</code> estimator contract: <strong>instantiate &rarr; <code>.fit(X, y)</code> &rarr; <code>.predict(X_new)</code></strong>.</p>
+				</section>
+
+				<!-- Slide 18: Main Challenges of Machine Learning (Data) -->
+				<section>
+					<h3>Main Challenges of ML: Bad Data</h3>
+					<p class="text-smaller"><em>"Garbage in, garbage out"</em> &mdash; even the best model fails on flawed training data:</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>Insufficient Quantity of Training Data:</strong> Simple problems require thousands of examples; complex perceptual tasks (vision, NLP) often require millions unless using transfer learning.</li>
+						<li class="fragment"><strong>Nonrepresentative Training Data:</strong> Sampling bias (e.g., training only on high-income countries or convenience samples) prevents generalization to the true target population.</li>
+						<li class="fragment"><strong>Poor-Quality Data:</strong> Missing values, sensor outliers, and mislabeled records degrade learned decision boundaries.</li>
+						<li class="fragment"><strong>Irrelevant Features:</strong> Successful ML relies heavily on <strong>Feature Engineering</strong>&mdash;feature selection, feature extraction, and creating informative domain features.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 19: Main Challenges of Machine Learning (Algorithms) -->
+				<section>
+					<h3>Main Challenges of ML: Bad Algorithms</h3>
+					<div style="display: flex; gap: 20px; align-items: center;">
+						<div style="flex: 1.1; font-size: 0.68em;">
+							<ul>
+								<li class="fragment"><strong>Overfitting the Training Data:</strong> Model is too complex relative to data noise; memorizes training quirks and performs poorly on unseen test data.
+									<br><span style="color: #8be9fd;"><em>Fixes:</em> Simplify model, gather more data, reduce noise, apply <strong>regularization</strong>.</span>
+								</li>
+								<li class="fragment"><strong>Underfitting the Training Data:</strong> Model is too simple to capture underlying structure (high bias); performs poorly even on training data.
+									<br><span style="color: #8be9fd;"><em>Fixes:</em> Select a more expressive model, engineer better features, reduce regularization.</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+        				<!-- Slide 19: Main Challenges of Machine Learning (Algorithms) -->
+				<section>
+					<h3>Over fitting and underfitting</h3>
+					<div style="display: flex; gap: 20px; align-items: center;">
+						<div style="flex: 1.1; font-size: 0.68em;">
+							<a href="https://www.youtube.com/watch?v=o3DztvnfAJg">Video on Overfitting and Underfitting</a>
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 20: Testing, Validating & Data Leakage -->
+				<section>
+					<h3>Testing, Validating &amp; Preventing Data Leakage</h3>
+					<p class="text-smaller">How do we know a model will generalize before deploying it?</p>
+					<ul style="font-size: 0.68em;">
+						<li class="fragment"><strong>Train / Test Split (e.g., 80% / 20%):</strong> Lock the test set away until final evaluation; the error rate on new cases is called the <strong>generalization error</strong>.</li>
+						<li class="fragment"><strong>The Hyperparameter Tuning Trap:</strong> If you evaluate 100 models on the test set and pick the best one, you leak test-set information into model selection!</li>
+						<li class="fragment"><strong>Holdout Validation &amp; Cross-Validation:</strong> Carve a <strong>validation set</strong> from the training set (or use $k$-fold cross-validation) to compare models and tune hyperparameters, touching the test set <em>only once</em> at the end.</li>
+						<li class="fragment"><strong>Data Mismatch:</strong> Ensure validation and test sets are as representative as possible of real production data.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 21: Chapter 1 Summary -->
+				<section>
+					<h3>Summary of Chapter 1</h3>
+					<ol style="font-size: 0.76em;">
+						<li class="fragment"><strong>Data-Driven Learning:</strong> Machine Learning replaces brittle hand-coded rules with models that optimize parameters from experience $E$ on task $T$ measured by $P$.</li>
+						<li class="fragment"><strong>Three Classification Axes:</strong> Systems differ by supervision (supervised, unsupervised, self-supervised, RL), learning mode (batch vs. online), and generalization (instance-based vs. model-based).</li>
+						<li class="fragment"><strong>Two Failure Modes:</strong> Models fail either from <em>bad data</em> (insufficient, nonrepresentative, noisy, poor features) or <em>bad algorithms</em> (overfitting vs. underfitting).</li>
+						<li class="fragment"><strong>Experimental Discipline:</strong> Always isolate a test set and use a separate validation set (or cross-validation) for hyperparameter tuning.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 22: Week 1 Action Items & Tooling Setup -->
+				<section>
+					<h3>Week 1 Action Items &amp; Environment Setup</h3>
+					<p class="text-smaller">Complete these ungraded tasks before next meeting (Vectorization &amp; EDA Bootcamp):</p>
+					<ol style="font-size: 0.72em;">
+						<li class="fragment"><strong>Environment Verification:</strong> Set up Python 3.11+ (via <code>venv</code>/<code>conda</code> or Google Colab) with <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>, <code>scikit-learn</code>, and <code>torch</code> installed.</li>
+						<li class="fragment"><strong>Tooling Setup Checklist:</strong> Verify import and version output for all five core libraries in a Jupyter Notebook.</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>
