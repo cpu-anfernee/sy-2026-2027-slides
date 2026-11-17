@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 1243: Week 2 - C# Program Structure &amp; Static Typing</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/night.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">SE 1243: Week 2 Lecture</h2>
+					<p style="font-size: 0.95em; color: #38bdf8; margin-top: 15px;">C# Program Structure, Static Typing &amp; Primitive Data Types</p>
+					<div style="margin-top: 40px; font-size: 0.7em; color: #94a3b8;">
+						<p>Chapters 2&ndash;4 &bull; Learning C# by Programming Games</p>
+						<p>Central Philippine University &bull; Department of Software Engineering</p>
+					</div>
+				</section>
+
+				<!-- Slide 2: Week 2 Learning Focus -->
+				<section>
+					<h3>Week 2 Learning Objectives (CO2 &bull; LO5)</h3>
+					<p class="text-smaller">Transitioning from procedural Python logic to strongly typed, structured C# code:</p>
+					<ul style="font-size: 0.85em;">
+						<li class="fragment"><strong>How C# Runs:</strong> Understand two-stage compilation (IL + JIT), syntax vs. semantics, and the Edit-Compile-Run cycle.</li>
+						<li class="fragment"><strong>C# Program Structure:</strong> Organize code into <em>instructions</em>, <em>methods</em>, <em>classes</em>, and <em>namespaces</em>.</li>
+						<li class="fragment"><strong>Static Typing:</strong> Declare variables with explicit data types and catch type mismatches at compile time.</li>
+						<li class="fragment"><strong>Primitive Data Types &amp; Operators:</strong> Work with C# integer, floating-point, and text types, expressions, and explicit type casting.</li>
+					</ul>
+				</section>
+
+				<!-- Part I Divider -->
+				<section>
+					<h3 style="color: #38bdf8; font-size: 1.15em;">Part I: C# Program Structure</h3>
+					<p class="text-smaller" style="color: #94a3b8;">Chapters 2 &amp; 3 &mdash; From Instructions to Namespaces</p>
+				</section>
+
+				<!-- Slide 4: How C# Translates & Executes Code -->
+				<section>
+					<h3>How C# Translates Your Source Code</h3>
+					<p class="text-smaller">Unlike Python (which uses an interpreter), C# uses a <strong>two-compiler pipeline</strong>:</p>
+					<ol style="font-size: 0.82em;">
+						<li class="fragment"><strong>C# Compiler:</strong> Translates your human-readable <code>.cs</code> source files into platform-independent <strong>Intermediate Language (IL)</strong> stored in an <em>assembly</em> (<code>.dll</code> / <code>.exe</code>).</li>
+						<li class="fragment"><strong>Just-In-Time (JIT) Compiler:</strong> At runtime, the .NET runtime compiles IL instructions into native machine code for your specific CPU (Windows, Linux, or macOS).</li>
+						<li class="fragment"><strong>Why It Matters:</strong> Errors in syntax or data types are caught <em>before</em> your game ever runs!</li>
+					</ol>
+				</section>
+
+				<!-- Slide 5: Syntax vs. Semantics & Edit-Compile-Run -->
+				<section>
+					<h3>Syntax vs. Semantics &amp; Development Cycle</h3>
+					<p class="text-smaller">Every programmer lives inside the <strong>Edit &rarr; Compile &rarr; Run</strong> loop:</p>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Syntax (Grammar Rules):</strong> Strict C# rules checked by the compiler (e.g., missing semicolons or mismatched braces block compilation).</li>
+						<li class="fragment"><strong>Semantics (Actual Meaning):</strong> Whether the compiled program actually behaves the way you intended (e.g., moving left instead of right).</li>
+						<li class="fragment"><strong>Golden Rule:</strong> A program that compiles cleanly is <em>syntactically valid</em>, but you must run and test it to verify it is <em>semantically correct</em>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 6: Building Blocks of a C# Program -->
+				<section>
+					<h3>Hierarchy of a C# Program</h3>
+					<p class="text-smaller">C# combines <strong>imperative</strong>, <strong>procedural</strong>, and <strong>object-oriented</strong> paradigms into four nested layers:</p>
+					<ol style="font-size: 0.82em;">
+						<li class="fragment"><strong>Instructions:</strong> Individual commands that perform work and change memory; always end with a semicolon (<code>;</code>).</li>
+						<li class="fragment"><strong>Methods:</strong> Named groups of instructions that execute only when called (e.g., <code>Jump();</code>).</li>
+						<li class="fragment"><strong>Classes:</strong> Blueprints that group related methods and data together (e.g., <code>class Character</code>).</li>
+						<li class="fragment"><strong>Namespaces:</strong> Logical folders that group related classes and prevent naming collisions.</li>
+					</ol>
+				</section>
+
+				<!-- Slide 7: Instructions, Methods & Parameters -->
+				<section>
+					<h3>Instructions, Methods &amp; Parameters</h3>
+					<p class="text-smaller">Recall the line you edited in Chapter 1:</p>
+					<pre class="fragment"><code class="language-csharp">GraphicsDevice.Clear(Color.CornflowerBlue);</code></pre>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Instruction:</strong> Ends with <code>;</code>, telling the compiler where one command finishes and the next begins.</li>
+						<li class="fragment"><strong>Method Call:</strong> Invokes <code>Clear</code>, a reusable group of rendering instructions defined inside MonoGame.</li>
+						<li class="fragment"><strong>Parameter:</strong> The value inside parentheses <code>(Color.CornflowerBlue)</code> passes specific data into the method. Methods without parameters still require empty parentheses: <code>Jump();</code>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 8: Classes as Blueprints -->
+				<section>
+					<h3>Classes: Blueprints for Game Objects</h3>
+					<p class="text-smaller">Just as a method does nothing until called, a <strong>class</strong> does nothing until you create an <strong>instance (object)</strong> from it:</p>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Class = Blueprint:</strong> Defines what data an entity holds and what methods (behaviors) it can perform.</li>
+						<li class="fragment"><strong>Object = Instance:</strong> A concrete entity created in memory from that blueprint.</li>
+						<li class="fragment"><strong>Game Example:</strong> One <code>Ghost</code> class in Pac-Man serves as the blueprint for four distinct ghost objects (Blinky, Pinky, Inky, Clyde).</li>
+					</ul>
+				</section>
+
+				<!-- Slide 9: Hello World Console Application -->
+				<section>
+					<h3>Anatomy of the Smallest C# Program</h3>
+					<p class="text-smaller">Listing 3.1 demonstrates a complete, runnable C# console program:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">class HelloWorld
+{
+    static void Main()
+    {
+        System.Console.WriteLine("Hello World!");
+        System.Console.Read();
+    }
+}</code></pre>
+					<ul style="font-size: 0.65em;">
+						<li class="fragment"><strong><code>class HelloWorld</code>:</strong> Class header, followed by curly braces <code>{ }</code> enclosing the class body.</li>
+						<li class="fragment"><strong><code>static void Main()</code>:</strong> The mandatory entry-point method called automatically when the program starts.</li>
+						<li class="fragment"><strong>Instructions:</strong> <code>WriteLine(...)</code> prints text; <code>Read()</code> pauses until a key is pressed.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 10: Python vs. C# Structural Comparison -->
+				<section>
+					<h3>Translating from Python to C# (LO5)</h3>
+					<p class="text-smaller">Key structural differences you must apply when writing C#:</p>
+					<table style="font-size: 0.5em; width: 100%; border-collapse: collapse; margin-top: 10px;">
+						<thead>
+							<tr style="background-color: #1e293b; color: #38bdf8;">
+								<th style="padding: 8px; border: 1px solid #475569; width: 24%;">Feature</th>
+								<th style="padding: 8px; border: 1px solid #475569; width: 38%;">Python (SE 1122)</th>
+								<th style="padding: 8px; border: 1px solid #475569; width: 38%;">C# (SE 1243)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Code Blocks</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Defined by colon <code>:</code> and indentation</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Defined by curly braces <code>{ ... }</code></td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>End of Instruction</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Newline character</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Semicolon <code>;</code> required</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Program Entry</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Top-level script executes top-to-bottom</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Must reside inside a <code>class</code> and <code>Main()</code></td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Variable Types</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Dynamic (<code>x = 5</code>)</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Static &amp; explicit (<code>int x = 5;</code>)</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Comments</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;"><code># single line</code></td>
+								<td style="padding: 8px; border: 1px solid #475569;"><code>// single line</code> or <code>/* multi-line */</code></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Slide 11: Namespaces & Libraries (using) -->
+				<section>
+					<h3>Namespaces &amp; External Libraries (<code>using</code>)</h3>
+					<p class="text-smaller">Large programs organize classes into <strong>namespaces</strong> to avoid name conflicts:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+
+namespace MyFirstGame
+{
+    class BasicGame : Game
+    {
+        // Can write "Color" instead of "Microsoft.Xna.Framework.Color"
+    }
+}</code></pre>
+					<ul style="font-size: 0.65em;">
+						<li class="fragment"><strong><code>namespace</code>:</strong> Wraps your classes in a logical group (like folders on disk).</li>
+						<li class="fragment"><strong><code>using</code> Directive:</strong> Imports existing libraries so you don't have to type full namespace prefixes every time.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 12: Structure of a MonoGame Application -->
+				<section>
+					<h3>Structure of a MonoGame Application</h3>
+					<p class="text-smaller">Listing 3.2 shows how MonoGame structures a real-time game class:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">class BasicGame : Game
+{
+    GraphicsDeviceManager graphics;
+
+    static void Main()
+    {
+        BasicGame game = new BasicGame();
+        game.Run();
+    }
+
+    public BasicGame() { graphics = new GraphicsDeviceManager(this); }
+    protected override void LoadContent() { }
+    protected override void Update(GameTime gameTime) { }
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.Olive);
+    }
+}</code></pre>
+				</section>
+
+				<!-- Slide 13: Comments, Whitespace & Code Readability -->
+				<section>
+					<h3>Program Layout: Comments &amp; Whitespace</h3>
+					<p class="text-smaller">Clean formatting makes code readable for humans while the compiler ignores extra spacing:</p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment"><strong>Single-Line Comment (<code>//</code>):</strong> Ignores everything from <code>//</code> to the end of the line. Explain <em>intent</em>, not obvious syntax.</li>
+						<li class="fragment"><strong>Multi-Line Comment (<code>/* ... */</code>):</strong> Ignores blocks of text across multiple lines.</li>
+						<li class="fragment"><strong>XML Summary (<code>/// &lt;summary&gt;</code>):</strong> Placed above classes/methods to generate IDE documentation tooltips.</li>
+						<li class="fragment"><strong>Whitespace &amp; Indentation:</strong> C# ignores extra newlines and spaces outside string literals, but consistent indentation inside <code>{ }</code> blocks is essential engineering practice.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 14: Checkpoint 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #34d399;">Verify your grasp of C# Program Structure:</p>
+					<ol style="font-size: 0.85em;">
+						<li class="fragment">What is the difference between a <strong>syntax error</strong> and a <strong>semantic error</strong>, and which one does the C# compiler catch?</li>
+						<li class="fragment">In what order are C# code elements nested from smallest unit to largest organizational container?</li>
+						<li class="fragment">What is the purpose of writing <code>using Microsoft.Xna.Framework;</code> at the top of a <code>.cs</code> file?</li>
+					</ol>
+				</section>
+
+				<!-- Part II Divider -->
+				<section>
+					<h3 style="color: #fbbf24; font-size: 1.15em;">Part II: Static Typing &amp; Primitive Data Types</h3>
+					<p class="text-smaller" style="color: #94a3b8;">Chapter 4 &mdash; Storing and Manipulating Data in Memory</p>
+				</section>
+
+				<!-- Slide 16: Variables & Static Typing -->
+				<section>
+					<h3>Variables &amp; Static Typing</h3>
+					<p class="text-smaller">A <strong>variable</strong> is a named location in computer memory that stores a value of a specific <strong>data type</strong>.</p>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Static Typing (C#):</strong> Every variable's type must be declared explicitly before use, and it <em>cannot change</em> later.</li>
+						<li class="fragment"><strong>Compile-Time Safety:</strong> The compiler rejects mismatched assignments before execution (e.g., trying to store <code>Color.Olive</code> inside an <code>int</code> variable).</li>
+						<li class="fragment"><strong>Compare with Python:</strong> Python checks types dynamically at runtime; C# enforces type contracts up front for speed and safety.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 17: Variable Declaration, Assignment & Constants -->
+				<section>
+					<h3>Declaration, Assignment &amp; Constants</h3>
+					<pre class="fragment"><code class="language-csharp">int red;                 // 1. Declaration: reserves memory for an int
+red = 3;                 // 2. Assignment ("becomes" 3)
+red = 5;                 // Overwrites previous value (now 5)
+
+int age = 16;            // 3. Combined declaration &amp; initialization
+int a = 4, b = 15;       // Multiple declarations on one line
+
+const int speedLimit = 100; // 4. Constant: cannot be modified later
+// speedLimit = 5000;    // COMPILER ERROR!</code></pre>
+					<p class="fragment text-smaller" style="color: #38bdf8;"><strong>Mental Tip:</strong> Read <code>=</code> as <em>"becomes"</em> (assignment), not mathematical equality (<code>==</code>).</p>
+				</section>
+
+				<!-- Slide 18: Expressions vs. Instructions -->
+				<section>
+					<h3>Expressions vs. Instructions</h3>
+					<p class="text-smaller">Understanding how C# builds computations from smaller pieces:</p>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Expression:</strong> A code fragment that evaluates to a <em>value</em> of a specific type (e.g., <code>16</code>, <code>age + 12</code>, <code>Color.Olive</code>).</li>
+						<li class="fragment"><strong>Instruction:</strong> A complete command ending with <code>;</code> that performs an action or modifies memory (e.g., <code>int total = age + 12;</code>).</li>
+						<li class="fragment"><strong>Type Matching Rule:</strong> The type of the expression on the right of <code>=</code> must match (or safely convert to) the variable type on the left.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 19: Arithmetic Operators & Integer Division -->
+				<section>
+					<h3>Arithmetic Operators &amp; Integer Division</h3>
+					<p class="text-smaller">C# supports five standard binary arithmetic operators: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, and <code>%</code> (modulo):</p>
+					<ul style="font-size: 0.6em;">
+						<li class="fragment"><strong>Explicit Multiplication:</strong> Always write <code>age * 3</code> (writing <code>age3</code> refers to a different variable name).</li>
+						<li class="fragment"><strong>Integer Division Truncation:</strong> Dividing two <code>int</code> values drops the fractional part (no rounding!):
+							<ul>
+								<li><code>14 / 3</code> evaluates to <code>4</code></li>
+								<li><code>3 / 4</code> evaluates to <code>0</code></li>
+							</ul>
+						</li>
+						<li class="fragment"><strong>Modulo Operator (<code>%</code>):</strong> Returns the division remainder (e.g., <code>14 % 3</code> is <code>2</code>; <code>456 % 10</code> is <code>6</code>).</li>
+						<li class="fragment"><strong>Precedence &amp; Shorthand:</strong> Follows standard PEMDAS rules; supports compound assignments (<code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>) and unary <code>++</code> / <code>--</code>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 20: Primitive vs. Library/Class Types -->
+				<section>
+					<h3>Primitive Types vs. Class/Struct Types</h3>
+					<p class="text-smaller">C# distinguishes built-in fundamental types from complex object types:</p>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Primitive Types:</strong> Built directly into the C# language core to store single basic values (integers, floating-point numbers, booleans, characters).</li>
+						<li class="fragment"><strong>Class &amp; Struct Types:</strong> Composite types defined by libraries (like MonoGame's <code>Color</code> and <code>GameTime</code>) or by you, grouping multiple sub-values and methods together.</li>
+						<li class="fragment"><strong>Instantiation:</strong> Complex types are often created using the <code>new</code> keyword (e.g., <code>Color bg = new Color(255, 0, 0);</code>).</li>
+					</ul>
+				</section>
+
+				<!-- Slide 21: C# Integer Primitive Types (8 Types) -->
+				<section>
+					<h3>C# Integer Primitive Types (8 Types)</h3>
+					<p class="text-smaller">Integer types store whole numbers and differ by memory size (bytes) and signed vs. unsigned range:</p>
+					<table style="font-size: 0.58em; width: 100%; border-collapse: collapse; margin-top: 8px;">
+						<thead>
+							<tr style="background-color: #1e293b; color: #38bdf8;">
+								<th style="padding: 5px; border: 1px solid #475569;">Type</th>
+								<th style="padding: 5px; border: 1px solid #475569;">Size</th>
+								<th style="padding: 5px; border: 1px solid #475569;">Minimum Value</th>
+								<th style="padding: 5px; border: 1px solid #475569;">Maximum Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td style="padding: 4px; border: 1px solid #475569;"><code>sbyte</code> / <code>byte</code></td>
+								<td style="padding: 4px; border: 1px solid #475569;">1 byte</td>
+								<td style="padding: 4px; border: 1px solid #475569;">-128 / 0</td>
+								<td style="padding: 4px; border: 1px solid #475569;">127 / 255</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 4px; border: 1px solid #475569;"><code>short</code> / <code>ushort</code></td>
+								<td style="padding: 4px; border: 1px solid #475569;">2 bytes</td>
+								<td style="padding: 4px; border: 1px solid #475569;">-32,768 / 0</td>
+								<td style="padding: 4px; border: 1px solid #475569;">32,767 / 65,535</td>
+							</tr>
+							<tr class="fragment" style="background-color: rgba(56, 189, 248, 0.15);">
+								<td style="padding: 4px; border: 1px solid #475569;"><strong><code>int</code></strong> / <code>uint</code></td>
+								<td style="padding: 4px; border: 1px solid #475569;">4 bytes</td>
+								<td style="padding: 4px; border: 1px solid #475569;">-2,147,483,648 / 0</td>
+								<td style="padding: 4px; border: 1px solid #475569;">2,147,483,647 / 4,294,967,295</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 4px; border: 1px solid #475569;"><code>long</code> / <code>ulong</code></td>
+								<td style="padding: 4px; border: 1px solid #475569;">8 bytes</td>
+								<td style="padding: 4px; border: 1px solid #475569;">$-9.22 	\times 10^{18}$ / 0</td>
+								<td style="padding: 4px; border: 1px solid #475569;">$9.22 	\times 10^{18}$ / $1.84 	\times 10^{19}$</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="fragment text-smaller" style="margin-top: 8px;"><strong>Default Choice:</strong> Use <code>int</code> for standard whole numbers unless you need massive ranges (<code>long</code>) or raw byte buffers (<code>byte</code>).</p>
+				</section>
+
+				<!-- Slide 22: Floating-Point & Real Number Types -->
+				<section>
+					<h3>Floating-Point &amp; Real Number Types</h3>
+					<p class="text-smaller">C# provides three types for numbers with fractional parts, trading off speed, range, and precision:</p>
+					<table style="font-size: 0.62em; width: 100%; border-collapse: collapse; margin-top: 10px;">
+						<thead>
+							<tr style="background-color: #1e293b; color: #fbbf24;">
+								<th style="padding: 6px; border: 1px solid #475569;">Type</th>
+								<th style="padding: 6px; border: 1px solid #475569;">Size</th>
+								<th style="padding: 6px; border: 1px solid #475569;">Precision</th>
+								<th style="padding: 6px; border: 1px solid #475569;">Suffix &amp; Primary Use Case</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment" style="background-color: rgba(251, 191, 36, 0.15);">
+								<td style="padding: 6px; border: 1px solid #475569;"><strong><code>float</code></strong></td>
+								<td style="padding: 6px; border: 1px solid #475569;">4 bytes</td>
+								<td style="padding: 6px; border: 1px solid #475569;">~7 digits</td>
+								<td style="padding: 6px; border: 1px solid #475569;"><code>0.3f</code> &mdash; Fast 2D/3D game math (MonoGame standard)</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 6px; border: 1px solid #475569;"><strong><code>double</code></strong></td>
+								<td style="padding: 6px; border: 1px solid #475569;">8 bytes</td>
+								<td style="padding: 6px; border: 1px solid #475569;">~15 digits</td>
+								<td style="padding: 6px; border: 1px solid #475569;"><code>3.14</code> (default literal) &mdash; General scientific/math calculations</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 6px; border: 1px solid #475569;"><strong><code>decimal</code></strong></td>
+								<td style="padding: 6px; border: 1px solid #475569;">16 bytes</td>
+								<td style="padding: 6px; border: 1px solid #475569;">28 digits</td>
+								<td style="padding: 6px; border: 1px solid #475569;"><code>19.99m</code> &mdash; Financial &amp; exact base-10 calculations</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Slide 23: Other Essential Built-In Types (string, char, bool) -->
+				<section>
+					<h3>Text &amp; Logical Types: <code>string</code>, <code>char</code>, <code>bool</code></h3>
+					<p class="text-smaller">Alongside numeric types, games rely heavily on text and true/false flags:</p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment"><strong><code>string</code>:</strong> Represents sequences of text enclosed in double quotes (<code>"Player 1"</code>). Supports concatenation with <code>+</code> (e.g., <code>"Score: " + score</code>), but not arithmetic like <code>*</code>.</li>
+						<li class="fragment"><strong><code>char</code>:</strong> Represents a single Unicode character enclosed in single quotes (<code>'A'</code>, <code>'#'</code>).</li>
+						<li class="fragment"><strong><code>bool</code>:</strong> Stores logical truth values: strictly <code>true</code> or <code>false</code> (e.g., <code>bool isGameOver = false;</code>).</li>
+					</ul>
+				</section>
+
+				<!-- Slide 24: Mixing Types, Suffixes & Explicit Casting -->
+				<section>
+					<h3>Mixing Types, Suffixes &amp; Explicit Casting</h3>
+					<p class="text-smaller">C# prevents accidental data loss when assigning a wider type into a narrower type:</p>
+					<pre class="fragment"><code class="language-csharp">// Decimal literals default to 'double' in C#:
+// float speed = 0.3;        // COMPILER ERROR: double cannot fit in float!
+float speed = 0.3f;          // VALID: 'f' suffix marks literal as float
+
+double account = 12345678912345.0;
+// float newAccount = account;       // COMPILER ERROR: potential precision loss
+float newAccount = (float)account;   // VALID: explicit cast acknowledges precision loss</code></pre>
+					<ul style="font-size: 0.78em;">
+						<li class="fragment"><strong>Explicit Cast <code>(targetType)expr</code>:</strong> Tells the compiler you intentionally want to convert between compatible numeric types.</li>
+						<li class="fragment"><strong>Unrelated Types:</strong> You cannot cast unrelated types (e.g., <code>(float)Color.Red</code> is invalid).</li>
+					</ul>
+				</section>
+
+				<!-- Slide 25: Checkpoint 2 & Practice -->
+				<section>
+					<h3>Quick Review: Checkpoint 2</h3>
+					<p style="color: #34d399;">Test your understanding of Static Typing &amp; Primitive Data Types:</p>
+					<ol style="font-size: 0.82em;">
+						<li class="fragment">What value is stored in <code>y</code> after executing <code>int y = 3 / 4;</code> versus <code>double y = 3.0 / 4;</code>?</li>
+						<li class="fragment">Why does <code>float gravity = 9.81;</code> cause a C# compiler error, and what are two ways to fix it?</li>
+						<li class="fragment">Which C# primitive data type would you choose to store: (a) a player's display name, (b) whether a door is locked, and (c) a bank balance in pesos?</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>
