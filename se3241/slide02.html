@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Machine Learning: Week 2 &mdash; Scientific Python Bootcamp, Linear Algebra &amp; EDA</title>
+
+  <link rel="stylesheet" href="../dist/reset.css">
+  <link rel="stylesheet" href="../dist/reveal.css">
+  <link rel="stylesheet" href="../dist/theme/simple.css">
+
+  <!-- Theme used for syntax highlighted code -->
+  <link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+
+  <!-- Custom slide styling -->
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <!-- Slide 1: Title -->
+      <section>
+        <h2 style="font-size: 1.35em;">Week 2: Scientific Python Bootcamp &amp; Tabular EDA</h2>
+        <p style="font-size: 0.9em; color: #bd93f9; margin-top: 15px;">Applied Linear Algebra,
+          <code>NumPy</code>/<code>PyTorch</code> Vectorization, <code>pandas</code>, <code>matplotlib</code> &amp;
+          G&eacute;ron Ch. 2
+        </p>
+        <div style="margin-top: 40px; font-size: 0.7em; color: #6272a4;">
+          <p>Central Philippine University &bull; College of Engineering</p>
+          <p>Department of Software Engineering &bull; Second Semester AY 2026&ndash;2027</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: Week 2 Roadmap & Learning Outcomes -->
+      <section>
+        <h3>Week 2 Learning Outcomes &amp; Roadmap (6 Hours)</h3>
+        <p class="text-smaller" style="font-size: 0.72em;"><strong>CO1: LO 1.</strong> Translate iterative numerical
+          computations into vectorized array and tensor operations using <code>NumPy</code> and <code>PyTorch</code>
+          broadcasting rules.</p>
+        <p class="text-smaller" style="font-size: 0.68em; color: #ffb86c;"><strong>Value Focus:</strong> Computational
+          Efficiency &bull; Precision &amp; Attention to Detail</p>
+        <ol style="font-size: 0.6em; margin-top: 10px;">
+          <li class="fragment"><strong>Part I &mdash; Applied Linear Algebra Review:</strong> Vectors, matrices, norms,
+            dot products, and matrix multiplication in ML notation.</li>
+          <li class="fragment"><strong>Part II &mdash; <code>NumPy</code> &amp; <code>PyTorch</code> Tensor
+              Architecture:</strong> Memory layout, slicing, boolean masks, reductions, and broadcasting rules.</li>
+          <li class="fragment"><strong>Part III &mdash; Tabular Manipulation with <code>pandas</code>:</strong>
+            <code>DataFrame</code> indexing (<code>.loc</code>/<code>.iloc</code>), missing data, binning, and
+            <code>groupby</code>.
+          </li>
+          <li class="fragment"><strong>Part IV &mdash; Data Visualization with <code>matplotlib</code>:</strong>
+            Object-oriented Figure/Axes API and diagnostic statistical plots.</li>
+          <li class="fragment"><strong>Part V &mdash; G&eacute;ron (2025) Ch. 2 (EDA Sections):</strong> Problem
+            framing, RMSE/MAE, stratified splitting, and California Housing EDA.</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PART I: APPLIED LINEAR ALGEBRA & MATRIX OPERATIONS REVIEW    -->
+      <!-- ============================================================ -->
+      <section>
+        <h3 style="color: #bd93f9; font-size: 1.1em;">Part I: Applied Linear Algebra &amp; Matrix Operations</h3>
+        <p style="font-size: 0.75em; color: #8be9fd;">Supplemental Bootcamp Notes &amp; G&eacute;ron Ch. 2 Mathematical
+          Notation</p>
+      </section>
+
+      <!-- Slide 4: ML Mathematical Notation & Tensor Hierarchy -->
+      <section>
+        <section>
+          <h3>Mathematical Objects &amp; ML Notation (G&eacute;ron Convention)</h3>
+          <p class="text-smaller">Standardizing symbols used across <code>NumPy</code>, <code>PyTorch</code>, and our
+            textbooks:</p>
+          <ul style="font-size: 0.66em;">
+            <li class="fragment"><strong>Scalars (0D Tensor):</strong> Lowercase italic font, e.g., $m = 2,000$ (number
+              of
+              instances), $n = 8$ (features), $y^{(i)} \in \mathbb{R}$ (target label of instance $i$).</li>
+            <li class="fragment"><strong>Vectors (1D Tensor):</strong> Lowercase bold font, e.g., $\mathbf{x}^{(i)} \in
+              \mathbb{R}^n$ represents the column feature vector of the $i$-th instance:
+              $$\mathbf{x}^{(1)} = \begin{bmatrix} -118.29 \\ 33.91 \\ 1416 \\ 38372 \end{bmatrix}, \quad
+              (\mathbf{x}^{(1)})^\top = \begin{bmatrix} -118.29 &amp; 33.91 &amp; 1416 &amp; 38372 \end{bmatrix}$$
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Mathematical Objects &amp; ML Notation (G&eacute;ron Convention)</h3>
+          <p class="text-smaller">Standardizing symbols used across <code>NumPy</code>, <code>PyTorch</code>, and our
+            textbooks:</p>
+          <ul style="font-size: 0.66em;">
+            <li class="fragment"><strong>Design Matrix (2D Tensor):</strong> Uppercase bold font $\mathbf{X} \in
+              \mathbb{R}^{m \times n}$ where each row $i$ is $(\mathbf{x}^{(i)})^\top$:
+              $$\mathbf{X} = \begin{bmatrix} (\mathbf{x}^{(1)})^\top \\ (\mathbf{x}^{(2)})^\top \\ \vdots \\
+              (\mathbf{x}^{(m)})^\top \end{bmatrix} \in \mathbb{R}^{m \times n}$$
+            </li>
+            <li class="fragment"><strong>Higher-Order Tensors (3D/4D+):</strong> Multi-dimensional arrays (e.g., RGB
+              image batch $\mathcal{X} \in \mathbb{R}^{B \times C \times H \times W}$ in <code>PyTorch</code>).</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- Slide 4: ML Mathematical Notation & Tensor Hierarchy -->
+
+
+      <!-- Slide 5: Vector Operations & Inner Products -->
+      <section>
+        <section>
+          <h3>Core Vector Operations in Machine Learning</h3>
+          <p class="text-smaller">Given two column vectors $\mathbf{u}, \mathbf{v} \in \mathbb{R}^n$ and scalar $c \in
+            \mathbb{R}$:</p>
+          <ul style="font-size: 0.66em;">
+            <li class="fragment"><strong>Element-Wise Addition &amp; Scalar Multiplication:</strong> $(\mathbf{u} +
+              \mathbf{v})_j = u_j + v_j$, $(c\mathbf{u})_j = c \cdot u_j$.</li>
+            <li class="fragment"><strong>Hadamard (Element-Wise) Product ($\mathbf{u} \odot \mathbf{v}$):</strong>
+              $(\mathbf{u} \odot \mathbf{v})_j = u_j v_j$ (written as <code>u * v</code> in
+              <code>NumPy</code>/<code>PyTorch</code>).
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h3>Core Vector Operations in Machine Learning</h3>
+          <p class="text-smaller">Given two column vectors $\mathbf{u}, \mathbf{v} \in \mathbb{R}^n$ and scalar $c \in
+            \mathbb{R}$:</p>
+          <ul style="font-size: 0.66em;">
+            <li class="fragment"><strong>Dot (Inner) Product ($\mathbf{u}^\top \mathbf{v}$):</strong> Produces a scalar
+              measuring alignment/similarity (written as <code>u @ v</code> or <code>np.dot(u, v)</code>):
+              $$\mathbf{u}^\top \mathbf{v} = \sum_{j=1}^{n} u_j v_j = \|\mathbf{u}\|_2 \|\mathbf{v}\|_2 \cos\theta$$
+            </li>
+            <li class="fragment"><strong>Linear Model Prediction:</strong> A single instance prediction with weights
+              $\mathbf{w} \in \mathbb{R}^n$ and bias $b \in \mathbb{R}$ is simply a dot product:
+              $$\hat{y}^{(i)} = h_{\mathbf{w}, b}(\mathbf{x}^{(i)}) = \mathbf{w}^\top \mathbf{x}^{(i)} + b$$
+            </li>
+          </ul>
+        </section>
+      </section>
+
+
+      <!-- Slide 6: Vector Norms & Distance Metrics -->
+      <section>
+        <h3>Vector Norms ($\ell_p$) &amp; Error Metrics</h3>
+        <p class="text-smaller">A <strong>norm</strong> $\|\mathbf{v}\|$ measures vector magnitude (or distance
+          $\|\hat{\mathbf{y}} - \mathbf{y}\|$ between predictions and targets):</p>
+        <ul style="font-size: 0.5em;">
+          <li class="fragment"><strong>General $\ell_k$ Norm:</strong>
+            $$\|\mathbf{v}\|_k = \left( \sum_{j=1}^{n} |v_j|^k \right)^{1/k}$$
+          </li>
+          <li class="fragment"><strong>$\ell_1$ Norm (Manhattan Norm):</strong> $\|\mathbf{v}\|_1 = \sum_{j=1}^n |v_j|$.
+            Used in <strong>MAE</strong>: $\text{MAE} = \frac{1}{m}\|\hat{\mathbf{y}} - \mathbf{y}\|_1$.</li>
+          <li class="fragment"><strong>$\ell_2$ Norm (Euclidean Norm):</strong> $\|\mathbf{v}\|_2 = \sqrt{\sum_{j=1}^n
+            v_j^2} = \sqrt{\mathbf{v}^\top \mathbf{v}}$. Used in <strong>RMSE</strong>: $\text{RMSE} =
+            \frac{1}{\sqrt{m}}\|\hat{\mathbf{y}} - \mathbf{y}\|_2$.</li>
+          <li class="fragment"><strong>$\ell_0$ &amp; $\ell_\infty$ Norms:</strong> $\|\mathbf{v}\|_0$ counts nonzero
+            elements; $\|\mathbf{v}\|_\infty = \max_j |v_j|$ gives maximum absolute component.</li>
+          <li class="fragment" style="color: darkblue;"><strong>Key Insight:</strong> Higher norm indices penalize large
+            residuals disproportionately&mdash;making RMSE far more sensitive to outliers than MAE.</li>
+        </ul>
+      </section>
+
+      <!-- Slide 7: Matrix Operations & Matrix Multiplication -->
+      <section>
+        <h3>Matrix Multiplication &amp; Batch Vectorization</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.15; font-size: 0.64em;">
+            <ul>
+              <li class="fragment"><strong>Transpose ($\mathbf{A}^\top$):</strong> Flips rows and columns; if
+                $\mathbf{A} \in \mathbb{R}^{m \times n}$, then $\mathbf{A}^\top \in \mathbb{R}^{n \times m}$ with
+                $(\mathbf{A}^\top)_{ji} = A_{ij}$. Property: $(\mathbf{AB})^\top = \mathbf{B}^\top \mathbf{A}^\top$.
+              </li>
+              <li class="fragment"><strong>Matrix Product ($\mathbf{C} = \mathbf{AB}$):</strong> Defined only when inner
+                dimensions match: $(m \times \mathbf{n}) \cdot (\mathbf{n} \times p) \to (m \times p)$:
+                $$C_{ik} = \sum_{j=1}^{n} A_{ij} B_{jk} = \mathbf{a}_{i,:}^\top \mathbf{b}_{:,k}$$
+              </li>
+              <li class="fragment"><strong>Batch Linear Predictions:</strong> Instead of looping over $m$ instances,
+                compute all $m$ predictions in one BLAS call:
+                $$\hat{\mathbf{y}} = \mathbf{X}\mathbf{w} + b \quad \text{where } \mathbf{X} \in \mathbb{R}^{m \times
+                n}, \; \mathbf{w} \in \mathbb{R}^n$$
+              </li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.85; text-align: center;">
+            <img src="slide02-images/mat-mult.png" alt="Matrix Multiplication Row by Column Dimension Compatibility Diagram" width="380"
+              height="200">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>Fig. W2.1: Matrix Multiplication $(m \times n)(n \times p)
+                \to (m \times p)$</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Special Matrices & ML Diagnostics -->
+      <section>
+        <h3>Essential Matrix Properties for Machine Learning</h3>
+        <ul style="font-size: 0.65em;">
+          <li class="fragment"><strong>Identity Matrix ($\mathbf{I}_n$):</strong> Square $n \times n$ matrix with $1$s
+            on the main diagonal and $0$s elsewhere ($\mathbf{A}\mathbf{I}_n = \mathbf{I}_m\mathbf{A} = \mathbf{A}$).
+          </li>
+          <li class="fragment"><strong>Symmetric &amp; Positive Semi-Definite Matrices:</strong> $\mathbf{S} =
+            \mathbf{S}^\top$. Covariance matrices $\boldsymbol{\Sigma} = \frac{1}{m}\mathbf{X}^\top\mathbf{X}$ are
+            always symmetric and positive semi-definite ($\mathbf{v}^\top \boldsymbol{\Sigma} \mathbf{v} \ge 0$).</li>
+          <li class="fragment"><strong>Matrix Inverse ($\mathbf{A}^{-1}$) &amp; Rank:</strong> Exists only if square
+            $\mathbf{A}$ has full rank (no linearly dependent columns).
+            <br><span style="color: #ffb86c;"><em>ML Connection:</em></span> In the Normal Equation
+            $\hat{\boldsymbol{\theta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}$, duplicate/collinear
+            features make $\mathbf{X}^\top\mathbf{X}$ singular (non-invertible)!
+          </li>
+          <li class="fragment"><strong>Eigenvalues &amp; Eigenvectors ($\mathbf{A}\mathbf{v} =
+              \lambda\mathbf{v}$):</strong> Directions $\mathbf{v}$ scaled by $\lambda$ under transformation
+            $\mathbf{A}$&mdash;the mathematical backbone of Principal Component Analysis (PCA).</li>
+        </ul>
+      </section>
+
+      <!-- Slide 9: Checkpoint 1 -->
+      <section>
+        <h3>Quick Review: Checkpoint 1 (Linear Algebra)</h3>
+        <p style="color: #50fa7b;">Verify your shape and norm intuition:</p>
+        <ol style="font-size: 0.76em;">
+          <li class="fragment">A dataset has $m = 16,512$ districts and $n = 9$ features. What are the shapes of
+            $\mathbf{X}$, $\mathbf{X}^\top\mathbf{X}$, and $\mathbf{X}\mathbf{X}^\top$?</li>
+          <li class="fragment">Given residual vector $\mathbf{e} = \hat{\mathbf{y}} - \mathbf{y} = [2, -2, 2, -2]^\top$,
+            compute $\|\mathbf{e}\|_1$, $\|\mathbf{e}\|_2$, and $\|\mathbf{e}\|_\infty$.</li>
+          <li class="fragment">Why does replacing a single residual in $\mathbf{e}$ with a large outlier ($e_1 = 100$)
+            inflate RMSE much faster than MAE?</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PART II: NUMPY ARRAY ARCHITECTURE, INDEXING & BROADCASTING   -->
+      <!-- ============================================================ -->
+      <section>
+        <h3 style="color: #bd93f9; font-size: 1.1em;">Part II: <code>NumPy</code> Array Architecture, Indexing &amp;
+          Broadcasting</h3>
+        <p style="font-size: 0.75em; color: #8be9fd;">With Direct <code>PyTorch</code> Tensor Parallels (CO1: LO 1)</p>
+      </section>
+
+      <!-- Slide 11: Why Python Loops Are Slow vs NumPy Internals -->
+      <section>
+        <h3>Why Loops Are Slow: Python <code>list</code> vs. <code>NumPy</code> <code>ndarray</code></h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.15; font-size: 0.55em;">
+            <ul>
+              <li class="fragment"><strong>Python <code>list</code> Overhead:</strong> Stores an array of pointers to
+                scattered <code>PyObject</code> structs on the heap. Every loop iteration incurs type checking,
+                reference counting, and cache misses.</li>
+              <li class="fragment"><strong><code>NumPy</code> <code>ndarray</code> Architecture:</strong> Stores
+                homogeneous, fixed-size binary elements in a <strong>contiguous C memory buffer</strong>, accessed via
+                metadata:
+                <ul>
+                  <li><code>dtype</code>: Fixed binary type (e.g., <code>float64</code>, <code>float32</code>,
+                    <code>int64</code>).
+                  </li>
+                  <li><code>shape</code> &amp; <code>ndim</code>: Tuple of axis lengths and rank.</li>
+                  <li><code>strides</code>: Bytes to step along each axis to reach the next element.</li>
+                </ul>
+              </li>
+              <li class="fragment"><strong>Vectorization:</strong> Delegates loops to compiled C/Fortran BLAS/SIMD
+                routines ($50\times$&ndash;$500\times$ speedup).</li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.85; text-align: center;">
+            <img src="slide02-images/list-array.png" alt="Python List Pointer Array vs Contiguous NumPy Memory Buffer" width="340" height="340"
+              >
+            <p style="font-size: 0.55em; color: #6272a4;"><em>Fig. W2.2: Python List Heap Pointers vs. Contiguous
+                <code>ndarray</code></em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: Creating & Inspecting NumPy Arrays -->
+      <section>
+        <h3>Creating &amp; Inspecting <code>NumPy</code> Arrays</h3>
+        <pre style="font-size: 0.34em;"><code class="language-python">import numpy as np
+
+# 1. From Python sequences with explicit dtype (crucial for PyTorch float32 compatibility)
+X = np.array([[1.0, 2.0, 3.0],
+              [4.0, 5.0, 6.0]], dtype=np.float32)
+print(f"shape={X.shape}, ndim={X.ndim}, dtype={X.dtype}, strides={X.strides}")
+
+# 2. Structural initializers
+zeros = np.zeros((3, 4))                 # 3x4 matrix of 0.0 (float64 default)
+ones  = np.ones_like(X)                  # Same shape & dtype as X, filled with 1.0
+grid  = np.linspace(0.0, 1.0, num=5)     # [0.0, 0.25, 0.5, 0.75, 1.0]
+ident = np.eye(3)                        # 3x3 identity matrix
+
+# 3. Reproducible random generation (modern Generator API)
+rng = np.random.default_rng(seed=42)
+W = rng.normal(loc=0.0, scale=0.01, size=(3, 2))  # Gaussian weight initialization
+idx = rng.permutation(100)                        # Shuffled indices [0..99]</code></pre>
+        <p class="fragment text-smaller" style="color: #8be9fd; font-size: 0.68em;">Always prefer
+          <code>np.random.default_rng(seed)</code> over legacy <code>np.random.seed()</code> for isolated, reproducible
+          streams.
+        </p>
+      </section>
+
+      <!-- Slide 13: Reshaping, Views vs Copies & Axis Manipulation -->
+      <section>
+        <h3>Reshaping, Views vs. Copies &amp; Axis Manipulation</h3>
+        <pre style="font-size: 0.33em;"><code class="language-python">a = np.arange(12)                # shape: (12,)
+B = a.reshape(3, 4)              # View of same memory! shape: (3, 4)
+C = a.reshape(3, -1)             # -1 infers dimension automatically -> (3, 4)
+
+# Views share underlying buffer (mutating B mutates a!)
+print("Shares memory?", np.shares_memory(a, B))  # True
+flat_view = B.ravel()            # Returns contiguous view when possible
+flat_copy = B.flatten()          # Always allocates an independent copy
+
+# Adding/removing singleton dimensions (essential for broadcasting)
+col_vec = a[:, np.newaxis]       # shape: (12, 1)  (or a[:, None])
+row_vec = a[None, :]             # shape: (1, 12)
+squeezed = col_vec.squeeze()     # Removes size-1 axes -> (12,)
+
+# Stacking & Concatenation
+top = np.ones((2, 3)); bot = np.zeros((2, 3))
+v_cat = np.concatenate([top, bot], axis=0)  # shape: (4, 3) (same as np.vstack)
+h_cat = np.concatenate([top, bot], axis=1)  # shape: (2, 6) (same as np.hstack)</code></pre>
+        <p class="fragment text-smaller" style="color: #ffb86c; font-size: 0.66em;"><strong>Memory Trap:</strong> Basic
+          slices and <code>.reshape()</code> return <em>views</em>; use <code>.copy()</code> when modifying subsets
+          safely.</p>
+      </section>
+
+      <!-- Slide 14: Advanced Indexing — Slicing, Boolean Masks & Fancy Indexing -->
+      <section>
+        <h3>Slicing, Boolean Masking &amp; Fancy Indexing</h3>
+        <pre style="font-size: 0.33em;"><code class="language-python">M = np.arange(20).reshape(4, 5)
+
+# 1. Multi-axis slicing: M[row_slice, col_slice] -> returns a VIEW
+sub = M[1:3, ::2]                # Rows 1..2, every 2nd column (0, 2, 4) -> shape (2, 3)
+
+# 2. Boolean Masking (filtering data by condition) -> returns a COPY
+mask = (M[:, 0] >= 5) & (M[:, -1] < 19)   # Use &, |, ~ with parentheses (NOT and/or/not!)
+filtered_rows = M[mask]
+
+# Vectorized conditional selection: np.where(condition, value_if_true, value_if_false)
+capped = np.where(M > 12, 12, M)
+
+# 3. Fancy (Integer Array) Indexing -> returns a COPY
+selected_rows = M[[3, 0, 2]]     # Reorders rows to index 3, then 0, then 2
+diag_elements = M[[0, 1, 2, 3], [0, 1, 2, 3]]  # Pairs (0,0), (1,1), (2,2), (3,3)</code></pre>
+        <p class="fragment text-smaller" style="color: #50fa7b; font-size: 0.66em;">In Python/NumPy, bitwise operators
+          <code>&amp;</code>, <code>|</code>, <code>~</code> bind tighter than comparisons&mdash;always wrap conditions
+          in <code>(...)</code>.
+        </p>
+      </section>
+
+      <!-- Slide 15: Ufuncs & Axis Reductions -->
+      <section>
+        <h3>Universal Functions (<code>ufuncs</code>) &amp; Axis Reductions</h3>
+        <p class="text-smaller">Understanding <code>axis</code>: the axis specified is the axis that gets
+          <strong>collapsed</strong>!
+        </p>
+        <pre class="fragment" style="font-size: 0.33em;"><code class="language-python">X = np.array([[10., 20., 30.],
+              [40., 50., 60.]])   # shape: (2 instances, 3 features)
+
+# Element-wise ufuncs preserve shape
+log_X = np.log1p(X)               # log(1 + x), numerically stable for skewed counts
+
+# Reductions along specific axes
+total_sum   = X.sum()             # Scalar: 210.0
+col_means   = X.mean(axis=0)      # Collapses rows (axis 0) -> shape (3,): [25., 35., 45.]
+row_sums    = X.sum(axis=1)       # Collapses cols (axis 1) -> shape (2,): [60., 150.]
+
+# keepdims=True preserves rank so result can broadcast back against X!
+row_sums_2d = X.sum(axis=1, keepdims=True)  # shape (2, 1): [[60.], [150.]]
+row_probs   = X / row_sums_2d               # Exact row-wise normalization!</code></pre>
+        <p class="fragment text-smaller" style="color: #8be9fd; font-size: 0.66em;">Passing <code>keepdims=True</code>
+          prevents rank-collapse bugs when dividing a 2D matrix by row statistics.</p>
+      </section>
+
+      <!-- Slide 16: Broadcasting Rules in NumPy and PyTorch -->
+      <section>
+        <h3>Broadcasting Rules in <code>NumPy</code> &amp; <code>PyTorch</code></h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.15; font-size: 0.63em;">
+            <p>When operating on two arrays/tensors of different shapes, <code>NumPy</code> and <code>PyTorch</code>
+              apply the <strong>exact same 3 rules</strong>:</p>
+            <ol>
+              <li class="fragment"><strong>Rule 1 (Rank Alignment):</strong> If arrays differ in <code>ndim</code>,
+                prepend <code>1</code>s to the <em>left</em> of the smaller shape until ranks match.</li>
+              <li class="fragment"><strong>Rule 2 (Dimension Compatibility):</strong> Compare dimensions from right to
+                left. Each pair $(d_1, d_2)$ is compatible iff $d_1 = d_2$, OR $d_1 = 1$, OR $d_2 = 1$.</li>
+              <li class="fragment"><strong>Rule 3 (Virtual Stretching):</strong> Output shape takes $\max(d_1, d_2)$
+                along each axis; size-<code>1</code> dimensions repeat virtually with <strong>zero extra
+                  memory</strong>. Otherwise, raises <code>ValueError</code> / <code>RuntimeError</code>.</li>
+            </ol>
+          </div>
+          <div class="fragment" style="flex: 0.85; text-align: center;">
+            <img src="" alt="NumPy and PyTorch Broadcasting Alignment Diagram" width="380" height="270"
+              style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>Fig. W2.3: Left-Padding &amp; Stretching Along Size-1
+                Axes</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 17: Broadcasting in Action & Classic Bugs -->
+      <section>
+        <h3>Broadcasting in Action &amp; The Silent Outer-Sum Bug</h3>
+        <pre style="font-size: 0.33em;"><code class="language-python"># Example 1: Feature-wise Z-score standardization
+X = rng.normal(size=(1000, 8))          # shape: (1000, 8)
+mu = X.mean(axis=0)                     # shape:       (8,) -> padded to (1, 8) -> stretched to (1000, 8)
+sigma = X.std(axis=0)                   # shape:       (8,) -> padded to (1, 8) -> stretched to (1000, 8)
+X_scaled = (X - mu) / sigma             # shape: (1000, 8)
+
+# Example 2: Pairwise Euclidean distance matrix via broadcasting
+A = rng.normal(size=(50, 3))            # 50 points in 3D -> A[:, None, :] has shape (50, 1, 3)
+B = rng.normal(size=(20, 3))            # 20 points in 3D -> B[None, :, :] has shape (1, 20, 3)
+diff = A[:, None, :] - B[None, :, :]    # Broadcasts to (50, 20, 3)!
+dist_matrix = np.sqrt((diff ** 2).sum(axis=-1))  # shape: (50, 20)
+
+# WARNING: The Silent Shape Bug!
+y_true = np.array([1.0, 2.0, 3.0])      # shape: (3,)
+y_pred = np.array([[1.1], [1.9], [3.2]])# shape: (3, 1)
+err = y_pred - y_true                   # (3, 1) - (1, 3) -> broadcasts to (3, 3) matrix instead of (3,)!</code></pre>
+        <p class="fragment text-smaller" style="color: #ff5555; font-size: 0.65em;">Always assert
+          <code>y_pred.shape == y_true.shape</code> before computing residuals!
+        </p>
+      </section>
+
+      <!-- Slide 18: Live Vectorization Demo — NumPy vs PyTorch -->
+      <section>
+        <h3>Side-by-Side: <code>NumPy</code> vs. <code>PyTorch</code> Tensors</h3>
+        <p class="text-smaller">Near-identical APIs make transitioning from tabular ML to deep learning seamless:</p>
+        <pre style="font-size: 0.33em;"><code class="language-python">import numpy as np
+import torch
+
+# --- NumPy Implementation ---
+X_np = np.random.default_rng(0).normal(size=(1000, 10)).astype(np.float32)
+W_np = np.ones((10, 1), dtype=np.float32)
+b_np = np.array([0.5], dtype=np.float32)
+y_np = X_np @ W_np + b_np                 # Matrix multiply + (1,) broadcast -> (1000, 1)
+
+# --- PyTorch Equivalent ---
+X_pt = torch.from_numpy(X_np)             # Zero-copy bridge sharing CPU memory!
+W_pt = torch.ones((10, 1), dtype=torch.float32)
+b_pt = torch.tensor([0.5], dtype=torch.float32)
+y_pt = X_pt @ W_pt + b_pt                 # Exact same @ operator & broadcasting rules!
+
+assert np.allclose(y_np, y_pt.numpy())</code></pre>
+        <p class="fragment text-smaller" style="color: #50fa7b; font-size: 0.66em;">Key naming differences:
+          <code>axis</code> (NumPy) &harr; <code>dim</code> (PyTorch); <code>.reshape()</code> / <code>.view()</code>;
+          default float is <code>float64</code> (NumPy) vs <code>float32</code> (PyTorch).
+        </p>
+      </section>
+
+      <!-- Slide 19: Checkpoint 2 -->
+      <section>
+        <h3>Quick Review: Checkpoint 2 (Broadcasting &amp; Vectorization)</h3>
+        <p style="color: #50fa7b;">Determine whether each pair of shapes is broadcast-compatible and give the output
+          shape:</p>
+        <ol style="font-size: 0.76em;">
+          <li class="fragment"><code>A.shape = (64, 3, 28, 28)</code> and <code>B.shape = (3, 1, 1)</code> (e.g.,
+            per-channel RGB image normalization).</li>
+          <li class="fragment"><code>A.shape = (100, 5)</code> and <code>B.shape = (100,)</code>. How do you fix this if
+            you want to subtract <code>B</code> from each column of <code>A</code>?</li>
+          <li class="fragment">Why does <code>arr[1:4]</code> share memory with <code>arr</code>, whereas
+            <code>arr[[1, 2, 3]]</code> allocates a new array?
+          </li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PART III: TABULAR DATA MANIPULATION WITH PANDAS              -->
+      <!-- ============================================================ -->
+      <section>
+        <h3 style="color: #bd93f9; font-size: 1.1em;">Part III: Tabular Data Manipulation with <code>pandas</code></h3>
+        <p style="font-size: 0.75em; color: #8be9fd;">Supplemental Bootcamp Notes for Structured Datasets</p>
+      </section>
+
+      <!-- Slide 21: Series & DataFrame Architecture -->
+      <section>
+        <h3><code>Series</code> and <code>DataFrame</code> Architecture</h3>
+        <ul style="font-size: 0.66em;">
+          <li class="fragment"><strong><code>pd.Series</code>:</strong> A 1D labeled array holding a single
+            <code>dtype</code>, backed by a <code>NumPy</code>/Arrow array plus an explicit <code>Index</code>.
+          </li>
+          <li class="fragment"><strong><code>pd.DataFrame</code>:</strong> A 2D heterogeneous table mapping column names
+            to <code>Series</code> objects sharing a row <code>Index</code>.</li>
+          <li class="fragment"><strong>Essential Inspection Methods:</strong>
+            <ul>
+              <li><code>df.shape</code>, <code>df.columns</code>, <code>df.dtypes</code></li>
+              <li><code>df.head(n)</code> / <code>df.tail(n)</code> / <code>df.sample(n, random_state=42)</code></li>
+              <li><code>df.info()</code> (non-null counts, dtypes, memory footprint) &amp; <code>df.describe()</code>
+                (quartiles, mean, std)</li>
+              <li><code>df["col"].value_counts(dropna=False, normalize=True)</code></li>
+            </ul>
+          </li>
+          <li class="fragment"><strong>Bridging to ML Libraries:</strong> Extract raw feature matrices via
+            <code>X = df[feature_cols].to_numpy()</code>.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Slide 22: Indexing & Selection (.loc vs .iloc) -->
+      <section>
+        <h3>Precision Indexing: <code>.loc[]</code> vs. <code>.iloc[]</code></h3>
+        <pre style="font-size: 0.33em;"><code class="language-python">import pandas as pd
+
+# 1. Column selection
+col_series = df["median_income"]                 # Single column -> Series
+sub_df     = df[["median_income", "population"]] # List of cols -> DataFrame
+
+# 2. .loc[row_labels, col_labels] -> LABEL-based (end label IS inclusive!)
+df.loc[0:4, ["longitude", "latitude"]]
+
+# 3. .iloc[row_pos, col_pos] -> INTEGER POSITION-based (end index is EXCLUSIVE!)
+df.iloc[0:5, 0:2]
+
+# 4. Conditional Filtering + Safe Assignment (Avoid chained indexing df[mask]["col"] = val!)
+high_income = df.loc[df["median_income"] > 6.0, ["median_income", "median_house_value"]]
+df.loc[df["total_bedrooms"].isna(), "bedrooms_missing"] = 1</code></pre>
+        <p class="fragment text-smaller" style="color: #ffb86c; font-size: 0.66em;">Always use single-step
+          <code>df.loc[row_mask, col_name] = value</code> to prevent <code>SettingWithCopyWarning</code>.
+        </p>
+      </section>
+
+      <!-- Slide 23: Missing Values, Type Casting & Binning -->
+      <section>
+        <h3>Data Cleaning, Missing Values &amp; Discretization</h3>
+        <pre style="font-size: 0.33em;"><code class="language-python"># 1. Auditing missing values
+missing_counts = df.isna().sum()
+missing_pct    = (df.isna().mean() * 100).round(2)
+
+# 2. Handling missing values (note: fit medians ONLY on training data!)
+df_clean = df.dropna(subset=["median_house_value"]).copy()
+median_bed = df_clean["total_bedrooms"].median()
+df_clean["total_bedrooms"] = df_clean["total_bedrooms"].fillna(median_bed)
+
+# 3. Type conversion & categorical memory optimization
+df_clean["ocean_proximity"] = df_clean["ocean_proximity"].astype("category")
+numeric_col = pd.to_numeric(raw_series, errors="coerce")  # Invalid strings -> NaN
+
+# 4. Discretizing continuous variables into strata (used in Géron Ch. 2!)
+df_clean["income_cat"] = pd.cut(
+    df_clean["median_income"],
+    bins=[0.0, 1.5, 3.0, 4.5, 6.0, np.inf],
+    labels=[1, 2, 3, 4, 5]
+)</code></pre>
+      </section>
+
+      <!-- Slide 24: Aggregation (groupby), Merging & Vectorized Ops -->
+      <section>
+        <h3>Split&ndash;Apply&ndash;Combine (<code>groupby</code>), Joins &amp; Vectorized Columns</h3>
+        <pre style="font-size: 0.33em;"><code class="language-python"># 1. Named aggregations with groupby()
+summary = (
+    df.groupby("ocean_proximity", observed=True)
+      .agg(
+          district_count=("median_house_value", "count"),
+          median_price=("median_house_value", "median"),
+          mean_income=("median_income", "mean")
+      )
+      .sort_values("median_price", ascending=False)
+)
+
+# 2. Relational Joins (merging lookup tables)
+enriched = pd.merge(df, region_metadata, on="region_id", how="left")
+
+# 3. Vectorized Feature Creation (Prefer vectorized arithmetic over slow .apply(lambda ...))
+df = df.assign(
+    rooms_per_house=df["total_rooms"] / df["households"],
+    bedrooms_ratio=df["total_bedrooms"] / df["total_rooms"],
+    people_per_house=df["population"] / df["households"]
+)</code></pre>
+        <p class="fragment text-smaller" style="color: #50fa7b; font-size: 0.66em;">Vectorized column arithmetic runs in
+          C/NumPy speed&mdash;avoid row-wise <code>df.apply(..., axis=1)</code> on large tables.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PART IV: DATA VISUALIZATION WITH MATPLOTLIB                  -->
+      <!-- ============================================================ -->
+      <section>
+        <h3 style="color: #bd93f9; font-size: 1.1em;">Part IV: Data Visualization with <code>matplotlib</code></h3>
+        <p style="font-size: 0.75em; color: #8be9fd;">Object-Oriented Plotting &amp; Diagnostic Visuals</p>
+      </section>
+
+      <!-- Slide 26: Anatomy of a Matplotlib Figure -->
+      <section>
+        <h3>Anatomy of a <code>matplotlib</code> Figure (OO Interface)</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.15; font-size: 0.64em;">
+            <ul>
+              <li class="fragment"><strong><code>Figure</code>:</strong> The top-level canvas container holding one or
+                more subplots, titles, and colorbars.</li>
+              <li class="fragment"><strong><code>Axes</code>:</strong> An individual plot region with its own coordinate
+                system, x/y <code>Axis</code> objects, ticks, labels, and legend.</li>
+              <li class="fragment"><strong>Why Use the OO API (<code>fig, ax = plt.subplots()</code>)?</strong>
+                <ul>
+                  <li>Explicitly targets specific panels in multi-plot figures.</li>
+                  <li>Avoids hidden global state bugs from legacy MATLAB-style <code>plt.plot()</code> calls.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.85; text-align: center;">
+            <img src="" alt="Anatomy of a Matplotlib Figure and Axes Diagram" width="380" height="270"
+              style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>Fig. W2.4: Hierarchy of <code>Figure</code>,
+                <code>Axes</code>, <code>Axis</code>, and <code>Artist</code></em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 27: Diagnostic Plot Types & Multi-Panel Code -->
+      <section>
+        <h3>Building Diagnostic Subplots in <code>matplotlib</code></h3>
+        <pre style="font-size: 0.32em;"><code class="language-python">import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(14, 4), dpi=120)
+
+# Panel 1: Histogram (distribution shape, skewness, capping artifacts)
+axes[0].hist(housing["median_income"], bins=50, color="#4c72b0", edgecolor="white")
+axes[0].set(title="Median Income Distribution", xlabel="Median Income ($10k)", ylabel="Districts")
+
+# Panel 2: Scatter with alpha transparency (revealing density & horizontal price caps)
+axes[1].scatter(housing["median_income"], housing["median_house_value"], alpha=0.1, s=10)
+axes[1].set(title="Income vs. House Value", xlabel="Median Income ($10k)", ylabel="House Value ($)")
+
+# Panel 3: Correlation Matrix Heatmap
+corr = housing[["median_house_value", "median_income", "rooms_per_house", "bedrooms_ratio"]].corr()
+im = axes[2].imshow(corr, cmap="coolwarm", vmin=-1, vmax=1)
+axes[2].set_xticks(range(len(corr)), corr.columns, rotation=30, ha="right")
+axes[2].set_yticks(range(len(corr)), corr.columns)
+fig.colorbar(im, ax=axes[2], fraction=0.046)
+
+fig.tight_layout()
+plt.show()</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PART V: GÉRON (2025) CHAPTER 2 — END-TO-END PROJECT & EDA    -->
+      <!-- ============================================================ -->
+      <section>
+        <h3 style="color: #bd93f9; font-size: 1.1em;">Part V: End-to-End ML Project &amp; Tabular EDA</h3>
+        <p style="font-size: 0.75em; color: #8be9fd;">G&eacute;ron (2025), Chapter 2 &mdash; California Housing Case
+          Study</p>
+      </section>
+
+      <!-- Slide 29: 8 Steps of an End-to-End ML Project -->
+      <section>
+        <h3>The 8 Steps of an End-to-End ML Project</h3>
+        <p class="text-smaller">G&eacute;ron's structured checklist (Steps 1&ndash;3 covered this week; Steps 4&ndash;8
+          in Weeks 3&ndash;4):</p>
+        <div style="display: flex; gap: 20px; font-size: 0.68em; margin-top: 10px;">
+          <div class="fragment"
+            style="flex: 1; background: #282a36; border: 1px solid #50fa7b; padding: 12px; border-radius: 6px;">
+            <h4 style="color: #50fa7b; margin-bottom: 8px;">Week 2 Focus (Steps 1&ndash;3)</h4>
+            <ol>
+              <li><strong>Look at the big picture</strong> (frame problem, select metric, verify assumptions).</li>
+              <li><strong>Get the data</strong> (automate ingestion, inspect schema, <em>create test set first</em>).
+              </li>
+              <li><strong>Explore and visualize the data</strong> (gain domain insights, check correlations, test
+                attribute combinations).</li>
+            </ol>
+          </div>
+          <div class="fragment"
+            style="flex: 1; background: #282a36; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
+            <h4 style="color: #8be9fd; margin-bottom: 8px;">Weeks 3&ndash;4 Preview (Steps 4&ndash;8)</h4>
+            <ol start="4">
+              <li>Prepare the data for ML algorithms (clean, encode, scale via <code>Pipeline</code>).</li>
+              <li>Select a model and train it.</li>
+              <li>Fine-tune your model (cross-validation &amp; grid/random search).</li>
+              <li>Present your solution.</li>
+              <li>Launch, monitor, and maintain your system.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 30: Step 1 — Look at the Big Picture & Frame the Problem -->
+      <section>
+        <h3>Step 1: Look at the Big Picture &amp; Frame the Problem</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.15; font-size: 0.64em;">
+            <ul>
+              <li class="fragment"><strong>Business Objective:</strong> Predict a California census block group's
+                (<em>district's</em>) median housing price to feed into a downstream <strong>investment
+                  analysis</strong> pipeline.</li>
+              <li class="fragment"><strong>Current Baseline:</strong> Manual expert estimates using complex
+                rules&mdash;slow, expensive, and often off by <strong>&gt;30%</strong>.</li>
+              <li class="fragment"><strong>Problem Framing Decisions:</strong>
+                <ul>
+                  <li><em>Supervision:</em> <strong>Supervised learning</strong> (labeled historical census prices).
+                  </li>
+                  <li><em>Task Type:</em> <strong>Multiple univariate regression</strong> (multiple input features,
+                    single continuous target per district).</li>
+                  <li><em>Learning Mode:</em> <strong>Batch learning</strong> (data fits in memory; no rapid streaming
+                    updates needed).</li>
+                </ul>
+              </li>
+              <li class="fragment"><strong>Check Assumptions:</strong> Confirm downstream team needs exact dollar
+                prices, not coarse categories (<em>"cheap"</em>/<em>"expensive"</em>).</li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.85; text-align: center;">
+            <img src="" alt="Figure 2-2 Machine Learning Pipeline for Real Estate Investments" width="380" height="250"
+              style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Fig. 2-2: Upstream/Downstream ML
+                Pipeline</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 31: Selecting a Performance Measure (RMSE vs MAE) -->
+      <section>
+        <h3>Step 1 (Cont.): Selecting a Performance Measure</h3>
+        <p class="text-smaller">Comparing the two standard regression loss/evaluation functions:</p>
+        <ul style="font-size: 0.65em;">
+          <li class="fragment"><strong>Root Mean Square Error (RMSE &mdash; Equation 2-1):</strong> Corresponds to the
+            Euclidean ($\ell_2$) norm; penalizes large errors heavily:
+            $$\text{RMSE}(\mathbf{X}, h) = \sqrt{\frac{1}{m} \sum_{i=1}^{m} \left( h(\mathbf{x}^{(i)}) - y^{(i)}
+            \right)^2}$$
+          </li>
+          <li class="fragment"><strong>Mean Absolute Error (MAE &mdash; Equation 2-2):</strong> Corresponds to the
+            Manhattan ($\ell_1$) norm; more robust when there are many outlier districts:
+            $$\text{MAE}(\mathbf{X}, h) = \frac{1}{m} \sum_{i=1}^{m} \left| h(\mathbf{x}^{(i)}) - y^{(i)} \right|$$
+          </li>
+          <li class="fragment" style="color: #8be9fd;"><strong>Rule of Thumb:</strong> When outliers are exponentially
+            rare (bell-shaped error distribution), <strong>RMSE</strong> is generally preferred.</li>
+        </ul>
+      </section>
+
+      <!-- Slide 32: Step 2 — Get the Data & Initial Structure Inspection -->
+      <section>
+        <h3>Step 2: Automated Data Ingestion &amp; Structure Check</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.1; font-size: 0.63em;">
+            <ul>
+              <li class="fragment"><strong>Automate Fetching:</strong> Write a Python function
+                (<code>load_housing_data()</code>) using <code>pathlib</code>, <code>urllib</code>, and
+                <code>tarfile</code> so dataset retrieval is reproducible across environments.
+              </li>
+              <li class="fragment"><strong>Initial Audit (20,640 districts, 10 attributes):</strong>
+                <ul>
+                  <li><code>housing.info()</code> reveals <code>total_bedrooms</code> has only <strong>20,433</strong>
+                    non-null values (<strong>207 missing values</strong>).</li>
+                  <li>All attributes are <code>float64</code> except <code>ocean_proximity</code> (<code>object</code>
+                    text categorical).</li>
+                  <li><code>housing["ocean_proximity"].value_counts()</code> reveals 5 categories
+                    (<code>&lt;1H OCEAN</code>: 9,136; <code>INLAND</code>: 6,551; <code>NEAR OCEAN</code>: 2,658;
+                    <code>NEAR BAY</code>: 2,290; <code>ISLAND</code>: 5).
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.9; text-align: center;">
+            <img src="" alt="Figure 2-6 and 2-7 housing.head() and housing.describe() summary" width="390" height="270"
+              style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-6 &amp; 2-7: <code>head()</code>
+                &amp; <code>describe()</code> Summary</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 33: Visual Inspection via Histograms (Fig 2-8) -->
+      <section>
+        <h3>Diagnostic Histograms: 4 Critical Data Discoveries</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.1; font-size: 0.62em;">
+            <p>Calling <code>housing.hist(bins=50, figsize=(12, 8))</code> exposes hidden quirks immediately:</p>
+            <ol>
+              <li class="fragment"><strong>Pre-Scaled &amp; Capped Income:</strong> <code>median_income</code> is
+                expressed in tens of thousands of USD and capped at <code>0.5</code> and <code>15.0</code>.</li>
+              <li class="fragment"><strong>Target &amp; Age Capping:</strong> <code>housing_median_age</code> is capped
+                at 52, and target <code>median_house_value</code> is capped at <strong>$500,000</strong>&mdash;risking
+                models that never predict above $500k!</li>
+              <li class="fragment"><strong>Varying Scales:</strong> Attributes span vastly different ranges
+                (necessitating feature scaling later).</li>
+              <li class="fragment"><strong>Heavy Right-Skewness:</strong> <code>total_rooms</code>,
+                <code>total_bedrooms</code>, <code>population</code>, and <code>households</code> have long right tails
+                (candidates for log/sqrt transforms).
+              </li>
+            </ol>
+          </div>
+          <div class="fragment" style="flex: 0.9; text-align: center;">
+            <img src="" alt="Figure 2-8 Histograms for each numerical attribute in California Housing" width="400"
+              height="280" style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Fig. 2-8: Histograms of All Numerical
+                Attributes</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 34: Creating a Test Set & Preventing Data Snooping Bias -->
+      <section>
+        <h3>STOP! Create a Test Set Before Exploring Further</h3>
+        <p class="text-smaller" style="color: #ff5555;"><strong>Data Snooping Bias:</strong> Looking at the test set
+          leads your brain to overfit model choices to test quirks.</p>
+        <ul style="font-size: 0.64em;">
+          <li class="fragment"><strong>Naive Random Split Pitfall:</strong> Re-running unseeded random splits eventually
+            leaks the entire dataset across runs; even seeded splits break if new rows are inserted into an updated
+            dataset.</li>
+          <li class="fragment"><strong>Deterministic ID Hashing (<code>zlib.crc32</code>):</strong> Hash each instance's
+            immutable unique identifier (e.g., <code>longitude * 1000 + latitude</code>) and assign to test if
+            $\text{hash}(\text{id}) &lt; 0.2 \times 2^{32}$.</li>
+          <li class="fragment"><strong><code>scikit-learn</code> Standard Splitting:</strong>
+            <pre style="font-size: 0.48em; margin-top: 6px;"><code class="language-python">from sklearn.model_selection import train_test_split
+train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)</code></pre>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Slide 35: Stratified Sampling vs Purely Random Sampling -->
+      <section>
+        <h3>Stratified Sampling: Eliminating Sampling Bias</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.15; font-size: 0.61em;">
+            <p>Because domain experts identify <code>median_income</code> as the strongest predictor, we divide the
+              population into homogeneous <strong>strata</strong> (<code>income_cat</code> 1&ndash;5 via
+              <code>pd.cut</code>) so the test set mirrors the full dataset's distribution:
+            </p>
+            <pre style="font-size: 0.46em;"><code class="language-python">housing["income_cat"] = pd.cut(
+    housing["median_income"],
+    bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+    labels=[1, 2, 3, 4, 5]
+)
+strat_train_set, strat_test_set = train_test_split(
+    housing, test_size=0.2, stratify=housing["income_cat"], random_state=42
+)
+for set_ in (strat_train_set, strat_test_set):
+    set_.drop("income_cat", axis=1, inplace=True)</code></pre>
+            <p class="fragment" style="color: #50fa7b;">Stratified sampling cuts category proportion error to
+              <strong>&lt;0.4%</strong> vs. up to <strong>6.45%</strong> in purely random sampling!
+            </p>
+          </div>
+          <div class="fragment" style="flex: 0.85; text-align: center;">
+            <img src="" alt="Figure 2-9 Income Categories Histogram and Figure 2-10 Sampling Bias Table" width="380"
+              height="270" style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-9 &amp; 2-10: Income Strata &amp;
+                Sampling Bias Comparison</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 36: Step 3 — Explore & Visualize Geographical Data -->
+      <section>
+        <h3>Step 3: Visualizing Geographical &amp; Multi-Variable Patterns</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.1; font-size: 0.62em;">
+            <p>Working strictly on <code>housing = strat_train_set.copy()</code>:</p>
+            <ul>
+              <li class="fragment"><strong>Fixing Overplotting:</strong> Plain scatter plots hide point density; setting
+                <code>alpha=0.2</code> reveals dense urban clusters (Bay Area, LA, San Diego, Central Valley).
+              </li>
+              <li class="fragment"><strong>4-Dimensional Bubble Scatter:</strong> Encode <code>longitude</code> ($x$),
+                <code>latitude</code> ($y$), <code>population/100</code> (circle radius <code>s</code>), and
+                <code>median_house_value</code> (color <code>c</code> with <code>cmap="jet"</code>).
+              </li>
+              <li class="fragment"><strong>Actionable Modeling Insight:</strong> Housing prices correlate strongly with
+                coastal proximity and population clusters&mdash;motivating radial basis / clustering similarity features
+                later!</li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.9; text-align: center;">
+            <img src="" alt="Figure 2-12 Alpha Density Map and Figure 2-13 California Housing Prices Bubble Map"
+              width="400" height="280" style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-12 &amp; 2-13: Density Scatter &amp;
+                Price/Population Map</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 37: Looking for Correlations & Scatter Matrix -->
+      <section>
+        <h3>Looking for Correlations: Pearson's $r$ &amp; <code>scatter_matrix</code></h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.1; font-size: 0.62em;">
+            <ul>
+              <li class="fragment"><strong>Correlation Matrix (<code>housing.corr(numeric_only=True)</code>):</strong>
+                <ul>
+                  <li><code>median_income</code>: <strong>+0.688</strong> (strongest positive predictor)</li>
+                  <li><code>total_rooms</code>: +0.137 | <code>housing_median_age</code>: +0.102</li>
+                  <li><code>latitude</code>: &minus;0.140 (slight southward price increase)</li>
+                </ul>
+              </li>
+              <li class="fragment"><strong><code>scatter_matrix</code> &amp; Zoomed Income Scatter:</strong> Plotting
+                <code>median_income</code> vs. <code>median_house_value</code> (<code>alpha=0.1</code>) exposes sharp
+                horizontal cap lines at <strong>$500k, $450k, $350k, and $280k</strong> that we may want to clean so
+                models don't learn data quirks.
+              </li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.9; text-align: center;">
+            <img src="" alt="Figure 2-14 Scatter Matrix and Figure 2-15 Median Income vs Median House Value" width="400"
+              height="280" style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-14 &amp; 2-15: Scatter Matrix &amp;
+                Income-Price Cap Lines</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 38: Pitfalls of Pearson's Correlation Coefficient -->
+      <section>
+        <h3>Warning: What Pearson's Correlation $r$ Misses</h3>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div style="flex: 1.1; font-size: 0.65em;">
+            <ul>
+              <li class="fragment"><strong>Measures Linear Trend Only:</strong> $r \in [-1, 1]$ captures monotonic
+                linear association (<em>"as $x$ rises, $y$ rises/falls linearly"</em>).</li>
+              <li class="fragment"><strong>Independent of Slope:</strong> A steep line and a nearly flat line both have
+                $r = 1.0$ (height in inches vs. height in nanometers has $r = 1.0$).</li>
+              <li class="fragment"><strong>Blind to Nonlinear Dependencies:</strong> Quadratic curves, circles,
+                sinusoids, and symmetric clusters (bottom row) all yield <strong>$r = 0$</strong> despite deterministic
+                functional relationships!</li>
+              <li class="fragment" style="color: #8be9fd;"><strong>Takeaway:</strong> Always visualize scatter plots
+                alongside summary correlation tables.</li>
+            </ul>
+          </div>
+          <div class="fragment" style="flex: 0.9; text-align: center;">
+            <img src="" alt="Figure 2-16 Standard Correlation Coefficient Across Linear and Nonlinear Datasets"
+              width="400" height="260" style="border: 2px dashed #6272a4; background: #282a36;">
+            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Fig. 2-16: Correlation $r$ vs. Slope &amp;
+                Nonlinear Shapes</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 39: Experimenting with Attribute Combinations -->
+      <section>
+        <h3>Experimenting with Attribute Combinations</h3>
+        <p class="text-smaller">Raw totals per district are noisy unless normalized into meaningful domain ratios:</p>
+        <pre style="font-size: 0.34em;"><code class="language-python">housing["rooms_per_house"]  = housing["total_rooms"] / housing["households"]
+housing["bedrooms_ratio"]   = housing["total_bedrooms"] / housing["total_rooms"]
+housing["people_per_house"] = housing["population"] / housing["households"]
+
+corr_matrix = housing.corr(numeric_only=True)
+print(corr_matrix["median_house_value"].sort_values(ascending=False))</code></pre>
+        <ul style="font-size: 0.65em; margin-top: 10px;">
+          <li class="fragment"><strong><code>bedrooms_ratio</code> ($r = -0.256$):</strong> Much stronger correlation
+            with house value than raw <code>total_bedrooms</code> ($+0.055$) or <code>total_rooms</code>
+            ($+0.137$)&mdash;houses with a lower bedroom-to-room ratio tend to be more expensive!</li>
+          <li class="fragment"><strong><code>rooms_per_house</code> ($r = +0.144$):</strong> More informative measure of
+            house size than raw district room count.</li>
+          <li class="fragment" style="color: #50fa7b;">EDA is <strong>iterative</strong>: build a fast prototype,
+            analyze model errors, and return to engineer better features.</li>
+        </ul>
+      </section>
+
+      <!-- Slide 40: Checkpoint 3 -->
+      <section>
+        <h3>Quick Review: Checkpoint 3 (G&eacute;ron Ch. 2 EDA)</h3>
+        <p style="color: #50fa7b;">Test your data science discipline:</p>
+        <ol style="font-size: 0.76em;">
+          <li class="fragment">Why must <code>train_test_split()</code> happen <em>before</em> plotting correlation
+            matrices, histograms, or computing imputation medians?</li>
+          <li class="fragment">Why did we discretize <code>median_income</code> into <code>income_cat</code> before
+            splitting, and why did we drop <code>income_cat</code> immediately after?</li>
+          <li class="fragment">Two attributes have a Pearson correlation of $r = 0.0$. Can we safely conclude they are
+            statistically independent and drop the feature? Why or why not?</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- PART VI: LABORATORY ACTIVITY 1 & WEEK 2 SUMMARY              -->
+      <!-- ============================================================ -->
+      <section>
+        <h3>Laboratory Activity 1: Vectorization &amp; Tabular EDA</h3>
+        <p class="text-smaller"><strong>Formative Assessment (100 Points &mdash; Evaluated via Analytical Lab
+            Rubric):</strong></p>
+        <ul style="font-size: 0.64em;">
+          <li class="fragment"><strong>Part A &mdash; Loop-to-Vectorization Refactoring (<code>NumPy</code> &amp;
+              <code>PyTorch</code>):</strong>
+            <ul>
+              <li>Refactor iterative Python implementations of batch linear inference, Z-score standardization, and
+                pairwise Euclidean distance matrices into vectorized operations using broadcasting.</li>
+              <li>Verify numerical equivalence with <code>np.allclose()</code> / <code>torch.allclose()</code> and
+                benchmark runtime speedups using <code>timeit</code>.</li>
+            </ul>
+          </li>
+          <li class="fragment"><strong>Part B &mdash; Leak-Free Stratified Split &amp; Tabular EDA (<code>pandas</code>
+              &amp; <code>matplotlib</code>):</strong>
+            <ul>
+              <li>Perform stratified train/test splitting on a real-world tabular dataset before exploring.</li>
+              <li>Produce diagnostic histograms, missing-value audits, multi-variable scatter plots, correlation
+                heatmaps, and engineered ratio features with documented findings.</li>
+            </ul>
+          </li>
+          <li class="fragment" style="color: #ffb86c;"><strong>Rubric Focus:</strong> Algorithmic/Math Correctness
+            (25%), Modularity &amp; Tool Usage (25%), Experimental Rigor &amp; No Leakage (20%), Diagnostic Analysis
+            (20%), Reporting &amp; Plots (10%).</li>
+        </ul>
+      </section>
+
+      <!-- Slide 42: Week 2 Summary -->
+      <section>
+        <h3>Summary of Week 2</h3>
+        <ol style="font-size: 0.72em;">
+          <li class="fragment"><strong>Linear Algebra as Code:</strong> Design matrices $\mathbf{X} \in \mathbb{R}^{m
+            \times n}$, batch predictions $\mathbf{X}\mathbf{w} + b$, and $\ell_1$/$\ell_2$ norms map directly to matrix
+            multiplication and regression metrics (MAE/RMSE).</li>
+          <li class="fragment"><strong>Vectorization &amp; Broadcasting:</strong> Eliminating Python loops via
+            contiguous arrays and right-aligned size-1 broadcasting delivers orders-of-magnitude speedups across both
+            <code>NumPy</code> and <code>PyTorch</code>.
+          </li>
+          <li class="fragment"><strong>Disciplined EDA Workflow:</strong> Isolate a stratified test set first, diagnose
+            capping/skewness/missing data visually, remember Pearson's $r$ only captures linear trends, and test domain
+            ratio features.</li>
+          <li class="fragment"><strong>Next Week (Weeks 3&ndash;4):</strong> Data Preparation, Custom
+            <code>scikit-learn</code> Estimators, Leak-Free <code>Pipeline</code>s, and Cross-Validation (G&eacute;ron
+            Ch. 2, Part 2).
+          </li>
+        </ol>
+      </section>
+    </div>
+  </div>
+
+  <script src="../dist/reveal.js"></script>
+  <script src="../dist/plugin/notes.js"></script>
+  <script src="../dist/plugin/markdown.js"></script>
+  <script src="../dist/plugin/highlight.js"></script>
+  <script src="../dist/plugin/zoom.js"></script>
+  <script src="../dist/plugin/math.js"></script>
+  <script>
+    // Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+    Reveal.initialize({
+      hash: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3]
+    });
+  </script>
+</body>
+
+</html>
