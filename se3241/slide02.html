@@ -384,8 +384,7 @@ row_probs   = X / row_sums_2d               # Exact row-wise normalization!</cod
             </ol>
           </div>
           <div class="fragment" style="flex: 0.85; text-align: center;">
-            <img src="" alt="NumPy and PyTorch Broadcasting Alignment Diagram" width="380" height="270"
-              style="border: 2px dashed #6272a4; background: #282a36;">
+            <img src="slide02-images/broadcasting.png" alt="NumPy and PyTorch Broadcasting Alignment Diagram" width="380" height="270">
             <p style="font-size: 0.55em; color: #6272a4;"><em>Fig. W2.3: Left-Padding &amp; Stretching Along Size-1
                 Axes</em></p>
           </div>
@@ -591,8 +590,7 @@ df = df.assign(
             </ul>
           </div>
           <div class="fragment" style="flex: 0.85; text-align: center;">
-            <img src="" alt="Anatomy of a Matplotlib Figure and Axes Diagram" width="380" height="270"
-              style="border: 2px dashed #6272a4; background: #282a36;">
+            <img src="slide02-images/matplot.png" alt="Anatomy of a Matplotlib Figure and Axes Diagram" width="380" height="380">
             <p style="font-size: 0.55em; color: #6272a4;"><em>Fig. W2.4: Hierarchy of <code>Figure</code>,
                 <code>Axes</code>, <code>Axis</code>, and <code>Artist</code></em></p>
           </div>
@@ -641,8 +639,8 @@ plt.show()</code></pre>
           in Weeks 3&ndash;4):</p>
         <div style="display: flex; gap: 20px; font-size: 0.68em; margin-top: 10px;">
           <div class="fragment"
-            style="flex: 1; background: #282a36; border: 1px solid #50fa7b; padding: 12px; border-radius: 6px;">
-            <h4 style="color: #50fa7b; margin-bottom: 8px;">Week 2 Focus (Steps 1&ndash;3)</h4>
+            style="flex: 1; background: #eaebef; border: 1px solid #0c972f; padding: 12px; border-radius: 6px;">
+            <h4 style="color: #0c972f; margin-bottom: 8px;">Week 2 Focus (Steps 1&ndash;3)</h4>
             <ol>
               <li><strong>Look at the big picture</strong> (frame problem, select metric, verify assumptions).</li>
               <li><strong>Get the data</strong> (automate ingestion, inspect schema, <em>create test set first</em>).
@@ -652,8 +650,8 @@ plt.show()</code></pre>
             </ol>
           </div>
           <div class="fragment"
-            style="flex: 1; background: #282a36; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
-            <h4 style="color: #8be9fd; margin-bottom: 8px;">Weeks 3&ndash;4 Preview (Steps 4&ndash;8)</h4>
+            style="flex: 1; background: #eaebef; border: 1px solid #6272a4; padding: 12px; border-radius: 6px;">
+            <h4 style="color: #6272a4; margin-bottom: 8px;">Weeks 3&ndash;4 Preview (Steps 4&ndash;8)</h4>
             <ol start="4">
               <li>Prepare the data for ML algorithms (clean, encode, scale via <code>Pipeline</code>).</li>
               <li>Select a model and train it.</li>
@@ -690,269 +688,13 @@ plt.show()</code></pre>
                 prices, not coarse categories (<em>"cheap"</em>/<em>"expensive"</em>).</li>
             </ul>
           </div>
-          <div class="fragment" style="flex: 0.85; text-align: center;">
-            <img src="" alt="Figure 2-2 Machine Learning Pipeline for Real Estate Investments" width="380" height="250"
-              style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Fig. 2-2: Upstream/Downstream ML
-                Pipeline</em></p>
-          </div>
         </div>
-      </section>
-
-      <!-- Slide 31: Selecting a Performance Measure (RMSE vs MAE) -->
-      <section>
-        <h3>Step 1 (Cont.): Selecting a Performance Measure</h3>
-        <p class="text-smaller">Comparing the two standard regression loss/evaluation functions:</p>
-        <ul style="font-size: 0.65em;">
-          <li class="fragment"><strong>Root Mean Square Error (RMSE &mdash; Equation 2-1):</strong> Corresponds to the
-            Euclidean ($\ell_2$) norm; penalizes large errors heavily:
-            $$\text{RMSE}(\mathbf{X}, h) = \sqrt{\frac{1}{m} \sum_{i=1}^{m} \left( h(\mathbf{x}^{(i)}) - y^{(i)}
-            \right)^2}$$
-          </li>
-          <li class="fragment"><strong>Mean Absolute Error (MAE &mdash; Equation 2-2):</strong> Corresponds to the
-            Manhattan ($\ell_1$) norm; more robust when there are many outlier districts:
-            $$\text{MAE}(\mathbf{X}, h) = \frac{1}{m} \sum_{i=1}^{m} \left| h(\mathbf{x}^{(i)}) - y^{(i)} \right|$$
-          </li>
-          <li class="fragment" style="color: #8be9fd;"><strong>Rule of Thumb:</strong> When outliers are exponentially
-            rare (bell-shaped error distribution), <strong>RMSE</strong> is generally preferred.</li>
-        </ul>
-      </section>
-
-      <!-- Slide 32: Step 2 — Get the Data & Initial Structure Inspection -->
-      <section>
-        <h3>Step 2: Automated Data Ingestion &amp; Structure Check</h3>
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div style="flex: 1.1; font-size: 0.63em;">
-            <ul>
-              <li class="fragment"><strong>Automate Fetching:</strong> Write a Python function
-                (<code>load_housing_data()</code>) using <code>pathlib</code>, <code>urllib</code>, and
-                <code>tarfile</code> so dataset retrieval is reproducible across environments.
-              </li>
-              <li class="fragment"><strong>Initial Audit (20,640 districts, 10 attributes):</strong>
-                <ul>
-                  <li><code>housing.info()</code> reveals <code>total_bedrooms</code> has only <strong>20,433</strong>
-                    non-null values (<strong>207 missing values</strong>).</li>
-                  <li>All attributes are <code>float64</code> except <code>ocean_proximity</code> (<code>object</code>
-                    text categorical).</li>
-                  <li><code>housing["ocean_proximity"].value_counts()</code> reveals 5 categories
-                    (<code>&lt;1H OCEAN</code>: 9,136; <code>INLAND</code>: 6,551; <code>NEAR OCEAN</code>: 2,658;
-                    <code>NEAR BAY</code>: 2,290; <code>ISLAND</code>: 5).
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-          <div class="fragment" style="flex: 0.9; text-align: center;">
-            <img src="" alt="Figure 2-6 and 2-7 housing.head() and housing.describe() summary" width="390" height="270"
-              style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-6 &amp; 2-7: <code>head()</code>
-                &amp; <code>describe()</code> Summary</em></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 33: Visual Inspection via Histograms (Fig 2-8) -->
-      <section>
-        <h3>Diagnostic Histograms: 4 Critical Data Discoveries</h3>
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div style="flex: 1.1; font-size: 0.62em;">
-            <p>Calling <code>housing.hist(bins=50, figsize=(12, 8))</code> exposes hidden quirks immediately:</p>
-            <ol>
-              <li class="fragment"><strong>Pre-Scaled &amp; Capped Income:</strong> <code>median_income</code> is
-                expressed in tens of thousands of USD and capped at <code>0.5</code> and <code>15.0</code>.</li>
-              <li class="fragment"><strong>Target &amp; Age Capping:</strong> <code>housing_median_age</code> is capped
-                at 52, and target <code>median_house_value</code> is capped at <strong>$500,000</strong>&mdash;risking
-                models that never predict above $500k!</li>
-              <li class="fragment"><strong>Varying Scales:</strong> Attributes span vastly different ranges
-                (necessitating feature scaling later).</li>
-              <li class="fragment"><strong>Heavy Right-Skewness:</strong> <code>total_rooms</code>,
-                <code>total_bedrooms</code>, <code>population</code>, and <code>households</code> have long right tails
-                (candidates for log/sqrt transforms).
-              </li>
-            </ol>
-          </div>
-          <div class="fragment" style="flex: 0.9; text-align: center;">
-            <img src="" alt="Figure 2-8 Histograms for each numerical attribute in California Housing" width="400"
-              height="280" style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Fig. 2-8: Histograms of All Numerical
-                Attributes</em></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 34: Creating a Test Set & Preventing Data Snooping Bias -->
-      <section>
-        <h3>STOP! Create a Test Set Before Exploring Further</h3>
-        <p class="text-smaller" style="color: #ff5555;"><strong>Data Snooping Bias:</strong> Looking at the test set
-          leads your brain to overfit model choices to test quirks.</p>
-        <ul style="font-size: 0.64em;">
-          <li class="fragment"><strong>Naive Random Split Pitfall:</strong> Re-running unseeded random splits eventually
-            leaks the entire dataset across runs; even seeded splits break if new rows are inserted into an updated
-            dataset.</li>
-          <li class="fragment"><strong>Deterministic ID Hashing (<code>zlib.crc32</code>):</strong> Hash each instance's
-            immutable unique identifier (e.g., <code>longitude * 1000 + latitude</code>) and assign to test if
-            $\text{hash}(\text{id}) &lt; 0.2 \times 2^{32}$.</li>
-          <li class="fragment"><strong><code>scikit-learn</code> Standard Splitting:</strong>
-            <pre style="font-size: 0.48em; margin-top: 6px;"><code class="language-python">from sklearn.model_selection import train_test_split
-train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)</code></pre>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Slide 35: Stratified Sampling vs Purely Random Sampling -->
-      <section>
-        <h3>Stratified Sampling: Eliminating Sampling Bias</h3>
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div style="flex: 1.15; font-size: 0.61em;">
-            <p>Because domain experts identify <code>median_income</code> as the strongest predictor, we divide the
-              population into homogeneous <strong>strata</strong> (<code>income_cat</code> 1&ndash;5 via
-              <code>pd.cut</code>) so the test set mirrors the full dataset's distribution:
-            </p>
-            <pre style="font-size: 0.46em;"><code class="language-python">housing["income_cat"] = pd.cut(
-    housing["median_income"],
-    bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
-    labels=[1, 2, 3, 4, 5]
-)
-strat_train_set, strat_test_set = train_test_split(
-    housing, test_size=0.2, stratify=housing["income_cat"], random_state=42
-)
-for set_ in (strat_train_set, strat_test_set):
-    set_.drop("income_cat", axis=1, inplace=True)</code></pre>
-            <p class="fragment" style="color: #50fa7b;">Stratified sampling cuts category proportion error to
-              <strong>&lt;0.4%</strong> vs. up to <strong>6.45%</strong> in purely random sampling!
-            </p>
-          </div>
-          <div class="fragment" style="flex: 0.85; text-align: center;">
-            <img src="" alt="Figure 2-9 Income Categories Histogram and Figure 2-10 Sampling Bias Table" width="380"
-              height="270" style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-9 &amp; 2-10: Income Strata &amp;
-                Sampling Bias Comparison</em></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 36: Step 3 — Explore & Visualize Geographical Data -->
-      <section>
-        <h3>Step 3: Visualizing Geographical &amp; Multi-Variable Patterns</h3>
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div style="flex: 1.1; font-size: 0.62em;">
-            <p>Working strictly on <code>housing = strat_train_set.copy()</code>:</p>
-            <ul>
-              <li class="fragment"><strong>Fixing Overplotting:</strong> Plain scatter plots hide point density; setting
-                <code>alpha=0.2</code> reveals dense urban clusters (Bay Area, LA, San Diego, Central Valley).
-              </li>
-              <li class="fragment"><strong>4-Dimensional Bubble Scatter:</strong> Encode <code>longitude</code> ($x$),
-                <code>latitude</code> ($y$), <code>population/100</code> (circle radius <code>s</code>), and
-                <code>median_house_value</code> (color <code>c</code> with <code>cmap="jet"</code>).
-              </li>
-              <li class="fragment"><strong>Actionable Modeling Insight:</strong> Housing prices correlate strongly with
-                coastal proximity and population clusters&mdash;motivating radial basis / clustering similarity features
-                later!</li>
-            </ul>
-          </div>
-          <div class="fragment" style="flex: 0.9; text-align: center;">
-            <img src="" alt="Figure 2-12 Alpha Density Map and Figure 2-13 California Housing Prices Bubble Map"
-              width="400" height="280" style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-12 &amp; 2-13: Density Scatter &amp;
-                Price/Population Map</em></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 37: Looking for Correlations & Scatter Matrix -->
-      <section>
-        <h3>Looking for Correlations: Pearson's $r$ &amp; <code>scatter_matrix</code></h3>
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div style="flex: 1.1; font-size: 0.62em;">
-            <ul>
-              <li class="fragment"><strong>Correlation Matrix (<code>housing.corr(numeric_only=True)</code>):</strong>
-                <ul>
-                  <li><code>median_income</code>: <strong>+0.688</strong> (strongest positive predictor)</li>
-                  <li><code>total_rooms</code>: +0.137 | <code>housing_median_age</code>: +0.102</li>
-                  <li><code>latitude</code>: &minus;0.140 (slight southward price increase)</li>
-                </ul>
-              </li>
-              <li class="fragment"><strong><code>scatter_matrix</code> &amp; Zoomed Income Scatter:</strong> Plotting
-                <code>median_income</code> vs. <code>median_house_value</code> (<code>alpha=0.1</code>) exposes sharp
-                horizontal cap lines at <strong>$500k, $450k, $350k, and $280k</strong> that we may want to clean so
-                models don't learn data quirks.
-              </li>
-            </ul>
-          </div>
-          <div class="fragment" style="flex: 0.9; text-align: center;">
-            <img src="" alt="Figure 2-14 Scatter Matrix and Figure 2-15 Median Income vs Median House Value" width="400"
-              height="280" style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Figs. 2-14 &amp; 2-15: Scatter Matrix &amp;
-                Income-Price Cap Lines</em></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 38: Pitfalls of Pearson's Correlation Coefficient -->
-      <section>
-        <h3>Warning: What Pearson's Correlation $r$ Misses</h3>
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div style="flex: 1.1; font-size: 0.65em;">
-            <ul>
-              <li class="fragment"><strong>Measures Linear Trend Only:</strong> $r \in [-1, 1]$ captures monotonic
-                linear association (<em>"as $x$ rises, $y$ rises/falls linearly"</em>).</li>
-              <li class="fragment"><strong>Independent of Slope:</strong> A steep line and a nearly flat line both have
-                $r = 1.0$ (height in inches vs. height in nanometers has $r = 1.0$).</li>
-              <li class="fragment"><strong>Blind to Nonlinear Dependencies:</strong> Quadratic curves, circles,
-                sinusoids, and symmetric clusters (bottom row) all yield <strong>$r = 0$</strong> despite deterministic
-                functional relationships!</li>
-              <li class="fragment" style="color: #8be9fd;"><strong>Takeaway:</strong> Always visualize scatter plots
-                alongside summary correlation tables.</li>
-            </ul>
-          </div>
-          <div class="fragment" style="flex: 0.9; text-align: center;">
-            <img src="" alt="Figure 2-16 Standard Correlation Coefficient Across Linear and Nonlinear Datasets"
-              width="400" height="260" style="border: 2px dashed #6272a4; background: #282a36;">
-            <p style="font-size: 0.55em; color: #6272a4;"><em>G&eacute;ron Fig. 2-16: Correlation $r$ vs. Slope &amp;
-                Nonlinear Shapes</em></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 39: Experimenting with Attribute Combinations -->
-      <section>
-        <h3>Experimenting with Attribute Combinations</h3>
-        <p class="text-smaller">Raw totals per district are noisy unless normalized into meaningful domain ratios:</p>
-        <pre style="font-size: 0.34em;"><code class="language-python">housing["rooms_per_house"]  = housing["total_rooms"] / housing["households"]
-housing["bedrooms_ratio"]   = housing["total_bedrooms"] / housing["total_rooms"]
-housing["people_per_house"] = housing["population"] / housing["households"]
-
-corr_matrix = housing.corr(numeric_only=True)
-print(corr_matrix["median_house_value"].sort_values(ascending=False))</code></pre>
-        <ul style="font-size: 0.65em; margin-top: 10px;">
-          <li class="fragment"><strong><code>bedrooms_ratio</code> ($r = -0.256$):</strong> Much stronger correlation
-            with house value than raw <code>total_bedrooms</code> ($+0.055$) or <code>total_rooms</code>
-            ($+0.137$)&mdash;houses with a lower bedroom-to-room ratio tend to be more expensive!</li>
-          <li class="fragment"><strong><code>rooms_per_house</code> ($r = +0.144$):</strong> More informative measure of
-            house size than raw district room count.</li>
-          <li class="fragment" style="color: #50fa7b;">EDA is <strong>iterative</strong>: build a fast prototype,
-            analyze model errors, and return to engineer better features.</li>
-        </ul>
-      </section>
-
-      <!-- Slide 40: Checkpoint 3 -->
-      <section>
-        <h3>Quick Review: Checkpoint 3 (G&eacute;ron Ch. 2 EDA)</h3>
-        <p style="color: #50fa7b;">Test your data science discipline:</p>
-        <ol style="font-size: 0.76em;">
-          <li class="fragment">Why must <code>train_test_split()</code> happen <em>before</em> plotting correlation
-            matrices, histograms, or computing imputation medians?</li>
-          <li class="fragment">Why did we discretize <code>median_income</code> into <code>income_cat</code> before
-            splitting, and why did we drop <code>income_cat</code> immediately after?</li>
-          <li class="fragment">Two attributes have a Pearson correlation of $r = 0.0$. Can we safely conclude they are
-            statistically independent and drop the feature? Why or why not?</li>
-        </ol>
       </section>
 
       <!-- ============================================================ -->
       <!-- PART VI: LABORATORY ACTIVITY 1 & WEEK 2 SUMMARY              -->
       <!-- ============================================================ -->
-      <section>
+      <!-- <section>
         <h3>Laboratory Activity 1: Vectorization &amp; Tabular EDA</h3>
         <p class="text-smaller"><strong>Formative Assessment (100 Points &mdash; Evaluated via Analytical Lab
             Rubric):</strong></p>
@@ -978,7 +720,7 @@ print(corr_matrix["median_house_value"].sort_values(ascending=False))</code></pr
             (25%), Modularity &amp; Tool Usage (25%), Experimental Rigor &amp; No Leakage (20%), Diagnostic Analysis
             (20%), Reporting &amp; Plots (10%).</li>
         </ul>
-      </section>
+      </section> -->
 
       <!-- Slide 42: Week 2 Summary -->
       <section>
