@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SE 1243: Week 2 (Part II) - Variable Scope &amp; Value vs. Reference Types</title>
+
+		<link rel="stylesheet" href="../dist/reset.css">
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/night.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+		
+		<!-- Custom slide styling -->
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Slide 1: Title -->
+				<section>
+					<h2 style="font-size: 1.4em;">SE 1243: Week 2 Lecture (Part II)</h2>
+					<p style="font-size: 0.95em; color: #38bdf8; margin-top: 15px;">Variable Scope &amp; Value vs. Reference Types</p>
+					<div style="margin-top: 40px; font-size: 0.7em; color: #94a3b8;">
+						<p>Chapter 4 &bull; C# Memory Model &amp; Game World State</p>
+						<p>Central Philippine University &bull; Department of Software Engineering</p>
+					</div>
+				</section>
+
+				<!-- Slide 2: Learning Objectives -->
+				<section>
+					<h3>Learning Objectives (CO2 &bull; LO5 &amp; LO6)</h3>
+					<p class="text-smaller">Mastering how C# manages variable visibility and memory allocation:</p>
+					<ul style="font-size: 0.7em;">
+						<li class="fragment"><strong>Block &amp; Variable Scope (LO5):</strong> Differentiate <em>local variables</em> from <em>member variables (fields)</em> to share game state cleanly between <code>Update</code> and <code>Draw</code>.</li>
+						<li class="fragment"><strong>Stack vs. Heap Memory (LO6):</strong> Contrast how C# stores <em>value types</em> (<code>struct</code>, primitives) versus <em>reference types</em> (<code>class</code> instances).</li>
+						<li class="fragment"><strong>Copy &amp; Parameter Behavior (LO6):</strong> Predict how assignments and method arguments behave for value copies versus object references.</li>
+						<li class="fragment"><strong>Null Safety (LO6):</strong> Understand <code>null</code> references and prevent runtime <code>NullReferenceException</code> crashes.</li>
+					</ul>
+				</section>
+
+				<!-- Part I Divider -->
+				<section>
+					<h3 style="color: #38bdf8; font-size: 1.15em;">Part I: Variable Scope (Local vs. Member Variables)</h3>
+					<p class="text-smaller" style="color: #94a3b8;">Chapter 4 (Section 4.4) &mdash; Managing Game World State</p>
+				</section>
+
+				<!-- Slide 4: What Is Variable Scope? -->
+				<section>
+					<h3>What Is Variable Scope?</h3>
+					<p class="text-smaller">The <strong>scope</strong> of a variable is the region of code where that variable is visible, valid, and exists in memory.</p>
+					<ul style="font-size: 0.82em;">
+						<li class="fragment"><strong>Block Scope Rule:</strong> In C#, scope is bounded by the innermost enclosing pair of curly braces <code>{ ... }</code> where the variable is declared.</li>
+						<li class="fragment"><strong>Lifetime in Memory:</strong> Memory is reserved when execution enters the block and reclaimed once execution exits ("goes out of scope").</li>
+						<li class="fragment"><strong>Why It Matters:</strong> Keeps temporary calculations isolated so your program does not waste memory on short-lived helper values.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 5: Local Variables -->
+				<section>
+					<h3>Local Variables (Method-Level Scope)</h3>
+					<p class="text-smaller" style="font-size: 0.7em;">A variable declared <strong>inside a method</strong> is a <em>local variable</em>&mdash;accessible only inside that specific method.</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">protected override void Update(GameTime gameTime)
+{
+    // Local helper variable: exists ONLY inside Update()
+    int redComponent = gameTime.TotalGameTime.Milliseconds / 4;
+}
+
+protected override void Draw(GameTime gameTime)
+{
+    // COMPILER ERROR: 'redComponent' does not exist in Draw()!
+    // GraphicsDevice.Clear(new Color(redComponent, 0, 0));
+}</code></pre>
+					<p class="fragment text-smaller" style="color: #fbbf24; font-size: 0.7em;">Every frame, <code>redComponent</code> is created when <code>Update</code> runs and destroyed as soon as <code>Update</code> finishes.</p>
+				</section>
+
+				<!-- Slide 6: Member Variables (Fields) -->
+				<section>
+					<h3>Member Variables / Fields (Class-Level Scope)</h3>
+					<p class="text-smaller">A variable declared <strong>inside the class body</strong> (outside all methods) is a <em>member variable</em> (officially called a <strong>field</strong> in C#).</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">class DiscoWorld : Game
+{
+    GraphicsDeviceManager graphics;
+    Color background; // Member variable: visible to ALL methods in DiscoWorld
+
+    protected override void Update(GameTime gameTime)
+    {
+        int redComponent = gameTime.TotalGameTime.Milliseconds / 4;
+        background = new Color(redComponent, 0, 0); // Updates member variable
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(background); // Reads the updated member variable
+    }
+}</code></pre>
+				</section>
+
+				<!-- Slide 7: Local vs. Member Variables Comparison -->
+				<section>
+					<h3>Local Variables vs. Member Variables</h3>
+					<table style="font-size: 0.65em; width: 100%; border-collapse: collapse; margin-top: 12px;">
+						<thead>
+							<tr style="background-color: #1e293b; color: #38bdf8;">
+								<th style="padding: 8px; border: 1px solid #475569; width: 22%;">Aspect</th>
+								<th style="padding: 8px; border: 1px solid #475569; width: 39%;">Local Variable</th>
+								<th style="padding: 8px; border: 1px solid #475569; width: 39%;">Member Variable (Field)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Where Declared</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Inside a method or inner <code>{ }</code> block</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Directly inside a <code>class</code> (outside methods)</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Visibility</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Only within its declaring method/block</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Accessible across all methods of the class</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Lifetime</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Temporary; destroyed when method returns</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Persists as long as the class instance exists</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 8px; border: 1px solid #475569;"><strong>Game Role</strong></td>
+								<td style="padding: 8px; border: 1px solid #475569;">Intermediate calculations (e.g., <code>redComponent</code>)</td>
+								<td style="padding: 8px; border: 1px solid #475569;">Stores the persistent game world state (e.g., <code>background</code>, score, position)</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Slide 8: Core MonoGame Architectural Pattern -->
+				<section>
+					<h3>The Core Game Loop State Pattern</h3>
+					<p class="text-smaller">Every MonoGame application you build in SE 1243 follows this exact separation of responsibilities:</p>
+					<ol style="font-size: 0.65em;">
+						<li class="fragment"><strong>Member Variables = Game World:</strong> Represent the state of your game (colors, player coordinates, velocities, scores).</li>
+						<li class="fragment"><strong><code>Update(GameTime gameTime)</code> = Simulation:</strong> Computes changes over time using local helper variables and writes new values into member variables.</li>
+						<li class="fragment"><strong><code>Draw(GameTime gameTime)</code> = Rendering:</strong> Reads those member variables and renders a visual snapshot to the screen&mdash;without mutating game logic.</li>
+					</ol>
+					<p class="fragment text-smaller" style="color: #34d399; margin-top: 12px; font-size: 0.8em;"><strong>Watch Out for Shadowing:</strong> Writing <code>Color background = new Color(...);</code> inside <code>Update</code> creates a <em>new local variable</em> that hides the member variable!</p>
+				</section>
+
+				<!-- Slide 9: Checkpoint 1 -->
+				<section>
+					<h3>Quick Review: Checkpoint 1</h3>
+					<p style="color: #34d399;">Verify your understanding of Variable Scope:</p>
+					<ol style="font-size: 0.84em;">
+						<li class="fragment">If you declare <code>int score = 0;</code> inside <code>Update()</code>, why can't <code>Draw()</code> display it?</li>
+						<li class="fragment">What is the difference between writing <code>background = new Color(r, 0, 0);</code> versus <code>Color background = new Color(r, 0, 0);</code> inside <code>Update()</code>?</li>
+					</ol>
+				</section>
+
+				<!-- Part II Divider -->
+				<section>
+					<h3 style="color: #fbbf24; font-size: 1.15em;">Part II: Value Types vs. Reference Types</h3>
+					<p class="text-smaller" style="color: #94a3b8;">CO2 (LO6) &mdash; Stack vs. Heap Memory, Parameter Passing &amp; Null Checks</p>
+				</section>
+
+				<!-- Slide 11: Two Regions of Runtime Memory -->
+				<section>
+					<h3>How .NET Organizes Memory: Stack vs. Heap</h3>
+					<p class="text-smaller">When your C# program runs, the .NET runtime divides working memory into two distinct regions:</p>
+					<div style="display: flex; gap: 20px; margin-top: 15px; font-size: 0.65em;">
+						<div class="fragment" style="flex: 1; background: #1e293b; border: 1px solid #38bdf8; padding: 14px; border-radius: 6px;">
+							<h4 style="color: #38bdf8; margin-bottom: 8px;">The Call Stack</h4>
+							<ul>
+								<li>Fast, fixed-size, Last-In-First-Out (LIFO) memory.</li>
+								<li>Automatically allocates and frees local variables when methods are called and return.</li>
+								<li>Stores <strong>Value Types</strong> directly and stores <em>memory addresses (references)</em> pointing to the Heap.</li>
+							</ul>
+						</div>
+						<div class="fragment" style="flex: 1; background: #1e293b; border: 1px solid #fbbf24; padding: 14px; border-radius: 6px;">
+							<h4 style="color: #fbbf24; margin-bottom: 8px;">The Managed Heap</h4>
+							<ul>
+								<li>Large, flexible pool of memory for dynamic objects of varying sizes.</li>
+								<li>Allocated via the <code>new</code> keyword; objects persist across method calls.</li>
+								<li>Automatically cleaned up by the <strong>Garbage Collector (GC)</strong> when no references remain.</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<!-- Slide 12: Value Types (Primitives & Structs) -->
+				<section>
+					<h3>Value Types (<code>struct</code> &amp; Primitive Numbers)</h3>
+					<p class="text-smaller">A <strong>value type</strong> variable holds its actual data directly inside its own memory slot.</p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment"><strong>Built-In Primitives:</strong> <code>int</code>, <code>float</code>, <code>double</code>, <code>decimal</code>, <code>bool</code>, <code>char</code>, <code>byte</code>, <code>long</code>.</li>
+						<li class="fragment"><strong>Structs (<code>struct</code>):</strong> Lightweight custom value types&mdash;including MonoGame's <code>Color</code>, <code>Vector2</code>, <code>Point</code>, and <code>Rectangle</code>!</li>
+						<li class="fragment"><strong>Memory Layout:</strong> Assigning <code>int b = a;</code> copies the actual numeric bits into a separate, independent variable.</li>
+						<li class="fragment"><strong>Cannot Be Null:</strong> A standard value type always contains a concrete value (e.g., <code>0</code> or <code>false</code>), never <code>null</code>.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 13: Reference Types (Classes & Strings) -->
+				<section>
+					<h3>Reference Types (<code>class</code> Instances &amp; <code>string</code>)</h3>
+					<p class="text-smaller">A <strong>reference type</strong> variable does <em>not</em> hold the object itself&mdash;it holds a memory address (pointer) to the object on the Heap.</p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment"><strong>All Classes (<code>class</code>):</strong> Any type defined with <code>class</code> (e.g., <code>BasicGame</code>, <code>Texture2D</code>, <code>SpriteBatch</code>, <code>Character</code>).</li>
+						<li class="fragment"><strong>Built-In Reference Types:</strong> <code>string</code>, arrays (<code>int[]</code>), and collections (<code>List&lt;T&gt;</code>).</li>
+						<li class="fragment"><strong>Two-Part Allocation:</strong> Declaring <code>Character hero;</code> reserves space for a reference; <code>new Character()</code> allocates the actual object on the Heap.</li>
+					</ul>
+				</section>
+
+				<!-- Slide 14: Assignment Behavior (Value Copy vs. Alias) -->
+				<section>
+					<h3>Assignment Behavior: Copy vs. Alias</h3>
+					<pre class="fragment"><code class="language-csharp">// 1. VALUE TYPE (struct): Independent copies
+Vector2 posA = new Vector2(100, 200);
+Vector2 posB = posA;      // Copies (100, 200) into posB
+posB.X = 500;             // posA.X is STILL 100!
+
+// 2. REFERENCE TYPE (class): Both variables point to the SAME Heap object
+Character hero1 = new Character();
+hero1.Health = 100;
+Character hero2 = hero1;  // Copies the memory address, NOT the object
+hero2.Health = 25;        // hero1.Health is NOW 25 too!</code></pre>
+					<p class="fragment text-smaller" style="color: #38bdf8;">Modifying a reference type through one variable affects all variables referencing that same Heap instance.</p>
+				</section>
+
+				<!-- Slide 15: Parameter Passing Behavior -->
+				<section>
+					<h3>Passing Value vs. Reference Types to Methods</h3>
+					<p class="text-smaller">By default, C# passes method arguments <strong>by value</strong>&mdash;meaning the method receives a copy of whatever is inside the variable:</p>
+					<ul style="font-size: 0.8em;">
+						<li class="fragment"><strong>Passing a Value Type (<code>int</code>, <code>Vector2</code>):</strong> The method gets a copy of the <em>data</em>. Changing the parameter inside the method does <strong>not</strong> change the caller's original variable.</li>
+						<li class="fragment"><strong>Passing a Reference Type (<code>Character</code>):</strong> The method gets a copy of the <em>Heap address</em>. Both the caller and the method point to the <strong>same object</strong>, so mutating properties inside the method (e.g., <code>target.Health -= 10;</code>) updates the original object!</li>
+					</ul>
+				</section>
+
+				<!-- Slide 16: Null References & Null Checks -->
+				<section>
+					<h3><code>null</code> References &amp; Defensive Checks</h3>
+					<p class="text-smaller"><code>null</code> is a special literal meaning a reference variable currently points to <strong>no object</strong> in memory.</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">Character enemy = null; // Valid for reference types (Invalid for 'int')
+
+// CRASH! Calling a method or property on null throws NullReferenceException:
+// enemy.Health = 50;
+
+// Safe defensive null check:
+if (enemy != null)
+{
+    enemy.Health = 50;
+}</code></pre>
+					<p class="fragment text-smaller" style="color: #fb7185; font-size: 0.8em;"><strong>Common Bug:</strong> Declaring a class member variable (<code>Texture2D playerSprite;</code>) and forgetting to load/instantiate it before calling <code>spriteBatch.Draw(playerSprite, ...)</code>!</p>
+				</section>
+
+				<!-- Slide 17: Value vs. Reference Types Summary Table -->
+				<section>
+					<h3>Summary: Value Types vs. Reference Types</h3>
+					<table style="font-size: 0.62em; width: 100%; border-collapse: collapse; margin-top: 10px;">
+						<thead>
+							<tr style="background-color: #1e293b; color: #fbbf24;">
+								<th style="padding: 7px; border: 1px solid #475569; width: 22%;">Characteristic</th>
+								<th style="padding: 7px; border: 1px solid #475569; width: 39%;">Value Type (<code>struct</code> / Primitive)</th>
+								<th style="padding: 7px; border: 1px solid #475569; width: 39%;">Reference Type (<code>class</code> / <code>string</code>)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>Examples</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;"><code>int</code>, <code>float</code>, <code>bool</code>, <code>Color</code>, <code>Vector2</code></td>
+								<td style="padding: 7px; border: 1px solid #475569;"><code>Game</code>, <code>SpriteBatch</code>, <code>Texture2D</code>, <code>string</code></td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>Storage Location</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;">Directly on the Stack (or inline inside a parent object)</td>
+								<td style="padding: 7px; border: 1px solid #475569;">Object on the Heap; reference address on the Stack</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>Assignment (<code>=</code>)</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;">Copies the actual value (independent data)</td>
+								<td style="padding: 7px; border: 1px solid #475569;">Copies the reference (two aliases to one object)</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>Allows <code>null</code>?</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;">No (defaults to <code>0</code> / <code>false</code>)</td>
+								<td style="padding: 7px; border: 1px solid #475569;">Yes (defaults to <code>null</code>; requires null checks)</td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>Cleanup</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;">Instantaneous when scope ends</td>
+								<td style="padding: 7px; border: 1px solid #475569;">Reclaimed automatically by Garbage Collector (GC)</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Slide 18: Checkpoint 2 & Lab 1 Bridge -->
+				<section>
+					<h3>Quick Review: Checkpoint 2 &amp; Lab 1 Prep</h3>
+					<p style="color: #34d399;">Test your mastery before Laboratory Activity 1:</p>
+					<ol style="font-size: 0.82em;">
+						<li class="fragment">MonoGame's <code>Color</code> is a <code>struct</code>. If you write <code>Color c1 = Color.Red; Color c2 = c1; c2.R = 0;</code>, what is the value of <code>c1.R</code>?</li>
+						<li class="fragment">If <code>Player</code> is a <code>class</code> and you pass a <code>Player</code> variable into a method <code>ApplyDamage(Player p)</code> that executes <code>p.Health -= 20;</code>, does the caller's <code>Player</code> lose health? Why?</li>
+					</ol>
+				</section>
+			</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<script src="../dist/plugin/notes.js"></script>
+		<script src="../dist/plugin/markdown.js"></script>
+		<script src="../dist/plugin/highlight.js"></script>
+		<script src="../dist/plugin/zoom.js"></script>
+		<script src="../dist/plugin/math.js"></script>
+		<script>
+			// Initialize reveal.js with all assets mapped to flat dist/plugin root directories
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealMath.MathJax3 ]
+			});
+		</script>
+	</body>
+</html>
