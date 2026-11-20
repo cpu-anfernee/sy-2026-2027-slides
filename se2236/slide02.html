@@ -374,36 +374,6 @@
         </div>
       </section>
 
-      <!-- SLIDE 5: RANDOM-ACCESS MACHINE (RAM) -->
-      <section>
-        <h2>The Random-Access Machine (RAM) Model</h2>
-        <p class="small">Scrolling along a paper tape takes $O(n)$ just to reach memory slot $n$. For algorithm
-          analysis, we use an abstract single-core computer called the <strong>RAM Model</strong>:</p>
-        <div class="three-col" style="margin-top: 14px;">
-          <div class="card fragment">
-            <h3>1. Sequential Execution</h3>
-            <p class="small">Instructions execute <strong>one after another</strong>. No free parallel execution across
-              infinitely many cores.</p>
-          </div>
-          <div class="card green fragment">
-            <h3>2. $O(1)$ Primitive Ops</h3>
-            <p class="small">Basic arithmetic (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>),
-              comparisons, branches, and direct memory reads/writes take <strong>constant time</strong>. Complex
-              operations (like <code>sort()</code>) do <em>not</em>.</p>
-          </div>
-          <div class="card pink fragment">
-            <h3>3. Bounded Word Size</h3>
-            <p class="small">One memory word holds $\Theta(\lg N)$ bits&mdash;large enough to address memory, but
-              <strong>not infinite</strong> (prevents packing an entire array into one integer to "cheat" in $O(1)$).
-            </p>
-          </div>
-        </div>
-        <div class="card orange small fragment" style="margin-top: 14px;">
-          <strong>Python Caveat:</strong> Python integers have <em>arbitrary precision</em>! Adding two 1,000,000-digit
-          integers in Python is <strong>not</strong> $O(1)$&mdash;it scales linearly with the number of digits!
-        </div>
-      </section>
-
       <!-- PART II: ASYMPTOTIC NOTATION DEEP DIVE -->
       <section class="center">
         <p><span class="badge pink">Part II</span></p>
