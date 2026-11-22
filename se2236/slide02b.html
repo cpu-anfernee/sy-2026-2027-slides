@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asymptotic Analysis & Big-O Proofs — Worked Examples</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/dracula.css" id="theme">
+  <style>
+    :root {
+      --r-main-font-size: 25px;
+      --r-heading1-size: 1.85em;
+      --r-heading2-size: 1.32em;
+      --r-heading3-size: 1.05em;
+    }
+    .reveal .slides section {
+      text-align: left;
+      line-height: 1.38;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      text-transform: none;
+      letter-spacing: -0.01em;
+    }
+    .reveal h2 {
+      border-bottom: 2px solid #6272a4;
+      padding-bottom: 0.22em;
+      margin-bottom: 0.55em;
+      color: #bd93f9;
+    }
+    .badge {
+      display: inline-block;
+      background: #44475a;
+      color: #50fa7b;
+      border: 1px solid #50fa7b;
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 0.65em;
+      font-weight: 600;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    .badge-pink {
+      color: #ff79c6;
+      border-color: #ff79c6;
+    }
+    .problem-box {
+      background: rgba(68, 71, 90, 0.72);
+      border-left: 4px solid #8be9fd;
+      padding: 10px 16px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      font-size: 0.94em;
+    }
+    .problem-box strong {
+      color: #8be9fd;
+    }
+    .result-box {
+      background: rgba(80, 250, 123, 0.12);
+      border: 1px solid #50fa7b;
+      padding: 8px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      font-size: 0.92em;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .col-card {
+      background: rgba(68, 71, 90, 0.45);
+      border: 1px solid #6272a4;
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 0.88em;
+    }
+    .col-card h3 {
+      color: #ffb86c;
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.02em;
+    }
+    .reveal ul, .reveal ol {
+      margin-left: 1.1em;
+    }
+    .reveal li {
+      margin-bottom: 0.36em;
+    }
+    .reveal table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78em;
+    }
+    .reveal th {
+      background: #44475a;
+      color: #f1fa8c;
+      padding: 8px 10px;
+      border: 1px solid #6272a4;
+    }
+    .reveal td {
+      padding: 7px 10px;
+      border: 1px solid #6272a4;
+    }
+    .muted {
+      color: #9aa5ce;
+      font-size: 0.82em;
+    }
+    .highlight {
+      color: #f1fa8c;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- SLIDE 1: TITLE -->
+      <section style="text-align: center;">
+        <p class="muted" style="letter-spacing: 0.08em; text-transform: uppercase;">Algorithm Analysis &amp; Discrete Mathematics</p>
+        <h1 style="color: #bd93f9; margin-top: 0.2em;">Asymptotic Growth &amp; Big-O Proofs</h1>
+        <h3 style="color: #8be9fd; font-weight: 400;">Worked Examples for Problem Set Preparation</h3>
+        <div style="margin-top: 1.4em; display: inline-block; text-align: left; background: rgba(68,71,90,0.6); padding: 14px 24px; border-radius: 8px; border: 1px solid #6272a4; font-size: 0.82em;">
+          <p style="margin: 0 0 6px 0;"><strong style="color: #50fa7b;">Exercise 1a (Goodrich &amp; Tamassia):</strong> Prep for <code>R-3.17</code></p>
+          <p style="margin: 0;"><strong style="color: #ff79c6;">Exercise 1b (Rosen, Sec. 3.2):</strong> Prep for <code>#3</code>, <code>#4</code>, <code>#7</code>, &amp; <code>#9</code></p>
+        </div>
+        <p class="muted" style="margin-top: 1.4em; font-size: 0.7em;">Tip: Press <strong>Space / Arrow Keys</strong> to step through fragments &bull; <strong>Alt + Click</strong> to zoom</p>
+      </section>
+
+      <!-- SLIDE 2: DEFINITIONS & ROADMAP -->
+      <section>
+        <h2>Core Definition &amp; Proof Strategy Map</h2>
+        <div class="problem-box">
+          <strong>Formal Big-O Definition:</strong> $f(x)$ is $O(g(x))$ iff there exist positive constants $C$ and $k$ (or $c, n_0$) such that
+          $$f(x) \le C g(x) \quad 	\forall x > k.$$
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Target Exercise</th>
+              <th>Core Concept Tested</th>
+              <th>Primary Proof Technique</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="fragment">
+              <td><strong>1a: R-3.17</strong></td>
+              <td>Binomial power upper bound $(n+a)^d$</td>
+              <td>Bound base $n + a \le (1+a)n$ for $n \ge 1$ (or expand)</td>
+            </tr>
+            <tr class="fragment">
+              <td><strong>1b: #3 &amp; #4</strong></td>
+              <td>Constructive witnesses $(C, k)$</td>
+              <td>Replace lower-order terms with dominant term for $x > 1$</td>
+            </tr>
+            <tr class="fragment">
+              <td><strong>1b: #7 (a–d)</strong></td>
+              <td>Least integer $n$ such that $f(x) = O(x^n)$</td>
+              <td>Compare $\log x \prec x^\epsilon$ &amp; subtract rational degrees</td>
+            </tr>
+            <tr class="fragment">
+              <td><strong>1b: #9</strong></td>
+              <td>Strict growth: $f = O(g)$ but $g \neq O(f)$</td>
+              <td>Direct witnesses for $\le$; contradiction ($x \le 	\text{const}$) for $\neq$</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SLIDE 4: PREP FOR EXERCISE 1A R-3.17 -->
+      <section>
+        <h2>Binomial Power Bound <span class="badge">Prep for 1a: R-3.17</span></h2>
+        <div class="problem-box">
+          <strong>Worked Example 2:</strong> Show that $(n + 2)^4$ is $O(n^4)$ using the definition of Big-O.
+        </div>
+        <div class="two-col">
+          <div class="col-card fragment">
+            <h3>Method A: Direct Base Bounding</h3>
+            <ol>
+              <li>Choose threshold $n_0 = 1$ (so $n \ge 1$).</li>
+              <li>Since $2 \le 2n$ for all $n \ge 1$:
+                $$n + 2 \le n + 2n = 3n$$
+              </li>
+              <li>Raise both positive sides to the 4th power:
+                $$(n + 2)^4 \le (3n)^4 = 81n^4$$
+              </li>
+              <li><strong>Witnesses:</strong> $c = 81,\; n_0 = 1$.</li>
+            </ol>
+          </div>
+          <div class="col-card fragment">
+            <h3>Method B: Binomial Expansion</h3>
+            <ol>
+              <li>Expand $(n + 2)^4$:
+                $$n^4 + 8n^3 + 24n^2 + 32n + 16$$
+              </li>
+              <li>For $n \ge 1$, replace every $n^k$ ($k &lt; 4$) with $n^4$:
+                $$\le (1 + 8 + 24 + 32 + 16)n^4$$
+              </li>
+              <li>Sum the coefficients:
+                $$(n + 2)^4 \le 81n^4$$
+              </li>
+              <li><strong>Witnesses:</strong> $c = 81,\; n_0 = 1$.</li>
+            </ol>
+          </div>
+        </div>
+        <div class="result-box fragment">
+          <strong>Takeaway for R-3.17:</strong> Both methods yield identical witnesses; Method A avoids expanding high powers.
+        </div>
+      </section>
+
+      <!-- SLIDE 5: PREP FOR EXERCISE 1B #3 -->
+      <section>
+        <h2>Polynomial Big-O Witnesses <span class="badge badge-pink">Prep for 1b: #3</span></h2>
+        <div class="problem-box">
+          <strong>Worked Example 3:</strong> Use the definition of "$f(x)$ is $O(g(x))$" to show that $f(x) = 2x^3 + 7x^2 + 5x + 11$ is $O(x^3)$.
+        </div>
+        <ol style="font-size: 0.92em;">
+          <li class="fragment"><strong>Set the threshold $k$:</strong> Assume $x &gt; 1$ (so $k = 1$).</li>
+          <li class="fragment"><strong>Establish term-by-term inequalities for $x &gt; 1$:</strong>
+            $$1 &lt; x &lt; x^2 &lt; x^3$$
+          </li>
+          <li class="fragment"><strong>Bound the entire polynomial from above by multiples of $x^3$:</strong>
+            $$ \begin{aligned}
+            2x^3 + 7x^2 + 5x + 11 < 2x^3 + 7x^3 + 5x^3 + 11x^3 &= (2 + 7 + 5 + 11)x^3 = 25x^3
+            \end{aligned}$$
+          </li>
+          <li class="fragment"><strong>Verify the definition:</strong> For all $x &gt; 1$, $|f(x)| \le 25|x^3|$.</li>
+        </ol>
+        <div class="result-box fragment">
+          <strong>Witnesses:</strong> $C = 25$ and $k = 1$. Therefore, $2x^3 + 7x^2 + 5x + 11$ is $O(x^3)$.
+        </div>
+      </section>
+
+      <!-- SLIDE 6: PREP FOR EXERCISE 1B #4 -->
+      <section>
+        <h2>Exponential Base Domination <span class="badge badge-pink">Prep for 1b: #4</span></h2>
+        <div class="problem-box">
+          <strong>Worked Example 4:</strong> Use the definition of "$f(x)$ is $O(g(x))$" to show that $f(x) = 3^x + 25$ is $O(4^x)$.
+        </div>
+        <ol style="font-size: 0.92em;">
+          <li class="fragment"><strong>Choose a threshold $k$ where $3^x$ dominates the constant $25$:</strong>
+            <ul>
+              <li>Test $x = 3$: $3^3 = 27 &gt; 25$. So for all $x &gt; 3$, we have $25 &lt; 3^x$.</li>
+            </ul>
+          </li>
+          <li class="fragment"><strong>Combine the terms into a single exponential:</strong>
+            $$3^x + 25 < 3^x + 3^x = 2 \cdot 3^x \quad 	\forall x > 3$$
+          </li>
+          <li class="fragment"><strong>Step up the exponential base from $3^x$ to $4^x$:</strong>
+            <ul>
+              <li>Since $3 &lt; 4$ and $x &gt; 3 &gt; 0$, we know $3^x &lt; 4^x$. Thus:</li>
+            </ul>
+            $$3^x + 25 < 2 \cdot 3^x < 2 \cdot 4^x \quad 	\forall x > 3$$
+          </li>
+        </ol>
+        <div class="result-box fragment">
+          <strong>Witnesses:</strong> $C = 2$ and $k = 3$ (alternatively, $C = 26, k = 1$ since $25 &lt; 25 \cdot 3^x$ for $x &gt; 1$).
+        </div>
+      </section>
+
+      <!-- SLIDE 7: PREP FOR EXERCISE 1B #7 -->
+      <section>
+        <h2>Finding the Least Integer $n$ for $O(x^n)$ <span class="badge badge-pink">Prep for 1b: #7</span></h2>
+        <div class="problem-box">
+          <strong>Worked Example 5:</strong> Find the least integer $n$ such that $f(x)$ is $O(x^n)$ for each function.
+        </div>
+        <div class="two-col" style="font-size: 0.86em;">
+          <div class="col-card fragment">
+            <h3>(a) $f(x) = 5x^2 + x\log x$</h3>
+            <p>For $x &gt; 1$, $\log x &lt; x \implies x\log x &lt; x^2$.</p>
+            <p>$f(x) &lt; 5x^2 + x^2 = 6x^2$.</p>
+            <p class="highlight">Least integer: $n = 2$</p>
+          </div>
+          <div class="col-card fragment">
+            <h3>(b) $f(x) = 4x^2 + (\log x)^5$</h3>
+            <p>Any polylog $(\log x)^a$ grows slower than $x^b$ ($b &gt; 0$), so $(\log x)^5 = O(x)$.</p>
+            <p>$4x^2$ dominates. <span class="highlight">Least integer: $n = 2$</span></p>
+          </div>
+          <div class="col-card fragment">
+            <h3>(c) $f(x) = \dfrac{x^5 + 3x^2 + 1}{x^2 + 1}$</h3>
+            <p>For $x &gt; 1$: numerator $&lt; 5x^5$, denominator $&gt; x^2$.</p>
+            <p>$f(x) &lt; \dfrac{5x^5}{x^2} = 5x^3$. <span class="highlight">Least integer: $n = 3$</span></p>
+          </div>
+          <div class="col-card fragment">
+            <h3>(d) $f(x) = \dfrac{x^3 + 7\log x}{x^3 + 1}$</h3>
+            <p>For $x &gt; 1$: numerator $&lt; 8x^3$, denominator $&gt; x^3$.</p>
+            <p>$f(x) &lt; \dfrac{8x^3}{x^3} = 8 = 8x^0$. <span class="highlight">Least integer: $n = 0$</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: PREP FOR EXERCISE 1B #9 -->
+      <section>
+        <h2>Strict Growth &amp; Proof by Contradiction <span class="badge badge-pink">Prep for 1b: #9</span></h2>
+        <div class="problem-box">
+          <strong>Worked Example 6:</strong> Show that $x^3 + 5x + 9$ is $O(x^4)$, <strong>but</strong> $x^4$ is <strong>not</strong> $O(x^3 + 5x + 9)$.
+        </div>
+        <div class="two-col">
+          <div class="col-card fragment">
+            <h3>Part 1: Prove $x^3 + 5x + 9$ is $O(x^4)$</h3>
+            <ol>
+              <li>Assume $x &gt; 1$.</li>
+              <li>Bound every term by $x^4$:
+                $$x^3 + 5x + 9 < x^4 + 5x^4 + 9x^4 = 15x^4$$
+              </li>
+              <li><strong>Witnesses:</strong> $C = 15,\; k = 1$.</li>
+              <li>Hence $x^3 + 5x + 9 = O(x^4)$.</li>
+            </ol>
+          </div>
+          <div class="col-card fragment">
+            <h3>Part 2: Prove $x^4 \neq O(x^3 + 5x + 9)$</h3>
+            <ol>
+              <li>Suppose for contradiction that $\exists\, C, k &gt; 0$ such that for all $x &gt; k$:
+                $$x^4 \le C(x^3 + 5x + 9)$$
+              </li>
+              <li>For $x &gt; k$, $x^3 + 5x + 9 &lt; 15x^3$:
+                $$x^4 < 15C x^3 \implies x < 15C$$
+              </li>
+              <li><strong>Contradiction:</strong> Fails whenever $x &gt; 15C$.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: SUMMARY & PITFALLS -->
+      <section>
+        <h2>Quick Checklist Before Writing Solutions</h2>
+        <ul style="font-size: 0.92em;">
+          <li class="fragment"><strong>Always state both witnesses explicitly:</strong> A Big-O proof is incomplete unless you name concrete values for $C$ and $k$ (or $c$ and $n_0$) and verify $x &gt; k$.</li>
+          <li class="fragment"><strong>Fractional bounding direction:</strong> To bound $\frac{N(x)}{D(x)}$ from above, make the numerator <em>larger</em> ($N(x) \le \dots$) and the denominator <em>smaller</em> ($D(x) \ge \dots &gt; 0$).</li>
+          <li class="fragment"><strong>Watch out for $n = 0$ in Exercise 7:</strong> When numerator and denominator have the same degree (e.g., $\frac{x^4 + \dots}{x^4 + 1}$), the function is bounded by a constant $C = C \cdot x^0$, so the least integer is $n = 0$.</li>
+          <li class="fragment"><strong>Disproving Big-O (Exercise 9):</strong> Always assume $f(x) \le C \cdot g(x)$ holds for all $x &gt; k$, divide out the highest common power, and derive an impossible upper bound on $x$ (like $x \le \text{constant}$).</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'slide',
+      plugins: [ RevealMath.KaTeX, RevealZoom ]
+    });
+  </script>
+</body>
+</html>
