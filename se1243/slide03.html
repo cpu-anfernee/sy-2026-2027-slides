@@ -1,3 +1,5 @@
+HTML
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -22,7 +24,7 @@
 				<!-- Slide 1: Title -->
 				<section>
 					<h2 style="font-size: 1.4em;">SE 1243: Week 2 Lecture (Part II)</h2>
-					<p style="font-size: 0.95em; color: #38bdf8; margin-top: 15px;">Variable Scope &amp; Value vs. Reference Types</p>
+					<p style="font-size: 0.95em; color: #38bdf8; margin-top: 15px;">Variable Scope, C# Type Definitions &amp; Value vs. Reference Types</p>
 					<div style="margin-top: 40px; font-size: 0.7em; color: #94a3b8;">
 						<p>Chapter 4 &bull; C# Memory Model &amp; Game World State</p>
 						<p>Central Philippine University &bull; Department of Software Engineering</p>
@@ -32,12 +34,12 @@
 				<!-- Slide 2: Learning Objectives -->
 				<section>
 					<h3>Learning Objectives (CO2 &bull; LO5 &amp; LO6)</h3>
-					<p class="text-smaller">Mastering how C# manages variable visibility and memory allocation:</p>
+					<p class="text-smaller">Mastering how C# manages variable visibility, custom types, and memory allocation:</p>
 					<ul style="font-size: 0.7em;">
 						<li class="fragment"><strong>Block &amp; Variable Scope (LO5):</strong> Differentiate <em>local variables</em> from <em>member variables (fields)</em> to share game state cleanly between <code>Update</code> and <code>Draw</code>.</li>
+						<li class="fragment"><strong>Custom Types &amp; Access Modifiers (LO5):</strong> Define <code>struct</code> and <code>class</code> blueprints with <code>public</code> fields and <code>static</code> helper methods.</li>
 						<li class="fragment"><strong>Stack vs. Heap Memory (LO6):</strong> Contrast how C# stores <em>value types</em> (<code>struct</code>, primitives) versus <em>reference types</em> (<code>class</code> instances).</li>
-						<li class="fragment"><strong>Copy &amp; Parameter Behavior (LO6):</strong> Predict how assignments and method arguments behave for value copies versus object references.</li>
-						<li class="fragment"><strong>Null Safety (LO6):</strong> Understand <code>null</code> references and prevent runtime <code>NullReferenceException</code> crashes.</li>
+						<li class="fragment"><strong>Conditionals &amp; Null Safety (LO6):</strong> Use C# <code>if (...)</code> syntax to prevent runtime <code>NullReferenceException</code> crashes.</li>
 					</ul>
 				</section>
 
@@ -50,11 +52,20 @@
 				<!-- Slide 4: What Is Variable Scope? -->
 				<section>
 					<h3>What Is Variable Scope?</h3>
-					<p class="text-smaller">The <strong>scope</strong> of a variable is the region of code where that variable is visible, valid, and exists in memory.</p>
-					<ul style="font-size: 0.82em;">
-						<li class="fragment"><strong>Block Scope Rule:</strong> In C#, scope is bounded by the innermost enclosing pair of curly braces <code>{ ... }</code> where the variable is declared.</li>
-						<li class="fragment"><strong>Lifetime in Memory:</strong> Memory is reserved when execution enters the block and reclaimed once execution exits ("goes out of scope").</li>
-						<li class="fragment"><strong>Why It Matters:</strong> Keeps temporary calculations isolated so your program does not waste memory on short-lived helper values.</li>
+					<p class="text-smaller" style="font-size: 0.72em;">The <strong>scope</strong> of a variable is bounded by the innermost enclosing curly braces <code>{ ... }</code> where it is declared:</p>
+					<pre class="fragment" style="font-size: 0.42em;"><code class="language-csharp">static void Main()
+{
+    int outerScore = 100; // Visible throughout Main()
+    {
+        int bonus = 25;   // Visible ONLY inside this inner { } block
+        outerScore += bonus;
+    }
+    // bonus = 50;        // COMPILER ERROR: 'bonus' is out of scope!
+    Console.WriteLine(outerScore); // Valid: prints 125
+}</code></pre>
+					<ul style="font-size: 0.68em;">
+						<li class="fragment"><strong>Lifetime in Memory:</strong> Memory is reserved when execution enters <code>{</code> and reclaimed immediately when execution exits <code>}</code>.</li>
+						<li class="fragment"><strong>Why It Matters:</strong> Keeps temporary calculations isolated so short-lived values do not clutter class state.</li>
 					</ul>
 				</section>
 
@@ -62,7 +73,7 @@
 				<section>
 					<h3>Local Variables (Method-Level Scope)</h3>
 					<p class="text-smaller" style="font-size: 0.7em;">A variable declared <strong>inside a method</strong> is a <em>local variable</em>&mdash;accessible only inside that specific method.</p>
-					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">protected override void Update(GameTime gameTime)
+					<pre class="fragment" style="font-size: 0.42em;"><code class="language-csharp">protected override void Update(GameTime gameTime)
 {
     // Local helper variable: exists ONLY inside Update()
     int redComponent = gameTime.TotalGameTime.Milliseconds / 4;
@@ -79,8 +90,8 @@ protected override void Draw(GameTime gameTime)
 				<!-- Slide 6: Member Variables (Fields) -->
 				<section>
 					<h3>Member Variables / Fields (Class-Level Scope)</h3>
-					<p class="text-smaller">A variable declared <strong>inside the class body</strong> (outside all methods) is a <em>member variable</em> (officially called a <strong>field</strong> in C#).</p>
-					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">class DiscoWorld : Game
+					<p class="text-smaller" style="font-size: 0.72em;">A variable declared <strong>inside the class body</strong> (outside all methods) is a <em>member variable</em> (officially called a <strong>field</strong> in C#).</p>
+					<pre class="fragment" style="font-size: 0.42em;"><code class="language-csharp">class DiscoWorld : Game
 {
     GraphicsDeviceManager graphics;
     Color background; // Member variable: visible to ALL methods in DiscoWorld
@@ -101,15 +112,15 @@ protected override void Draw(GameTime gameTime)
 				<!-- Slide 7: Local vs. Member Variables Comparison -->
 				<section>
 					<h3>Local Variables vs. Member Variables</h3>
-					<table style="font-size: 0.65em; width: 100%; border-collapse: collapse; margin-top: 12px;">
+					<table style="font-size: 0.65em; width: 100%; border-collapse: collapse; margin-top: 12px; ">
 						<thead>
 							<tr style="background-color: #1e293b; color: #38bdf8;">
-								<th style="padding: 8px; border: 1px solid #475569; width: 22%;">Aspect</th>
-								<th style="padding: 8px; border: 1px solid #475569; width: 39%;">Local Variable</th>
-								<th style="padding: 8px; border: 1px solid #475569; width: 39%;">Member Variable (Field)</th>
+								<th style="padding: 8px; border: 1px solid #f2f4f7; width: 22%;">Aspect</th>
+								<th style="padding: 8px; border: 1px solid #f2f4f7; width: 39%;">Local Variable</th>
+								<th style="padding: 8px; border: 1px solid #f2f4f7; width: 39%;">Member Variable (Field)</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody style="color: white">
 							<tr class="fragment">
 								<td style="padding: 8px; border: 1px solid #475569;"><strong>Where Declared</strong></td>
 								<td style="padding: 8px; border: 1px solid #475569;">Inside a method or inner <code>{ }</code> block</td>
@@ -134,23 +145,32 @@ protected override void Draw(GameTime gameTime)
 					</table>
 				</section>
 
-				<!-- Slide 8: Core MonoGame Architectural Pattern -->
+				<!-- Slide 8: Core MonoGame Architectural Pattern & Variable Shadowing -->
 				<section>
-					<h3>The Core Game Loop State Pattern</h3>
-					<p class="text-smaller">Every MonoGame application you build in SE 1243 follows this exact separation of responsibilities:</p>
-					<ol style="font-size: 0.65em;">
-						<li class="fragment"><strong>Member Variables = Game World:</strong> Represent the state of your game (colors, player coordinates, velocities, scores).</li>
-						<li class="fragment"><strong><code>Update(GameTime gameTime)</code> = Simulation:</strong> Computes changes over time using local helper variables and writes new values into member variables.</li>
-						<li class="fragment"><strong><code>Draw(GameTime gameTime)</code> = Rendering:</strong> Reads those member variables and renders a visual snapshot to the screen&mdash;without mutating game logic.</li>
-					</ol>
-					<p class="fragment text-smaller" style="color: #34d399; margin-top: 12px; font-size: 0.8em;"><strong>Watch Out for Shadowing:</strong> Writing <code>Color background = new Color(...);</code> inside <code>Update</code> creates a <em>new local variable</em> that hides the member variable!</p>
+					<h3>Game Loop State Pattern &amp; Variable Shadowing</h3>
+					<p class="text-smaller" style="font-size: 0.7em;">Member variables store game state; <code>Update</code> mutates them; <code>Draw</code> renders them. Never re-declare a member variable's type inside a method:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">class ScoreBoard
+{
+    int score = 0; // Member variable (field)
+
+    public void AddPoints(int pts)
+    {
+        // BUG (Shadowing): Declares a NEW local variable that hides the field!
+        // int score = 0;
+        // score += pts;
+
+        // CORRECT: Assigns directly to the class member variable
+        score += pts;
+    }
+}</code></pre>
+					<p class="fragment text-smaller" style="color: #34d399; font-size: 0.7em;"><strong>Rule:</strong> Use the data type only once when declaring the field at the top of the class.</p>
 				</section>
 
 				<!-- Slide 9: Checkpoint 1 -->
 				<section>
 					<h3>Quick Review: Checkpoint 1</h3>
 					<p style="color: #34d399;">Verify your understanding of Variable Scope:</p>
-					<ol style="font-size: 0.84em;">
+					<ol style="font-size: 0.82em;">
 						<li class="fragment">If you declare <code>int score = 0;</code> inside <code>Update()</code>, why can't <code>Draw()</code> display it?</li>
 						<li class="fragment">What is the difference between writing <code>background = new Color(r, 0, 0);</code> versus <code>Color background = new Color(r, 0, 0);</code> inside <code>Update()</code>?</li>
 					</ol>
@@ -158,14 +178,14 @@ protected override void Draw(GameTime gameTime)
 
 				<!-- Part II Divider -->
 				<section>
-					<h3 style="color: #fbbf24; font-size: 1.15em;">Part II: Value Types vs. Reference Types</h3>
-					<p class="text-smaller" style="color: #94a3b8;">CO2 (LO6) &mdash; Stack vs. Heap Memory, Parameter Passing &amp; Null Checks</p>
+					<h3 style="color: #fbbf24; font-size: 1.15em;">Part II: Value Types, Reference Types &amp; Essential C# Syntax</h3>
+					<p class="text-smaller" style="color: #94a3b8;">CO2 (LO5 &amp; LO6) &mdash; Stack vs. Heap, Custom Types, Static Methods &amp; Conditionals</p>
 				</section>
 
 				<!-- Slide 11: Two Regions of Runtime Memory -->
 				<section>
 					<h3>How .NET Organizes Memory: Stack vs. Heap</h3>
-					<p class="text-smaller">When your C# program runs, the .NET runtime divides working memory into two distinct regions:</p>
+					<p class="text-smaller" style="font-size: 0.72em;">When your C# program runs, the .NET runtime divides working memory into two distinct regions:</p>
 					<div style="display: flex; gap: 20px; margin-top: 15px; font-size: 0.65em;">
 						<div class="fragment" style="flex: 1; background: #1e293b; border: 1px solid #38bdf8; padding: 14px; border-radius: 6px;">
 							<h4 style="color: #38bdf8; margin-bottom: 8px;">The Call Stack</h4>
@@ -186,76 +206,144 @@ protected override void Draw(GameTime gameTime)
 					</div>
 				</section>
 
-				<!-- Slide 12: Value Types (Primitives & Structs) -->
+				<!-- Slide 12: Defining Value Types (struct) & public Fields -->
 				<section>
-					<h3>Value Types (<code>struct</code> &amp; Primitive Numbers)</h3>
-					<p class="text-smaller">A <strong>value type</strong> variable holds its actual data directly inside its own memory slot.</p>
-					<ul style="font-size: 0.8em;">
-						<li class="fragment"><strong>Built-In Primitives:</strong> <code>int</code>, <code>float</code>, <code>double</code>, <code>decimal</code>, <code>bool</code>, <code>char</code>, <code>byte</code>, <code>long</code>.</li>
-						<li class="fragment"><strong>Structs (<code>struct</code>):</strong> Lightweight custom value types&mdash;including MonoGame's <code>Color</code>, <code>Vector2</code>, <code>Point</code>, and <code>Rectangle</code>!</li>
-						<li class="fragment"><strong>Memory Layout:</strong> Assigning <code>int b = a;</code> copies the actual numeric bits into a separate, independent variable.</li>
-						<li class="fragment"><strong>Cannot Be Null:</strong> A standard value type always contains a concrete value (e.g., <code>0</code> or <code>false</code>), never <code>null</code>.</li>
+					<h3>Value Types (<code>struct</code>) &amp; <code>public</code> Fields</h3>
+					<p class="text-smaller" style="font-size: 0.68em;">A <strong>value type</strong> holds its data directly in its own memory slot. In C#, fields default to <code>private</code>&mdash;add <code>public</code> so other classes/methods can read or modify them:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">struct Position2D
+{
+    public float X; // Without 'public', Main() gets a compiler error!
+    public float Y;
+}
+
+// Usage in Main():
+Position2D spawnPoint = new Position2D();
+spawnPoint.X = 120.5f;
+spawnPoint.Y = 300.0f;</code></pre>
+					<ul style="font-size: 0.65em;">
+						<li class="fragment"><strong>Examples:</strong> Primitives (<code>int</code>, <code>float</code>, <code>bool</code>) and MonoGame structs (<code>Color</code>, <code>Vector2</code>, <code>Point</code>).</li>
+						<li class="fragment"><strong>Cannot Be Null:</strong> Value types always contain concrete data, never <code>null</code>.</li>
 					</ul>
 				</section>
 
-				<!-- Slide 13: Reference Types (Classes & Strings) -->
+				<!-- Slide 13: Defining Reference Types (class) & public Fields -->
 				<section>
-					<h3>Reference Types (<code>class</code> Instances &amp; <code>string</code>)</h3>
-					<p class="text-smaller">A <strong>reference type</strong> variable does <em>not</em> hold the object itself&mdash;it holds a memory address (pointer) to the object on the Heap.</p>
-					<ul style="font-size: 0.8em;">
-						<li class="fragment"><strong>All Classes (<code>class</code>):</strong> Any type defined with <code>class</code> (e.g., <code>BasicGame</code>, <code>Texture2D</code>, <code>SpriteBatch</code>, <code>Character</code>).</li>
-						<li class="fragment"><strong>Built-In Reference Types:</strong> <code>string</code>, arrays (<code>int[]</code>), and collections (<code>List&lt;T&gt;</code>).</li>
-						<li class="fragment"><strong>Two-Part Allocation:</strong> Declaring <code>Character hero;</code> reserves space for a reference; <code>new Character()</code> allocates the actual object on the Heap.</li>
-					</ul>
+					<h3>Reference Types (<code>class</code>) &amp; Heap Allocation</h3>
+					<p class="text-smaller" style="font-size: 0.68em;">A <strong>reference type</strong> variable stores a memory address pointing to an object allocated on the Heap via <code>new</code>:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">class EnemyUnit
+{
+    public string Name;  // Reference type field (stored on Heap)
+    public int Health;   // Value type field (stored inline inside the Heap object)
+}
+
+// Two-step allocation:
+EnemyUnit goblin;               // 1. Declares a reference variable on the Stack
+goblin = new EnemyUnit();       // 2. Allocates the actual object on the Heap
+goblin.Name = "Cave Goblin";
+goblin.Health = 80;</code></pre>
+					<p class="fragment text-smaller" style="font-size: 0.66em;"><strong>Built-In Reference Types:</strong> All <code>class</code> types, <code>string</code>, arrays (<code>int[]</code>), and <code>List&lt;T&gt;</code>.</p>
 				</section>
 
 				<!-- Slide 14: Assignment Behavior (Value Copy vs. Alias) -->
 				<section>
 					<h3>Assignment Behavior: Copy vs. Alias</h3>
-					<pre class="fragment"><code class="language-csharp">// 1. VALUE TYPE (struct): Independent copies
-Vector2 posA = new Vector2(100, 200);
-Vector2 posB = posA;      // Copies (100, 200) into posB
+					<pre class="fragment" style="font-size: 0.42em;"><code class="language-csharp">// 1. VALUE TYPE (struct): Independent copies
+Position2D posA = new Position2D();
+posA.X = 100;
+Position2D posB = posA;   // Copies X=100 into a separate struct
 posB.X = 500;             // posA.X is STILL 100!
 
 // 2. REFERENCE TYPE (class): Both variables point to the SAME Heap object
-Character hero1 = new Character();
-hero1.Health = 100;
-Character hero2 = hero1;  // Copies the memory address, NOT the object
-hero2.Health = 25;        // hero1.Health is NOW 25 too!</code></pre>
-					<p class="fragment text-smaller" style="color: #38bdf8;">Modifying a reference type through one variable affects all variables referencing that same Heap instance.</p>
+EnemyUnit enemy1 = new EnemyUnit();
+enemy1.Health = 100;
+EnemyUnit enemy2 = enemy1; // Copies the memory address, NOT the object
+enemy2.Health = 25;        // enemy1.Health is NOW 25 too!</code></pre>
+					<p class="fragment text-smaller" style="color: #38bdf8; font-size: 0.72em;">Modifying a reference type through one variable affects all variables referencing that same Heap instance.</p>
 				</section>
 
-				<!-- Slide 15: Parameter Passing Behavior -->
+				<!-- Slide 15: Parameter Passing & Writing static Helper Methods -->
 				<section>
-					<h3>Passing Value vs. Reference Types to Methods</h3>
-					<p class="text-smaller">By default, C# passes method arguments <strong>by value</strong>&mdash;meaning the method receives a copy of whatever is inside the variable:</p>
-					<ul style="font-size: 0.8em;">
-						<li class="fragment"><strong>Passing a Value Type (<code>int</code>, <code>Vector2</code>):</strong> The method gets a copy of the <em>data</em>. Changing the parameter inside the method does <strong>not</strong> change the caller's original variable.</li>
-						<li class="fragment"><strong>Passing a Reference Type (<code>Character</code>):</strong> The method gets a copy of the <em>Heap address</em>. Both the caller and the method point to the <strong>same object</strong>, so mutating properties inside the method (e.g., <code>target.Health -= 10;</code>) updates the original object!</li>
-					</ul>
-				</section>
-
-				<!-- Slide 16: Null References & Null Checks -->
-				<section>
-					<h3><code>null</code> References &amp; Defensive Checks</h3>
-					<p class="text-smaller"><code>null</code> is a special literal meaning a reference variable currently points to <strong>no object</strong> in memory.</p>
-					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">Character enemy = null; // Valid for reference types (Invalid for 'int')
-
-// CRASH! Calling a method or property on null throws NullReferenceException:
-// enemy.Health = 50;
-
-// Safe defensive null check:
-if (enemy != null)
+					<h3>Parameter Passing &amp; <code>static</code> Helper Methods</h3>
+					<p class="text-smaller" style="font-size: 0.66em;">Helper methods called directly from <code>static void Main()</code> must also be marked <code>static</code>:</p>
+					<pre class="fragment" style="font-size: 0.38em;"><code class="language-csharp">class Program
 {
-    enemy.Health = 50;
+    static void MovePoint(Position2D p)   // Receives a COPY of the struct
+    {
+        p.X += 50;                        // Modifies local copy only
+    }
+
+    static void DamageUnit(EnemyUnit u)   // Receives a COPY of the Heap address
+    {
+        u.Health -= 20;                   // Mutates the original Heap object!
+    }
+
+    static void Main()
+    {
+        Position2D pt = new Position2D(); pt.X = 10;
+        MovePoint(pt);                    // pt.X is STILL 10
+
+        EnemyUnit orc = new EnemyUnit(); orc.Health = 100;
+        DamageUnit(orc);                  // orc.Health is NOW 80!
+    }
 }</code></pre>
-					<p class="fragment text-smaller" style="color: #fb7185; font-size: 0.8em;"><strong>Common Bug:</strong> Declaring a class member variable (<code>Texture2D playerSprite;</code>) and forgetting to load/instantiate it before calling <code>spriteBatch.Draw(playerSprite, ...)</code>!</p>
 				</section>
 
-				<!-- Slide 17: Value vs. Reference Types Summary Table -->
+				<!-- Slide 16: Basic if Statement Syntax & Defensive null Checks -->
+				<section>
+					<h3>Basic <code>if</code> Statements &amp; Defensive <code>null</code> Checks</h3>
+					<p class="text-smaller" style="font-size: 0.68em;">Unlike Python (<code>if unit is not None:</code>), C# requires <strong>parentheses <code>( )</code></strong> around the condition and <strong>curly braces <code>{ }</code></strong> for the body:</p>
+					<pre class="fragment" style="font-size: 0.4em;"><code class="language-csharp">EnemyUnit boss = null; // Valid for class references (Compiler error for 'int' or 'struct')
+
+// CRASH: Accessing a field on null throws NullReferenceException:
+// Console.WriteLine(boss.Health);
+
+// Safe defensive null check using C# if-else syntax:
+if (boss != null)
+{
+    Console.WriteLine("Boss HP: " + boss.Health);
+}
+else
+{
+    Console.WriteLine("No active boss in memory.");
+}</code></pre>
+				</section>
+
+				<!-- Slide 17: Essential C# Syntax Checklist for Lab 1 -->
+				<section>
+					<h3>C# Syntax Bridge: 3 Rules to Remember</h3>
+					<p class="text-smaller" style="font-size: 0.7em;">Avoid the top three compiler errors when writing C# console &amp; MonoGame code:</p>
+					<table style="font-size: 0.58em; width: 100%; border-collapse: collapse; margin-top: 10px;">
+						<thead>
+							<tr style="background-color: #1e293b; color: #38bdf8;">
+								<th style="padding: 7px; border: 1px solid #475569; width: 24%;">Syntax Rule</th>
+								<th style="padding: 7px; border: 1px solid #475569; width: 38%;">Common Mistake (Compiler Error)</th>
+								<th style="padding: 7px; border: 1px solid #475569; width: 38%;">Valid C# Syntax</th>
+							</tr>
+						</thead>
+						<tbody style="color: white">
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>1. <code>public</code> Fields</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;"><code>struct Pt { int X; }</code> (defaults to <code>private</code>)</td>
+								<td style="padding: 7px; border: 1px solid #475569;"><code>struct Pt { public int X; }</code></td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>2. <code>static</code> Helpers</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;">Calling <code>void Test()</code> from <code>static void Main()</code></td>
+								<td style="padding: 7px; border: 1px solid #475569;">Declare <code>static void Test()</code> when called from <code>Main()</code></td>
+							</tr>
+							<tr class="fragment">
+								<td style="padding: 7px; border: 1px solid #475569;"><strong>3. <code>if ( )</code> Parentheses</strong></td>
+								<td style="padding: 7px; border: 1px solid #475569;"><code>if x != null:</code> (Python-style colon)</td>
+								<td style="padding: 7px; border: 1px solid #475569;"><code>if (x != null) { ... }</code></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Slide 18: Value vs. Reference Types Summary Table -->
 				<section>
 					<h3>Summary: Value Types vs. Reference Types</h3>
-					<table style="font-size: 0.62em; width: 100%; border-collapse: collapse; margin-top: 10px;">
+					<table style="font-size: 0.6em; width: 100%; border-collapse: collapse; margin-top: 10px;">
 						<thead>
 							<tr style="background-color: #1e293b; color: #fbbf24;">
 								<th style="padding: 7px; border: 1px solid #475569; width: 22%;">Characteristic</th>
@@ -263,7 +351,7 @@ if (enemy != null)
 								<th style="padding: 7px; border: 1px solid #475569; width: 39%;">Reference Type (<code>class</code> / <code>string</code>)</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody style="color: white"> 
 							<tr class="fragment">
 								<td style="padding: 7px; border: 1px solid #475569;"><strong>Examples</strong></td>
 								<td style="padding: 7px; border: 1px solid #475569;"><code>int</code>, <code>float</code>, <code>bool</code>, <code>Color</code>, <code>Vector2</code></td>
@@ -293,13 +381,14 @@ if (enemy != null)
 					</table>
 				</section>
 
-				<!-- Slide 18: Checkpoint 2 & Lab 1 Bridge -->
+				<!-- Slide 19: Checkpoint 2 & Lab 1 Bridge -->
 				<section>
 					<h3>Quick Review: Checkpoint 2 &amp; Lab 1 Prep</h3>
-					<p style="color: #34d399;">Test your mastery before Laboratory Activity 1:</p>
-					<ol style="font-size: 0.82em;">
+					<p style="color: #34d399;">Test your mastery before the C# Practice Drills &amp; Lab 1:</p>
+					<ol style="font-size: 0.78em;">
 						<li class="fragment">MonoGame's <code>Color</code> is a <code>struct</code>. If you write <code>Color c1 = Color.Red; Color c2 = c1; c2.R = 0;</code>, what is the value of <code>c1.R</code>?</li>
-						<li class="fragment">If <code>Player</code> is a <code>class</code> and you pass a <code>Player</code> variable into a method <code>ApplyDamage(Player p)</code> that executes <code>p.Health -= 20;</code>, does the caller's <code>Player</code> lose health? Why?</li>
+						<li class="fragment">If <code>Player</code> is a <code>class</code> and you pass a <code>Player</code> variable into <code>static void ApplyDamage(Player p)</code> that executes <code>p.Health -= 20;</code>, does the caller's <code>Player</code> lose health? Why?</li>
+						<li class="fragment">Why must fields inside a custom <code>struct</code> or <code>class</code> be marked <code>public</code> if you want to modify them from <code>Main()</code>?</li>
 					</ol>
 				</section>
 			</div>
