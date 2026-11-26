@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SE 3241 - Week 3: Counting, Recurrences &amp; Amortized Analysis</title>
+
+  <link rel="stylesheet" href="../dist/reset.css">
+  <link rel="stylesheet" href="../dist/reveal.css">
+  <link rel="stylesheet" href="../dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="../dist/plugin/highlight/monokai.css">
+
+  <style>
+    :root {
+      --r-main-font-size: 27px;
+      --accent-gold: #ffd166;
+      --accent-teal: #06d6a0;
+      --accent-coral: #ef476f;
+      --accent-sky: #4cc9f0;
+      --card-bg: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.16);
+    }
+
+    .reveal {
+      font-size: var(--r-main-font-size);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      text-transform: none;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.35em;
+    }
+
+    .reveal h1 { font-size: 1.85em; color: var(--accent-gold); }
+    .reveal h2 { font-size: 1.32em; color: var(--accent-sky); border-bottom: 1px solid rgba(76, 201, 240, 0.3); padding-bottom: 0.18em; }
+    .reveal h3 { font-size: 1.05em; color: var(--accent-teal); }
+
+    .reveal p, .reveal ul, .reveal ol {
+      margin-top: 0.25em;
+      margin-bottom: 0.35em;
+      line-height: 1.35;
+    }
+
+    .reveal li {
+      margin-bottom: 0.25em;
+    }
+
+    .reveal pre {
+      width: 100%;
+      margin: 0.35em 0;
+      font-size: 0.62em;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    }
+
+    .reveal code {
+      color: var(--accent-gold);
+    }
+
+    .reveal pre code {
+      color: inherit;
+      padding: 0.6em 0.8em;
+      border-radius: 6px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      align-items: start;
+    }
+
+    .two-col-wide-left {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 1.1rem;
+      align-items: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.65em 0.85em;
+      text-align: left;
+    }
+
+    .card-warn {
+      background: rgba(239, 71, 111, 0.12);
+      border-left: 4px solid var(--accent-coral);
+      border-radius: 6px;
+      padding: 0.55em 0.8em;
+      text-align: left;
+    }
+
+    .card-tip {
+      background: rgba(6, 214, 160, 0.10);
+      border-left: 4px solid var(--accent-teal);
+      border-radius: 6px;
+      padding: 0.55em 0.8em;
+      text-align: left;
+    }
+
+    .review-banner {
+      display: inline-block;
+      background: var(--accent-gold);
+      color: #111;
+      font-weight: 700;
+      font-size: 0.65em;
+      padding: 0.2em 0.65em;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.25em;
+    }
+
+    .reveal table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.72em;
+      margin-top: 0.3em;
+    }
+
+    .reveal th {
+      background: rgba(76, 201, 240, 0.18);
+      color: var(--accent-sky);
+      font-weight: 700;
+      border-bottom: 2px solid var(--accent-sky);
+    }
+
+    .reveal th, .reveal td {
+      padding: 0.36em 0.55em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      text-align: left;
+    }
+
+    .small { font-size: 0.82em; }
+    .tiny { font-size: 0.70em; color: #b8c1ec; }
+    .gold { color: var(--accent-gold); }
+    .teal { color: var(--accent-teal); }
+    .coral { color: var(--accent-coral); }
+    .sky { color: var(--accent-sky); }
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- SLIDE 1: TITLE -->
+      <section>
+        <p class="tiny" style="letter-spacing: 0.12em; text-transform: uppercase;">SE 3241 &bull; Design and Analysis of Algorithms</p>
+        <h1>Counting, Recurrences &amp; Amortized Analysis</h1>
+        <p class="small">Week 3 &bull; Hetland Ch. 3 &amp; Cormen et al. (CLRS) Ch. 17</p>
+        <div class="card small" style="margin-top: 0.8em;">
+          <p><strong>Course Outcome (CO1 &ndash; LO2):</strong> Solve recurrence relations via repeated substitution and recursion trees, and understand amortized bounds for dynamic structures.</p>
+          <p style="margin-bottom: 0;"><strong>Value Focus:</strong> <span class="gold">Analytical Persistence</span> &amp; <span class="teal">Logical Reasoning</span></p>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: ROADMAP -->
+      <section>
+        <h2>Week 3 Roadmap</h2>
+        <ol>
+          <li class="fragment"><strong>Combinatorial Counting &amp; Sums:</strong> Sigma notation, arithmetic vs. geometric sums, subsets, permutations &amp; combinations.</li>
+          <li class="fragment"><strong>Solving Recurrences:</strong> Setting up $T(n) = aT(g(n)) + f(n)$, repeated substitution (unraveling), and recursion trees.</li>
+          <li class="fragment"><strong>Amortized Analysis (Conceptual):</strong> What amortized cost means, why single expensive spikes don't ruin overall performance, and how dynamic lists stay fast.</li>
+        </ol>
+      </section>
+
+      <!-- ==================== MODULE 1: COUNTING & SUMS ==================== -->
+      <section>
+        <p class="tiny sky">MODULE 1</p>
+        <h1>Combinatorial Counting &amp; Sums</h1>
+        <p class="small">Translating nested loops, trees, and search spaces into closed-form bounds.</p>
+      </section>
+
+      <!-- SLIDE 4: SIGMA NOTATION -->
+      <section>
+        <h2>The Skinny on Sums ($\Sigma$ Notation)</h2>
+        <div class="two-col">
+          <div class="card small">
+            <h3>Mathematical Form</h3>
+            <p>$$\sum_{i=m}^{n} f(i)$$</p>
+            <ul>
+              <li class="fragment">Both lower limit $m$ and upper limit $n$ are <strong>inclusive</strong>.</li>
+              <li class="fragment"><strong>Pull out constants:</strong> $c \cdot \sum_{i=m}^{n} f(i) = \sum_{i=m}^{n} c \cdot f(i)$</li>
+              <li class="fragment"><strong>Split or combine sums:</strong> $\sum_{i=m}^{n} f(i) + \sum_{i=m}^{n} g(i) = \sum_{i=m}^{n} (f(i) + g(i))$</li>
+            </ul>
+          </div>
+          <div class="card small">
+            <h3>Python Equivalent</h3>
+            <pre><code class="language-python"># Inclusive range: m through n
+total = sum(f(i) for i in range(m, n + 1))
+
+# Pulling out a constant factor
+x * sum(S) == sum(x * y for y in S)
+
+# Combining two sums over the same range
+sum(f(i) for i in seq) + sum(g(i) for i in seq) \
+  == sum(f(i) + g(i) for i in seq)</code></pre>
+            <p class="tiny fragment">Sums arise whenever an inner loop's work depends on the outer loop's index.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: ROUND-ROBIN TOURNAMENT -->
+      <section>
+        <h2>Tournament 1: Round-Robin &amp; Handshakes</h2>
+        <div class="two-col-wide-left">
+          <div class="small">
+            <p>Suppose $n$ knights joust every other knight once (or $n$ nodes form a complete graph $K_n$):</p>
+            <ul>
+              <li class="fragment">Knight 1 fights $n-1$ others; Knight 2 fights $n-2$; $\dots$; Knight $n$ fights $0$.</li>
+              <li class="fragment">Pairing endpoints ("Gauss's trick") gives $\frac{n}{2}$ pairs summing to $(n-1)$:
+                $$\sum_{i=0}^{n-1} i = \frac{n(n-1)}{2} = \Theta(n^2)$$
+              </li>
+              <li class="fragment"><strong>General Rule:</strong> Any arithmetic sum of $i^k$ from $1$ to $n$ grows one degree higher: $\Theta(n^{k+1})$.</li>
+            </ul>
+          </div>
+          <div class="center">
+            <svg viewBox="0 0 240 240" style="width: 100%; height: auto; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);">
+              <g stroke="#4cc9f0" stroke-width="1.4" opacity="0.65">
+                <line x1="120" y1="28" x2="200" y2="74"/><line x1="120" y1="28" x2="200" y2="166"/>
+                <line x1="120" y1="28" x2="120" y2="212"/><line x1="120" y1="28" x2="40" y2="166"/>
+                <line x1="120" y1="28" x2="40" y2="74"/>
+                <line x1="200" y1="74" x2="200" y2="166"/><line x1="200" y1="74" x2="120" y2="212"/>
+                <line x1="200" y1="74" x2="40" y2="166"/><line x1="200" y1="74" x2="40" y2="74"/>
+                <line x1="200" y1="166" x2="120" y2="212"/><line x1="200" y1="166" x2="40" y2="166"/>
+                <line x1="200" y1="166" x2="40" y2="74"/>
+                <line x1="120" y1="212" x2="40" y2="166"/><line x1="120" y1="212" x2="40" y2="74"/>
+                <line x1="40" y1="166" x2="40" y2="74"/>
+              </g>
+              <g fill="#ffd166" stroke="#111" stroke-width="2">
+                <circle cx="120" cy="28" r="7"/><circle cx="200" cy="74" r="7"/>
+                <circle cx="200" cy="166" r="7"/><circle cx="120" cy="212" r="7"/>
+                <circle cx="40" cy="166" r="7"/><circle cx="40" cy="74" r="7"/>
+              </g>
+              <text x="120" y="234" fill="#ffd166" font-size="13" font-weight="bold" text-anchor="middle">K&#8326;: 6(5)/2 = 15 edges</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: KNOCKOUT TOURNAMENT & BINARY TREES -->
+      <section>
+        <h2>Tournament 2: Knockout &amp; Powers of Two</h2>
+        <div class="two-col">
+          <div class="card small">
+            <h3>Sum of Powers of 2</h3>
+            <ul>
+              <li class="fragment">In a knockout tournament with $n = 2^h$ players, each match eliminates 1 player, leaving 1 champion:
+                $$\sum_{i=0}^{h-1} 2^i = 1 + 2 + 4 + \dots + \frac{n}{2} = n - 1$$
+              </li>
+              <li class="fragment">A balanced binary tree with $n$ leaves has height $h = \lg n$ and <strong>$n - 1$ internal nodes</strong>.</li>
+              <li class="fragment"><strong>Key Insight:</strong> Adding up all powers of $2$ before $2^h$ gives just $1$ less than $2^h$ (e.g., $1+2+4+8 = 15 = 16 - 1$).</li>
+            </ul>
+          </div>
+          <div class="card small">
+            <h3>The Hare &amp; The Tortoise</h3>
+            <ul>
+              <li class="fragment"><strong class="teal">Logarithmic ($h = \lg n$):</strong> Halving $10^{90}$ particles in the universe takes only $\lg(10^{90}) \approx 299$ yes/no questions!</li>
+              <li class="fragment"><strong class="coral">Exponential ($n = 2^h$):</strong> Wheat &amp; chessboard: $2^{64} - 1 \approx 1.84 \times 10^{19}$ grains. At $1\text{ ms}$ per step, $2^{64}\text{ ms} \approx 584\text{ million years}$.</li>
+              <li class="fragment"><strong>Duality:</strong> Doublings from $1 \to n$ equals halvings from $n \to 1$.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: SUBSETS, PERMUTATIONS, COMBINATIONS -->
+      <section>
+        <h2>Subsets, Permutations &amp; Combinations</h2>
+        <div class="two-col small">
+          <div class="card">
+            <h3>Subsets &amp; Pseudopolynomiality</h3>
+            <ul>
+              <li class="fragment"><strong>Subsets of a $k$-set:</strong> Each item is either IN ($1$) or OUT ($0$) $\implies 2^k$ subsets.</li>
+              <li class="fragment"><strong>Pseudopolynomial Trap:</strong> Trial division primality (<code>range(2, n)</code>) runs in $\Theta(n)$ arithmetic steps, but $n$ takes $k = \lfloor \lg n \rfloor + 1$ bits to store ($n \approx 2^k$).</li>
+              <li class="fragment">In terms of input bit-length $k$, $\Theta(n) = \Theta(2^k)$ &mdash; <strong>exponential!</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Permutations &amp; Combinations</h3>
+            <ul>
+              <li class="fragment"><strong>Permutations (Order matters):</strong>
+                $$n! = n(n-1)(n-2)\cdots 1$$
+                <span class="tiny">(e.g., Bogosort expected runtime: $\Theta(n \cdot n!)$)</span>
+              </li>
+              <li class="fragment"><strong>Combinations ("$n$ choose $k$"):</strong> Unordered groups of size $k$:
+                $$\binom{n}{k} = C(n, k) = \frac{n!}{k!(n-k)!}$$
+              </li>
+              <li class="fragment"><strong>Identity:</strong> Summing $\binom{n}{k}$ for all $k = 0 \dots n$ equals $2^n$ total subsets.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: QUICK REVIEW 1 -->
+      <section>
+        <span class="review-banner">Quick Review 1</span>
+        <h2>Check Your Counting Intuition</h2>
+        <div class="card small">
+          <p><strong>1.</strong> You have an $n \times n$ grid and inspect only cells strictly below the main diagonal ($i &gt; j$). What is the exact count and tight bound?</p>
+          <p class="fragment teal"><strong>Answer:</strong> $\frac{n(n-1)}{2}$ cells, which is $\Theta(n^2)$.</p>
+          <hr style="border-color: rgba(255,255,255,0.12);">
+          <p><strong>2.</strong> Why is naive primality testing (<code>for i in range(2, n)</code>) called <em>pseudopolynomial</em> rather than polynomial?</p>
+          <p class="fragment teal"><strong>Answer:</strong> Input size is measured in bits $k \approx \lg n$. Since $n \approx 2^k$, a $\Theta(n)$ loop takes $\Theta(2^k)$ time relative to the input's bit-length.</p>
+          <hr style="border-color: rgba(255,255,255,0.12);">
+          <p><strong>3.</strong> How many teams of $3$ can be chosen from $7$ students?</p>
+          <p class="fragment teal"><strong>Answer:</strong> $\binom{7}{3} = \frac{7 \times 6 \times 5}{3 \times 2 \times 1} = 35$.</p>
+        </div>
+      </section>
+
+      <!-- ==================== MODULE 2: RECURRENCES ==================== -->
+      <section>
+        <p class="tiny sky">MODULE 2</p>
+        <h1>Solving Recurrence Relations</h1>
+        <p class="small">Repeated Substitution &amp; Recursion Trees</p>
+      </section>
+
+      <!-- SLIDE 10: ANATOMY OF A RECURRENCE -->
+      <section>
+        <h2>Anatomy of a Recurrence Relation</h2>
+        <div class="two-col small">
+          <div class="card">
+            <h3>Recursive Code ($S$)</h3>
+            <pre><code class="language-python">def S(seq, i=0):
+    if i == len(seq):
+        return 0
+    return S(seq, i + 1) + seq[i]</code></pre>
+            <p class="fragment">Base case: $T(0) = 1$ (constant work).</p>
+            <p class="fragment">Recursive step: $T(n) = T(n - 1) + 1$.</p>
+          </div>
+          <div class="card">
+            <h3>General Divide-and-Conquer Form</h3>
+            <p>$$T(n) = a \cdot T(g(n)) + f(n)$$</p>
+            <ul>
+              <li class="fragment"><strong>$a$:</strong> Number of recursive calls made.</li>
+              <li class="fragment"><strong>$g(n)$:</strong> Size of each subproblem (e.g., $n-1$ or $n/2$).</li>
+              <li class="fragment"><strong>$f(n)$:</strong> Extra non-recursive work done outside the recursive calls.</li>
+              <li class="fragment"><strong>Tip:</strong> Write $1$ (not $\Theta(1)$) inside equations so you don't accidentally add $1 + 1 + \dots + 1$ into a constant!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: REPEATED SUBSTITUTION METHOD -->
+      <section>
+        <h2>Method 1: Repeated Substitution (Unraveling)</h2>
+        <div class="two-col small">
+          <div class="card">
+            <h3>3-Step Procedure</h3>
+            <ol>
+              <li class="fragment"><strong>Unravel:</strong> Plug the recurrence definition into itself 2&ndash;3 times until you spot a pattern.</li>
+              <li class="fragment"><strong>Generalize:</strong> Write the formula after $i$ steps using variable $i$.</li>
+              <li class="fragment"><strong>Hit the Base Case:</strong> Pick $i$ so the inside of $T(\dots)$ becomes $T(1)$, then simplify.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Example: Binary Search</h3>
+            <p>$$T(n) = T(n/2) + 1$$</p>
+            <ul style="list-style: none; padding-left: 0;">
+              <li class="fragment">$= \{T(n/4) + 1\} + 1 = T(n/2^2) + 2$</li>
+              <li class="fragment">$= \{T(n/8) + 1\} + 2 = T(n/2^3) + 3$</li>
+              <li class="fragment">$\vdots$</li>
+              <li class="fragment">$= T(n/2^i) + i$</li>
+              <li class="fragment">Set $n/2^i = 1 \implies i = \lg n$:
+                $$T(n) = T(1) + \lg n = \Theta(\lg n)$$
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: MERGE SORT UNRAVELING & RECURSION TREE -->
+      <section>
+        <h2>Method 2: Recursion Tree ($T(n) = 2T(n/2) + n$)</h2>
+        <div class="two-col-wide-left small">
+          <div>
+            <ul>
+              <li class="fragment"><strong>Unraveling:</strong>
+                $$T(n) = 2\{2T(n/4) + n/2\} + n = 2^i T(n/2^i) + n \cdot i$$
+              </li>
+              <li class="fragment">Set $i = \lg n \implies T(n) = n \cdot T(1) + n \lg n = \Theta(n \lg n)$.</li>
+              <li class="fragment"><strong>Visual Tree Shortcut:</strong> Each row splits the work into twice as many pieces of half the size. Every row sums to <strong>$n$</strong> across $\lg n + 1$ rows!</li>
+            </ul>
+          </div>
+          <div class="center">
+            <svg viewBox="0 0 320 220" style="width: 100%; height: auto; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);">
+              <g stroke="#b8c1ec" stroke-width="1.5">
+                <line x1="130" y1="30" x2="75" y2="85"/><line x1="130" y1="30" x2="185" y2="85"/>
+                <line x1="75" y1="85" x2="45" y2="140"/><line x1="75" y1="85" x2="105" y2="140"/>
+                <line x1="185" y1="85" x2="155" y2="140"/><line x1="185" y1="85" x2="215" y2="140"/>
+              </g>
+              <g fill="#1a1b26" stroke="#4cc9f0" stroke-width="2">
+                <circle cx="130" cy="30" r="14"/>
+                <circle cx="75" cy="85" r="14"/><circle cx="185" cy="85" r="14"/>
+                <circle cx="45" cy="140" r="13"/><circle cx="105" cy="140" r="13"/>
+                <circle cx="155" cy="140" r="13"/><circle cx="215" cy="140" r="13"/>
+              </g>
+              <g fill="#f8f8f2" font-size="11" font-weight="bold" text-anchor="middle" dominant-baseline="central">
+                <text x="130" y="30">n</text>
+                <text x="75" y="85">n/2</text><text x="185" y="85">n/2</text>
+                <text x="45" y="140">n/4</text><text x="105" y="140">n/4</text>
+                <text x="155" y="140">n/4</text><text x="215" y="140">n/4</text>
+              </g>
+              <g fill="#06d6a0" font-size="12" font-weight="bold">
+                <text x="242" y="34">&Sigma; = n</text>
+                <text x="242" y="89">&Sigma; = n</text>
+                <text x="242" y="144">&Sigma; = n</text>
+                <text x="130" y="176" fill="#b8c1ec" text-anchor="middle">&vellip; (height h = lg n)</text>
+                <text x="130" y="202" fill="#ffd166" text-anchor="middle">Leaves: 1 + 1 + &hellip; + 1 &rArr; &Sigma; = n</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: REFERENCE TABLE OF BASIC RECURRENCES -->
+      <section>
+        <h2>Core Recurrences Reference (Hetland Table 3-1)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Recurrence</th>
+              <th>Closed Bound</th>
+              <th>Canonical Algorithm / Application</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="fragment">
+              <td>$T(n) = T(n-1) + 1$</td>
+              <td>$\Theta(n)$</td>
+              <td>Linear scan / recursive sequence sum</td>
+            </tr>
+            <tr class="fragment">
+              <td>$T(n) = T(n-1) + n$</td>
+              <td>$\Theta(n^2)$</td>
+              <td>Selection sort / Handshake sum</td>
+            </tr>
+            <tr class="fragment">
+              <td>$T(n) = 2T(n-1) + 1$</td>
+              <td>$\Theta(2^n)$</td>
+              <td>Towers of Hanoi</td>
+            </tr>
+            <tr class="fragment">
+              <td>$T(n) = T(n/2) + 1$</td>
+              <td>$\Theta(\lg n)$</td>
+              <td>Binary search (<code>bisect</code>)</td>
+            </tr>
+            <tr class="fragment">
+              <td>$T(n) = T(n/2) + n$</td>
+              <td>$\Theta(n)$</td>
+              <td>Randomized Select (average case)</td>
+            </tr>
+            <tr class="fragment">
+              <td>$T(n) = 2T(n/2) + 1$</td>
+              <td>$\Theta(n)$</td>
+              <td>Binary tree traversal (counting all nodes)</td>
+            </tr>
+            <tr class="fragment">
+              <td>$T(n) = 2T(n/2) + n$</td>
+              <td>$\Theta(n \lg n)$</td>
+              <td>Merge sort / Divide-and-conquer sorting</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SLIDE 14: QUICK REVIEW 2 -->
+      <section>
+        <span class="review-banner">Quick Review 2</span>
+        <h2>Recurrences &amp; Code Diagnosis</h2>
+        <div class="card small">
+          <p><strong>1.</strong> Suppose we modify recursive sum <code>S(seq)</code> to slice the list on every call: <code>return seq[0] + S(seq[1:])</code>. What is the new recurrence and tight bound? (Hetland Ex. 3-6)</p>
+          <p class="fragment teal"><strong>Answer:</strong> Slicing copies $n-1$ elements: $T(n) = T(n-1) + n \implies \Theta(n^2)$.</p>
+          <hr style="border-color: rgba(255,255,255,0.12);">
+          <p><strong>2.</strong> In Merge Sort (Listing 3-2), what happens to the runtime if we replace <code>lft.pop()</code> ($O(1)$) with <code>lft.pop(0)</code> ($\Theta(n)$)? (Hetland Ex. 3-12)</p>
+          <p class="fragment teal"><strong>Answer:</strong> Merging $n$ elements with <code>pop(0)</code> costs $\Theta(n^2)$ per level: $T(n) = 2T(n/2) + n^2 \implies \Theta(n^2)$.</p>
+        </div>
+      </section>
+
+      <!-- ==================== MODULE 3: AMORTIZED ANALYSIS (CONCEPTUAL) ==================== -->
+      <section>
+        <p class="tiny sky">MODULE 3</p>
+        <h1>Amortized Analysis</h1>
+        <p class="small">CLRS Chapter 17 &bull; Understanding "Average Cost Over a Sequence"</p>
+      </section>
+
+      <!-- SLIDE 16: WHAT IS AMORTIZED ANALYSIS? -->
+      <section>
+        <h2>What Is Amortized Analysis?</h2>
+        <div class="two-col small">
+          <div class="card">
+            <h3>The Core Idea</h3>
+            <ul>
+              <li class="fragment">Sometimes a data structure operation is <strong>super fast almost every time</strong>, but occasionally triggers an expensive cleanup or resize.</li>
+              <li class="fragment">If we only look at the <em>single worst operation</em>, our Big-O bound becomes way too pessimistic.</li>
+              <li class="fragment"><strong>Amortized Analysis</strong> spreads the cost of rare expensive operations across a whole sequence of $n$ operations:
+                $$\text{Amortized Cost} = \frac{\text{Total Cost of } n \text{ Operations}}{n}$$
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Amortized vs. Average-Case</h3>
+            <div class="card-tip" style="margin-bottom: 0.5em;">
+              <p style="margin: 0;"><strong class="teal">Amortized Analysis (Guaranteed):</strong> No randomness or probability! Even an adversary picking the worst possible sequence of operations cannot break the average cost per step.</p>
+            </div>
+            <div class="card-warn">
+              <p style="margin: 0;"><strong class="coral">Average-Case Analysis (Probabilistic):</strong> Assumes inputs are random or "typical" (e.g., Quicksort on shuffled data). Bad inputs can still trigger slow behavior.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 17: REAL-WORLD INTUITION - PYTHON LIST.APPEND -->
+      <section>
+        <h2>Concrete Example: How Python's <code>list.append()</code> Works</h2>
+        <div class="two-col-wide-left small">
+          <div>
+            <ul>
+              <li class="fragment">A Python <code>list</code> stores items in a contiguous block of memory with extra spare slots.</li>
+              <li class="fragment"><strong>Normal <code>append(x)</code> (99% of calls):</strong> Drops <code>x</code> into the next open slot in <strong>$O(1)$</strong> time.</li>
+              <li class="fragment"><strong>Full Capacity Spike:</strong> When all $n$ slots are full, Python allocates a larger array (~$2\times$ size) and copies all $n$ items over &mdash; costing <strong>$\Theta(n)$</strong>!</li>
+              <li class="fragment"><strong class="gold">Why it's still $O(1)$ amortized:</strong> After copying $n$ items, you get $n$ cheap $O(1)$ appends before the next resize. Paying for the copy is "spread out" across those $n$ cheap steps!</li>
+            </ul>
+          </div>
+          <div class="center">
+            <svg viewBox="0 0 280 215" style="width: 100%; height: auto; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);">
+              <!-- Axes -->
+              <line x1="36" y1="180" x2="265" y2="180" stroke="#f8f8f2" stroke-width="1.5"/>
+              <line x1="36" y1="180" x2="36" y2="20" stroke="#f8f8f2" stroke-width="1.5"/>
+              <text x="242" y="196" fill="#f8f8f2" font-size="10">append #</text>
+              <text x="12" y="24" fill="#f8f8f2" font-size="10">Cost</text>
+              <!-- Spikes at 1, 2, 4, 8, 16 -->
+              <g fill="#ef476f">
+                <rect x="44" y="166" width="8" height="14"/>
+                <rect x="58" y="154" width="8" height="26"/>
+                <rect x="86" y="132" width="8" height="48"/>
+                <rect x="142" y="92" width="8" height="88"/>
+                <rect x="245" y="28" width="8" height="152"/>
+              </g>
+              <!-- Cheap O(1) bars -->
+              <g fill="#4cc9f0" opacity="0.85">
+                <rect x="72" y="172" width="8" height="8"/>
+                <rect x="100" y="172" width="8" height="8"/><rect x="114" y="172" width="8" height="8"/><rect x="128" y="172" width="8" height="8"/>
+                <rect x="156" y="172" width="8" height="8"/><rect x="170" y="172" width="8" height="8"/><rect x="184" y="172" width="8" height="8"/>
+                <rect x="198" y="172" width="8" height="8"/><rect x="212" y="172" width="8" height="8"/><rect x="226" y="172" width="8" height="8"/>
+              </g>
+              <!-- Amortized average line -->
+              <line x1="36" y1="158" x2="265" y2="158" stroke="#06d6a0" stroke-width="2" stroke-dasharray="5,4"/>
+              <text x="155" y="150" fill="#06d6a0" font-size="10" font-weight="bold" text-anchor="middle">Amortized Cost = O(1) per append</text>
+              <text x="215" y="45" fill="#ef476f" font-size="10" font-weight="bold">Resize spikes</text>
+              <text x="215" y="57" fill="#ef476f" font-size="9">(rare, doubling gaps)</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 18: THREE WAYS ANALYSTS THINK ABOUT AMORTIZED COST -->
+      <section>
+        <h2>Three Conceptual Views (CLRS Ch. 17)</h2>
+        <p class="small">Computer scientists use three metaphors to reason about amortized cost &mdash; all give the same answer:</p>
+        <div class="two-col" style="grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem;">
+          <div class="card small fragment">
+            <h3 class="gold">1. Aggregate View</h3>
+            <p><strong>"Total Bill Divided by $n$"</strong></p>
+            <p>Count the total work of all $n$ operations combined, then divide by $n$.</p>
+            <p class="tiny"><em>Example:</em> $n$ appends do $\le 3n$ total copies $\implies 3n / n = O(1)$ each.</p>
+          </div>
+          <div class="card small fragment">
+            <h3 class="teal">2. Accounting View</h3>
+            <p><strong>"Prepaid Layaway Plan"</strong></p>
+            <p>Overcharge cheap operations slightly and save the extra "coins" on items to pay for future expensive work.</p>
+            <p class="tiny"><em>Example:</em> Pay $\$2$ per <code>PUSH</code> ($\$1$ to push now, $\$1$ saved on the item to pay for its future <code>POP</code>).</p>
+          </div>
+          <div class="card small fragment">
+            <h3 class="sky">3. Potential View</h3>
+            <p><strong>"Stored Battery Energy"</strong></p>
+            <p>Measure how "full" or "messy" the whole data structure is. Cheap steps charge the battery; expensive cleanups drain it.</p>
+            <p class="tiny"><em>Example:</em> As a list fills up, potential rises until it pays for resizing.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 19: PRACTICAL DESIGN LESSON - THRASHING -->
+      <section>
+        <h2>Design Lesson: Avoiding Dynamic Table Thrashing</h2>
+        <div class="two-col small">
+          <div class="card-warn">
+            <h3>Bad Design: Shrink at 50% Full</h3>
+            <ul>
+              <li class="fragment">Suppose we <strong>double</strong> a list when it hits $100\%$ full, and <strong>halve</strong> it immediately when it drops below $50\%$ full.</li>
+              <li class="fragment">Right at the $50\%$ boundary, alternating <code>append()</code>, <code>pop()</code>, <code>pop()</code>, <code>append()</code> forces a full resize copy on <strong>every single step</strong>!</li>
+              <li class="fragment">Amortized cost degrades from $O(1)$ to <strong>$\Theta(n)$ per operation</strong>!</li>
+            </ul>
+          </div>
+          <div class="card-tip">
+            <h3>Smart Design: Shrink at 25% Full</h3>
+            <ul>
+              <li class="fragment"><strong>Double</strong> capacity when $100\%$ full, but only <strong>halve</strong> capacity when it drops below <strong>$25\%$ full</strong>.</li>
+              <li class="fragment">This buffer zone guarantees many cheap operations happen between any two resizes.</li>
+              <li class="fragment">Both <code>append()</code> and <code>pop()</code> stay <strong>$O(1)$ amortized</strong> &mdash; the exact strategy used by real dynamic arrays!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 20: QUICK REVIEW 3 -->
+      <section>
+        <span class="review-banner">Quick Review 3</span>
+        <h2>Amortized Analysis Concept Check</h2>
+        <div class="card small">
+          <p><strong>1.</strong> A single <code>list.append(x)</code> in Python can take $\Theta(n)$ time when the underlying array is full. Why do we still classify <code>list.append(x)</code> as $O(1)$ amortized instead of $\Theta(n)$?</p>
+          <p class="fragment teal"><strong>Answer:</strong> Because capacity doubles on each resize, a $\Theta(n)$ copy only happens once every $n$ appends. Averaged across the sequence of $n$ appends, the cost per call is $O(1)$.</p>
+          <hr style="border-color: rgba(255,255,255,0.12);">
+          <p><strong>2.</strong> How does amortized analysis differ from average-case analysis?</p>
+          <p class="fragment teal"><strong>Answer:</strong> Average-case analysis relies on probability (assuming random inputs), whereas amortized analysis is a worst-case guarantee over an entire sequence of operations with zero probabilistic assumptions.</p>
+          <hr style="border-color: rgba(255,255,255,0.12);">
+          <p><strong>3.</strong> Why do dynamic arrays wait until they are less than $25\%$ full (rather than $50\%$ full) before shrinking?</p>
+          <p class="fragment teal"><strong>Answer:</strong> To prevent "thrashing" &mdash; repeatedly expanding and shrinking on alternating insertions and deletions right at the halfway boundary.</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 21: SUMMARY -->
+      <section>
+        <h2>Week 3 Takeaways</h2>
+        <div class="card small">
+          <ul>
+            <li><strong>Sums:</strong> Arithmetic sums ($\sum_{i=0}^{n-1} i$) grow quadratically $\Theta(n^2)$; geometric sums ($\sum_{i=0}^{h-1} 2^i$) grow linearly in $n = 2^h$.</li>
+            <li><strong>Recurrences:</strong> Unravel via repeated substitution or sum work across levels of a recursion tree ($h = \lg n$).</li>
+            <li><strong>Amortized Analysis:</strong> Measures the guaranteed average cost per operation over a worst-case sequence &mdash; explaining why occasional resize spikes still allow Python's <code>list.append()</code> to run in $O(1)$ amortized time.</li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../dist/reveal.js"></script>
+  <script src="../dist/plugin/zoom.js"></script>
+  <script src="../dist/plugin/highlight.js"></script>
+  <script src="../dist/plugin/math.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      margin: 0.06,
+      plugins: [ RevealZoom, RevealHighlight, RevealMath.KaTeX ]
+    });
+  </script>
+</body>
+</html>
